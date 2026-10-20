@@ -1,0 +1,27 @@
+import { chromium } from 'playwright-core';
+const exe = 'C:/Users/65259/AppData/Local/ms-playwright/chromium-1228/chrome-win64/chrome.exe';
+const browser = await chromium.launch({ executablePath: exe, headless: true });
+const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+const errors = [];
+page.on('pageerror', e => errors.push('PAGEERROR ' + e.message));
+page.on('console', m => { if (m.type() === 'error') errors.push('CONSOLE ' + m.text()); });
+await page.goto('http://127.0.0.1:8787/', { waitUntil: 'networkidle' });
+await page.waitForTimeout(400);
+await page.locator('.mode-card[data-mode="team"]').click();
+await page.waitForTimeout(300);
+await page.locator('#start-match').click();
+await page.waitForTimeout(700);
+console.log('chat initial', await page.locator('#battle-chat .chat-msg').count());
+await page.locator('#chat-input').fill('给我治疗');
+await page.locator('#chat-form').evaluate(f => f.requestSubmit());
+await page.waitForTimeout(1800);
+const msgs = await page.locator('#battle-chat .chat-msg').allTextContents();
+console.log('chat after', msgs.slice(-4));
+console.log('trust', await page.locator('.trust-row').textContent());
+console.log('ally panel', await page.locator('#teammate-panel').isVisible());
+// quick order
+await page.locator('[data-order="先保命，上盾"]').click();
+await page.waitForTimeout(1200);
+console.log('chat quick', (await page.locator('#battle-chat .chat-msg').allTextContents()).slice(-2));
+console.log('ERRORS', errors);
+await browser.close();

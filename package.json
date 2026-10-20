@@ -1,0 +1,23 @@
+{
+  "name": "coinfall",
+  "version": "1.0.0",
+  "private": true,
+  "description": "命途回廊 · COINFALL — 纯 HTML/CSS/JS 的抛币命运卡牌对战游戏，支持 1v1 到 4v4、AI 同注者、局域网与公网联机。",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "ai:proxy": "node tools/ai-proxy.mjs",
+    "test:engine": "node tests/test-engine.mjs",
+    "test:ui": "node tests/test-ui2.mjs",
+    "test:fun": "node tests/test-fun.mjs",
+    "test:online": "node tests/test-online.mjs",
+    "test:team": "node tests/test-team-online.mjs",
+    "test": "node tests/test-engine.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

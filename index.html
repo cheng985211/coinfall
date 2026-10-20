@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090a0e">
+  <meta name="description" content="命途回廊 COINFALL：一款可联机的回合制抛币卡牌对战游戏。32 名角色、150 张技能卡、16 种模式（1v1–4v4 自由组队），以及会听懂你指挥的 AI 同注者。">
+  <title>命途回廊 · COINFALL</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0b0f'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23e8b86d' stroke-width='3'/%3E%3Cpath d='M32 17v30M22 26c0-4 4-6 10-6s10 3 10 7-5 5-10 5-10 2-10 6 4 6 10 6 10-3 10-6' fill='none' stroke='%23e8b86d' stroke-width='3'/%3E%3C/svg%3E">
+</head>
+<body>
+  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+  <div class="atmosphere" aria-hidden="true">
+    <div class="atmosphere__vignette"></div>
+    <div class="atmosphere__grain"></div>
+  </div>
+
+  <div id="app">
+    <header class="site-header" id="site-header">
+      <button class="brand" data-nav="home" aria-label="回到命途回廊首页">
+        <span class="brand__coin" aria-hidden="true"><span>昭</span><span>昧</span></span>
+        <span class="brand__text">命途回廊<small>COINFALL</small></span>
+      </button>
+      <nav class="main-nav" aria-label="主导航">
+        <button data-nav="collection" class="nav-link">命途图鉴</button>
+        <button data-nav="world" class="nav-link">八域档案</button>
+        <button data-nav="lobby" class="nav-link">联机大厅</button>
+        <button data-action="rules" class="nav-link">规则</button>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="audio-toggle" data-action="toggle-audio" aria-label="开关声音" title="声音">
+          <span class="audio-icon" aria-hidden="true">◖</span>
+        </button>
+        <button class="icon-btn" data-action="settings" aria-label="设置" title="设置">☰</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ================= HOME ================= -->
+      <section id="screen-home" class="screen is-active" aria-label="首页">
+        <div class="home-hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="live-dot"></span> 第 ∞ 届命途夜 · 正在开桌</div>
+            <h1 class="display-title">命途<br><em>回廊</em></h1>
+            <p class="hero-subtitle">八域尽头，一枚硬币正在决定所有结局。<br>你带三张手牌入席，庄家准备了唯一的终章。</p>
+            <div class="hero-actions">
+              <button class="btn btn--primary btn--lg" data-action="enter-table">
+                <span>入席</span><span class="btn-glyph">◉</span>
+              </button>
+              <button class="btn btn--ghost btn--lg" data-nav="world">阅读世界观</button>
+            </div>
+            <div class="hero-stats">
+              <div><strong id="stat-chars">32</strong><span>执币角色</span></div>
+              <div><strong id="stat-cards">150</strong><span>命途卡牌</span></div>
+              <div><strong id="stat-modes">16</strong><span>游戏模式</span></div>
+              <div><strong>∞</strong><span>未完成结局</span></div>
+            </div>
+          </div>
+          <div class="hero-stage" aria-hidden="true">
+            <div class="hero-orbit hero-orbit--one"></div>
+            <div class="hero-orbit hero-orbit--two"></div>
+            <div class="hero-sigil">命</div>
+            <div class="hero-coin" id="hero-coin">
+              <div class="hero-coin__face hero-coin__face--front"><span>昭</span><small>CAUSALITY</small></div>
+              <div class="hero-coin__face hero-coin__face--back"><span>昧</span><small>REVERSAL</small></div>
+              <div class="hero-coin__rim"></div>
+            </div>
+            <div class="hero-caption"><span>THE COIN IS STILL SPINNING</span><i></i></div>
+          </div>
+        </div>
+
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee__track">
+            <span>克苏鲁 · 沉钟海</span><b>◉</b><span>蒸汽朋克 · 黄铜穹顶</span><b>⚙</b><span>修仙 · 九霄云海</span><b>☯</b><span>西式奇幻 · 圣誓原野</span><b>✦</b><span>未来武侠 · 霓虹江湖</span><b>⌁</b><span>日式和风 · 百鬼灯町</span><b>⛩</b><span>西部牛仔 · 无名边境</span><b>✶</b><span>经典动漫/小说 · 万象书脊</span><b>★</b>
+            <span>克苏鲁 · 沉钟海</span><b>◉</b><span>蒸汽朋克 · 黄铜穹顶</span><b>⚙</b><span>修仙 · 九霄云海</span><b>☯</b><span>西式奇幻 · 圣誓原野</span><b>✦</b><span>未来武侠 · 霓虹江湖</span><b>⌁</b><span>日式和风 · 百鬼灯町</span><b>⛩</b><span>西部牛仔 · 无名边境</span><b>✶</b><span>经典动漫/小说 · 万象书脊</span><b>★</b>
+          </div>
+        </div>
+
+        <section class="home-section" id="modes-section">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">CHOOSE YOUR TABLE</div>
+              <h2>选择你的命局</h2>
+            </div>
+            <p>从五点生命的经典审判，到会顶嘴的 AI 队友。每一种模式，都是回廊的一扇门。</p>
+          </div>
+          <div class="mode-grid" id="mode-grid"></div>
+        </section>
+
+        <section class="home-section home-section--fun" id="fun-section">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">FIVE BAD IDEAS</div>
+              <h2>五个不太正经的命局</h2>
+            </div>
+            <p>回廊偶尔也需要一点混乱。五个娱乐模式，五条被庄家划掉的规则。</p>
+          </div>
+          <div class="mode-grid mode-grid--fun" id="fun-mode-grid"></div>
+        </section>
+
+        <section class="home-section">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">THE EIGHT REALMS</div>
+              <h2>八域正在失去结局</h2>
+            </div>
+            <button class="text-btn" data-nav="world">展开完整档案 →</button>
+          </div>
+          <div class="realm-strip" id="realm-strip"></div>
+        </section>
+
+        <section class="home-section companion-feature">
+          <div class="companion-feature__art" aria-hidden="true">
+            <div class="companion-sigil">同</div>
+            <div class="companion-orbit"></div>
+            <div class="companion-card-stack"><i></i><i></i><i></i></div>
+          </div>
+          <div class="companion-feature__copy">
+            <div class="eyebrow">THE CO-SIGNERS</div>
+            <h2>你的队友，不是你的工具。</h2>
+            <p>同注者保留着生前的脾气。你可以用自然语言命令他们进攻、保命、治疗或开大招——合理的指挥会被执行，满血求奶会被嘲笑，送死命令会被当面拒绝。</p>
+            <blockquote id="companion-quote">“你满血还让我奶？我的牌不是矿泉水。”<cite>—— 齿轮医师·薇拉</cite></blockquote>
+            <div class="hero-actions">
+              <button class="btn btn--secondary" data-mode="team">体验自由组队指挥</button>
+              <button class="btn btn--quiet" data-nav="world">阅读同注者协议</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="home-section closing-cta">
+          <div class="closing-cta__sigil" aria-hidden="true">◉</div>
+          <div>
+            <div class="eyebrow">THE HOUSE IS WAITING</div>
+            <h2>庄家已经落座。<br>你还要让硬币再转一会儿吗？</h2>
+          </div>
+          <button class="btn btn--primary btn--lg" data-action="enter-table">现在开桌</button>
+        </section>
+
+        <footer class="site-footer">
+          <span>命途回廊 · COINFALL</span>
+          <span>纯前端 · 可局域网 / 公网联机 · 无需安装</span>
+          <button class="text-btn" data-action="rules">规则手册</button>
+        </footer>
+      </section>
+
+      <!-- ================= SETUP ================= -->
+      <section id="screen-setup" class="screen" aria-label="战前配置">
+        <div class="subpage-head">
+          <button class="back-btn" data-nav="home">← 返回回廊</button>
+          <div class="eyebrow" id="setup-eyebrow">MATCH CONFIGURATION</div>
+          <h1 id="setup-title">标准对战</h1>
+          <p id="setup-desc"></p>
+          <div class="badge-row" id="setup-badges"></div>
+        </div>
+
+        <div class="setup-layout">
+          <div class="setup-main">
+            <section class="panel setup-panel">
+              <div class="panel-head">
+                <span class="panel-index">01</span>
+                <div><h3>执币者</h3><p>名字会被记入回廊账本。</p></div>
+              </div>
+              <div class="field-row">
+                <label class="field">
+                  <span>你的称呼</span>
+                  <input id="player-name" maxlength="12" value="无名执币者" autocomplete="off">
+                </label>
+                <div class="field">
+                  <span>角色选择</span>
+                  <div class="segmented" id="char-mode-seg">
+                    <button data-char-mode="specified" class="is-active">指定英雄</button>
+                    <button data-char-mode="random">随机英雄</button>
+                  </div>
+                </div>
+              </div>
+              <div class="style-filter" id="char-style-filter"></div>
+              <div class="character-grid" id="character-grid"></div>
+              <div class="selection-note" id="char-selection-note"></div>
+            </section>
+
+            <section class="panel setup-panel" id="team-size-panel" hidden>
+              <div class="panel-head">
+                <span class="panel-index">02</span>
+                <div><h3>自由组队 · 几对几</h3><p>双方各 1–4 人。你是 A1，其余席位由 AI 同注者补齐；人数可以不对等。</p></div>
+                <span class="team-size-badge" id="team-size-badge">2v2</span>
+              </div>
+              <div class="team-size-grid">
+                <div class="size-field">
+                  <span class="size-field__label">我方 · A 席</span>
+                  <div class="size-picker" id="team-size-a" role="group" aria-label="我方人数">
+                    <button data-team-size="A" data-size="1">1</button>
+                    <button data-team-size="A" data-size="2" class="is-active">2</button>
+                    <button data-team-size="A" data-size="3">3</button>
+                    <button data-team-size="A" data-size="4">4</button>
+                  </div>
+                  <small>你 + AI 同注者</small>
+                </div>
+                <div class="size-vs">VS</div>
+                <div class="size-field">
+                  <span class="size-field__label">敌方 · B 席</span>
+                  <div class="size-picker" id="team-size-b" role="group" aria-label="敌方人数">
+                    <button data-team-size="B" data-size="1">1</button>
+                    <button data-team-size="B" data-size="2" class="is-active">2</button>
+                    <button data-team-size="B" data-size="3">3</button>
+                    <button data-team-size="B" data-size="4">4</button>
+                  </div>
+                  <small>全部由 AI 扮演</small>
+                </div>
+              </div>
+              <div class="selection-note" id="team-size-note"></div>
+            </section>
+
+            <section class="panel setup-panel" id="brawl-second-panel" hidden>
+              <div class="panel-head">
+                <span class="panel-index">01B</span>
+                <div><h3>第二角色</h3><p>大乱斗中，倒下一个还有下一个。</p></div>
+              </div>
+              <div class="character-grid character-grid--compact" id="second-character-grid"></div>
+            </section>
+
+            <section class="panel setup-panel" id="team-mate-panel" hidden>
+              <div class="panel-head">
+                <span class="panel-index">02B</span>
+                <div><h3>你的同注者</h3><p>会理解自然语言指挥，也会反驳你。</p></div>
+                <button class="btn btn--quiet btn--sm" data-action="random-ally">换一位搭档</button>
+              </div>
+              <div id="ally-preview" class="ally-preview"></div>
+            </section>
+
+            <section class="panel setup-panel">
+              <div class="panel-head">
+                <span class="panel-index">03</span>
+                <div><h3>技能卡组</h3><p>开局三张手牌，每回合补至三张。</p></div>
+              </div>
+              <div class="deck-mode-row">
+                <div class="segmented" id="deck-mode-seg">
+                  <button data-deck-mode="random" class="is-active">随机卡组</button>
+                  <button data-deck-mode="custom">自定义 10 张</button>
+                </div>
+                <div class="deck-count" id="deck-count">10 / 10</div>
+              </div>
+              <div class="deck-summary" id="deck-summary"></div>
+              <div class="hero-actions">
+                <button class="btn btn--secondary btn--sm" data-action="open-deck-builder">打开卡组编辑器</button>
+                <button class="btn btn--quiet btn--sm" data-action="random-deck">随机十张</button>
+              </div>
+            </section>
+
+            <section class="panel setup-panel">
+              <div class="panel-head">
+                <span class="panel-index">04</span>
+                <div><h3>场景与对手</h3><p>背景主题会改变音乐、粒子与光效。</p></div>
+              </div>
+              <div class="field">
+                <span>回廊场景</span>
+                <div class="theme-grid" id="theme-grid"></div>
+              </div>
+              <div class="field-row" id="opponent-fields">
+                <label class="field">
+                  <span>对手</span>
+                  <select id="opponent-select">
+                    <option value="ai">回廊 AI</option>
+                    <option value="local">本地双人（轮流操作）</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>AI 强度</span>
+                  <select id="ai-level-select">
+                    <option value="easy">简单 · 随机出牌</option>
+                    <option value="normal" selected>普通 · 看血线下菜</option>
+                    <option value="hard">困难 · 计算收益与欺骗</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field" id="story-field" hidden>
+                <span>剧情章节</span>
+                <div class="story-chapter-grid" id="story-chapter-grid"></div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="setup-aside">
+            <div class="summary-card">
+              <div class="summary-card__top">
+                <span class="eyebrow">YOUR TABLE</span>
+                <span class="summary-mode" id="summary-mode">STANDARD</span>
+              </div>
+              <div class="summary-portrait" id="summary-portrait"></div>
+              <div class="summary-rows" id="summary-rows"></div>
+              <div class="summary-tip" id="summary-tip">合理使用整局一次的逆写，别在第一枚硬币上就把命运花光。</div>
+              <button class="btn btn--primary btn--block btn--lg" id="start-match">开桌</button>
+              <button class="btn btn--quiet btn--block" data-nav="home">再想想</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ================= COLLECTION ================= -->
+      <section id="screen-collection" class="screen" aria-label="命途图鉴">
+        <div class="subpage-head">
+          <button class="back-btn" data-nav="home">← 返回回廊</button>
+          <div class="eyebrow">THE ARCHIVE</div>
+          <h1>命途图鉴</h1>
+          <p>32 名执币角色，150 张技能卡。每一张牌，都是某个世界拒绝遗忘的一段记忆。</p>
+        </div>
+        <div class="archive-toolbar">
+          <div class="segmented" id="archive-tabs">
+            <button data-archive-tab="characters" class="is-active">角色 <span>32</span></button>
+            <button data-archive-tab="cards">技能卡 <span>150</span></button>
+          </div>
+          <label class="search-field">
+            <span class="sr-only">搜索</span>
+            <input id="archive-search" placeholder="搜索名称、关键词、风格…" autocomplete="off">
+            <span aria-hidden="true">⌕</span>
+          </label>
+          <select id="archive-style-filter" aria-label="按风格筛选"><option value="all">全部八域</option></select>
+        </div>
+        <div class="archive-filters" id="archive-filters"></div>
+        <div class="archive-count" id="archive-count"></div>
+        <div id="archive-grid" class="archive-grid"></div>
+      </section>
+
+      <!-- ================= WORLD ================= -->
+      <section id="screen-world" class="screen" aria-label="八域档案">
+        <div class="world-hero">
+          <div class="eyebrow">THE WORLD BIBLE</div>
+          <h1>八域档案</h1>
+          <p id="world-lead"></p>
+          <div class="world-quote" id="world-quote"></div>
+        </div>
+        <div class="world-layout">
+          <nav class="world-nav" id="world-nav" aria-label="世界观目录"></nav>
+          <div class="world-content" id="world-content"></div>
+        </div>
+      </section>
+
+      <!-- ================= LOBBY ================= -->
+      <section id="screen-lobby" class="screen" aria-label="联机大厅">
+        <div class="subpage-head">
+          <button class="back-btn" data-nav="home">← 返回回廊</button>
+          <div class="eyebrow">THE NETWORKED TABLE</div>
+          <h1>联机大厅</h1>
+          <p>局域网用 PeerJS 点对点直连；公网用 Supabase 免费 Realtime 同步。房间号就是暗号，密码只做门槛。</p>
+        </div>
+        <div class="lobby-layout">
+          <div class="lobby-main">
+            <div class="segmented lobby-tabs" id="lobby-tabs">
+              <button data-transport="peer" class="is-active">局域网 · PeerJS</button>
+              <button data-transport="supabase">公网 · Supabase</button>
+            </div>
+            <div class="lobby-forms">
+              <section class="panel lobby-panel">
+                <div class="panel-head"><span class="panel-index">A</span><div><h3>创建房间</h3><p>你将成为房主，并由本机裁定对局。</p></div></div>
+                <label class="field"><span>房主称呼</span><input id="host-name" maxlength="12" value="无名执币者"></label>
+                <div class="field-row">
+                  <label class="field"><span>房间密码（可选）</span><input id="host-password" type="password" maxlength="20" placeholder="留空则公开" autocomplete="new-password"></label>
+                  <label class="field"><span>对局模式</span>
+                    <select id="host-mode">
+                      <option value="standard">标准对战</option>
+                      <option value="brawl">大乱斗</option>
+                      <option value="endless">无尽赌徒</option>
+                      <option value="quick">快速模式</option>
+                      <option value="team">自由组队</option>
+                      <option value="mirror">镜像审判</option>
+                      <option value="frenzy">无限火力</option>
+                      <option value="sudden">一币定生死</option>
+                      <option value="chain">连锁赌注</option>
+                      <option value="chaos">混沌换手</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="field-row" id="host-team-fields" hidden>
+                  <label class="field"><span>房主方人数（A）</span>
+                    <select id="host-team-a"><option value="1">1 人</option><option value="2" selected>2 人</option><option value="3">3 人</option><option value="4">4 人</option></select>
+                  </label>
+                  <label class="field"><span>挑战方人数（B）</span>
+                    <select id="host-team-b"><option value="1">1 人</option><option value="2" selected>2 人</option><option value="3">3 人</option><option value="4">4 人</option></select>
+                  </label>
+                </div>
+                <label class="check-row"><input type="checkbox" id="host-fill-ai"> <span>用 AI 补齐空位（自由组队时自动补齐）</span></label>
+                <button class="btn btn--primary btn--block" id="create-room">生成房间号并开桌</button>
+              </section>
+              <section class="panel lobby-panel">
+                <div class="panel-head"><span class="panel-index">B</span><div><h3>加入房间</h3><p>输入房主给你的六位暗号。</p></div></div>
+                <label class="field"><span>你的称呼</span><input id="join-name" maxlength="12" value="过路赌客"></label>
+                <div class="field-row">
+                  <label class="field"><span>房间号</span><input id="join-code" maxlength="8" placeholder="例如 CF-7K2Q" autocomplete="off"></label>
+                  <label class="field"><span>密码</span><input id="join-password" type="password" maxlength="20" placeholder="无密码留空" autocomplete="new-password"></label>
+                </div>
+                <button class="btn btn--secondary btn--block" id="join-room">加入同一张赌桌</button>
+                <p class="microcopy" id="transport-hint"></p>
+              </section>
+            </div>
+          </div>
+          <aside class="lobby-aside">
+            <div class="panel room-panel" id="room-panel" hidden>
+              <div class="eyebrow">ROOM CODE</div>
+              <div class="room-code" id="room-code">CF-0000</div>
+              <button class="text-btn" data-action="copy-room">复制房间号</button>
+              <div class="room-status" id="room-status">等待另一位执币者…</div>
+              <div class="room-slots" id="room-slots"></div>
+              <button class="btn btn--primary btn--block" id="start-online" disabled>等待玩家</button>
+              <button class="btn btn--quiet btn--block" id="leave-room">离开房间</button>
+            </div>
+            <div class="panel" id="net-setup-panel">
+              <div class="panel-head"><span class="panel-index">⚙</span><div><h3>联机配置</h3><p>公网联机需要 Supabase 项目；PeerJS 默认使用公共信令。</p></div></div>
+              <button class="btn btn--secondary btn--block btn--sm" data-action="net-config">打开联机配置</button>
+              <p class="microcopy">不填 Supabase 也可玩单机、人机、本地双人与局域网。公网模式会显示配置引导。</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ================= BATTLE ================= -->
+      <section id="screen-battle" class="screen battle-screen" aria-label="对局">
+        <div class="battle-topbar">
+          <button class="back-btn back-btn--battle" data-action="leave-battle">← 离席</button>
+          <div class="battle-mode">
+            <span id="battle-mode-name">标准对战</span>
+            <small id="battle-round">ROUND 1</small>
+          </div>
+          <div class="turn-chip" id="turn-chip"><span class="live-dot"></span> 你的回合</div>
+          <div class="battle-top-actions">
+            <span class="net-pill" id="net-pill" hidden>联机</span>
+            <button class="icon-btn" data-action="toggle-audio" aria-label="开关声音">◖</button>
+            <button class="icon-btn" data-action="settings" aria-label="设置">☰</button>
+          </div>
+        </div>
+
+        <div class="battle-layout">
+          <div class="battle-main">
+            <div class="board board--enemy" id="enemy-board" aria-label="对方区域"></div>
+
+            <div class="arena" id="arena">
+              <div class="arena__wash" aria-hidden="true"></div>
+              <div class="arena__lines" aria-hidden="true"></div>
+              <div class="arena__center">
+                <div class="turn-banner" id="turn-banner">
+                  <span class="eyebrow">THE COIN DECIDES</span>
+                  <strong>等待抛币</strong>
+                  <small>打出技能卡后，昭面成功 / 昧面反噬</small>
+                </div>
+                <div class="coin-stage" id="coin-stage" aria-hidden="true">
+                  <div class="coin coin--idle" id="battle-coin">
+                    <div class="coin__face coin__face--front"><span>昭</span><small>SUCCESS</small></div>
+                    <div class="coin__face coin__face--back"><span>昧</span><small>REVERSAL</small></div>
+                    <div class="coin__edge"></div>
+                  </div>
+                  <div class="coin-shadow"></div>
+                </div>
+                <div class="arena-actions" id="arena-actions"></div>
+              </div>
+              <div class="arena__footer">
+                <span id="arena-hint">每回合最多打出一张技能卡</span>
+                <div class="deck-status"><span id="deck-left">牌库 12</span><span class="dot"></span><span id="discard-left">弃牌 0</span></div>
+              </div>
+            </div>
+
+            <div class="board board--ally" id="ally-board" aria-label="我方区域"></div>
+
+            <div class="hand-zone">
+              <div class="hand-head">
+                <div><span class="eyebrow">YOUR HAND</span><strong id="hand-title">手牌</strong></div>
+                <div class="hand-meta"><span id="reroll-status">逆写 ×1</span><span id="hand-count">3 张</span></div>
+              </div>
+              <div class="hand-scroller" id="hand-scroller">
+                <div class="hand" id="hand"></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="battle-side">
+            <div class="side-tabs" id="side-tabs">
+              <button data-side-tab="chat" class="is-active">战术频道</button>
+              <button data-side-tab="log">战报</button>
+            </div>
+            <div class="side-panel" data-side-panel="chat">
+              <div class="teammate-panel" id="teammate-panel" hidden></div>
+              <div class="battle-chat" id="battle-chat" aria-live="polite"></div>
+              <div class="quick-orders" id="quick-orders">
+                <button data-order="集火对面输出">集火</button>
+                <button data-order="先保命，上盾">保命</button>
+                <button data-order="给我治疗">治疗</button>
+                <button data-order="开主动技">开技能</button>
+                <button data-order="过牌找机会">过牌</button>
+                <button data-order="按兵不动，留着">别动</button>
+              </div>
+              <form class="chat-form" id="chat-form">
+                <button type="button" class="mic-btn" id="chat-mic" title="语音指挥（浏览器支持时可用）" aria-label="语音输入">◉</button>
+                <input id="chat-input" maxlength="120" placeholder="对搭档说：先集火，别送…" autocomplete="off">
+                <button class="send-btn" type="submit" aria-label="发送">↗</button>
+              </form>
+            </div>
+            <div class="side-panel" data-side-panel="log" hidden>
+              <div class="battle-log" id="battle-log" aria-live="polite"></div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="flip-overlay" id="flip-overlay" hidden>
+          <div class="flip-dialog" role="dialog" aria-modal="true" aria-labelledby="flip-title">
+            <div class="eyebrow">CAUSALITY CHECK</div>
+            <h2 id="flip-title">命运正在落定</h2>
+            <div class="flip-coin-wrap">
+              <div class="coin coin--flipping" id="flip-coin">
+                <div class="coin__face coin__face--front"><span>昭</span><small>SUCCESS</small></div>
+                <div class="coin__face coin__face--back"><span>昧</span><small>REVERSAL</small></div>
+                <div class="coin__edge"></div>
+              </div>
+            </div>
+            <div class="flip-result" id="flip-result">
+              <strong>等待硬币</strong>
+              <p></p>
+            </div>
+            <div class="flip-choices" id="flip-choices"></div>
+          </div>
+        </div>
+
+        <div class="effect-layer" id="effect-layer" aria-hidden="true"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modal-root" class="modal-root" hidden></div>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+
+  <noscript><div class="noscript">命途回廊需要启用 JavaScript 才能抛币。</div></noscript>
+
+  <script src="data.js"></script>
+  <script src="ai.js"></script>
+  <script src="net.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
