@@ -1,4 +1,5 @@
 import { chromium } from 'playwright-core';
+const BASE = process.env.COINFALL_URL || 'http://127.0.0.1:8787/';
 const exe = 'C:/Users/65259/AppData/Local/ms-playwright/chromium-1228/chrome-win64/chrome.exe';
 const browser = await chromium.launch({ executablePath: exe, headless: true });
 const ctx = await browser.newContext();
@@ -41,8 +42,8 @@ const takeTurn = async (page, label) => {
   return result;
 };
 
-await host.goto('http://127.0.0.1:8787/', { waitUntil: 'networkidle' });
-await guest.goto('http://127.0.0.1:8787/', { waitUntil: 'networkidle' });
+await host.goto(BASE, { waitUntil: 'networkidle' });
+await guest.goto(BASE, { waitUntil: 'networkidle' });
 await host.locator('.main-nav [data-nav="lobby"]').click();
 await host.waitForTimeout(400);
 await host.locator('#host-name').fill('房主测试');
