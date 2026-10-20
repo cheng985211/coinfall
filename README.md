@@ -147,6 +147,7 @@ npm run test:fun     # 五个娱乐模式 / 3v3 / 卡组 / 重开
 npm run test:ui      # 桌面与移动端布局
 npm run test:online  # 双页面 PeerJS 回合同步
 npm run test:team    # 双页面 2v2 组队同步
+npm run test:live    # 线上站点冒烟（默认 GitHub Pages）
 ```
 
 引擎测试不依赖浏览器；UI / 联机测试使用本机 Chromium，详见 `tests/`。

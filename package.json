@@ -12,6 +12,7 @@
     "test:fun": "node tests/test-fun.mjs",
     "test:online": "node tests/test-online.mjs",
     "test:team": "node tests/test-team-online.mjs",
+    "test:live": "node tests/test-live.mjs",
     "test": "node tests/test-engine.mjs"
   },
   "devDependencies": {
