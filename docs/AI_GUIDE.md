@@ -1,4 +1,4 @@
-# AI 接口与“同注者”配置指南
+﻿# AI 接口与“同注者”配置指南
 
 命途回廊的 AI 有两层：
 
@@ -17,7 +17,7 @@
 | 字段 | 推荐值 |
 | --- | --- |
 | 接口地址 | `https://maas.qianwenaiapi.com/compatible-mode/v1` |
-| 模型 | `deepseek1017` |
+| 模型 | `deepseek-v4.1-flash-1017` |
 | API Key | 你自己的 Key |
 | 超时 | `12000`（弱网可 20000） |
 | 启用远程 AI | 打开 |
@@ -60,7 +60,7 @@ UPSTREAM_KEY=sk-你的真实Key node tools/ai-proxy.mjs
 | 字段 | 值 |
 | --- | --- |
 | 接口地址 | `http://127.0.0.1:8788/v1` |
-| 模型 | `deepseek1017` |
+| 模型 | `deepseek-v4.1-flash-1017` |
 | API Key | `local-proxy`（代理不校验，随便填一个非空值） |
 
 代理会转发到：
@@ -196,7 +196,7 @@ Key 无效、过期、余额不足，或模型服务要求不同的 Header。先
 curl -X POST "https://maas.qianwenaiapi.com/compatible-mode/v1/chat/completions" \
   -H "Authorization: Bearer sk-..." \
   -H "Content-Type: application/json" \
-  -d '{"model":"deepseek1017","messages":[{"role":"user","content":"只回复：在。"}]}'
+  -d '{"model":"deepseek-v4.1-flash-1017","messages":[{"role":"user","content":"只回复：在。"}]}'
 ```
 
 ### `AI 接口 404`
@@ -239,7 +239,7 @@ CF_AI.handleCommand(game, ally, commander, text, opts);
 
 ```json
 {
-  "model": "deepseek1017",
+  "model": "deepseek-v4.1-flash-1017",
   "messages": [{ "role": "user", "content": "..." }],
   "temperature": 0.75,
   "max_tokens": 420,

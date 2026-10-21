@@ -164,7 +164,12 @@
     thorns: { name: '反震', desc: '每回合第一次受到伤害时，对伤害来源造成 1 点伤害。' },
     startShield: { name: '预护', desc: '开局获得 1 点护盾。' },
     houseEdge: { name: '庄家优势', desc: '造成的所有伤害 +1。' },
-    voidArmor: { name: '空页护甲', desc: '受到的伤害 -1，最少为 1。' }
+    voidArmor: { name: '空页护甲', desc: '受到的伤害 -1，最少为 1。' },
+    onFlipLoseDraw: { name: '昧面进账', desc: '每回合第一次抛币失败时，抽 1 张牌。' },
+    bloodPrice: { name: '血价', desc: '自身每受到 1 点伤害，本回合下一次造成的伤害 +1（可叠加）。' },
+    grimHarvest: { name: '收割', desc: '每当任意角色（含敌方）阵亡时，回复 2 点生命。' },
+    luckySeven: { name: '幸运转', desc: '回合结束时，若本回合未打出技能卡，抽 1 张牌。' },
+    highRoller: { name: '狂注', desc: '每回合第一次抛币成功后，本回合下一次造成的伤害 +1。' }
   };
 
   /* ---------------------------------------------------------
@@ -174,7 +179,7 @@
     {
       id: 'cth-01', name: '执灯人·伊莱', title: '深渊执灯人', style: 'abyss', role: '输出',
       passiveKey: 'firstStrike',
-      active: { name: '凝视深渊', uses: 2, effects: { dmg: 1, discard: 1 }, quote: '别眨眼，深渊也在看你。' },
+      active: { name: '凝视深渊', uses: 2, effects: { dmg: 2, discard: 1 }, quote: '别眨眼，深渊也在看你。' },
       bio: '沉钟海岸最后一名执灯人。他提的灯里没有火，只有一段拒绝被潮水带走的记忆。',
       temper: '阴郁、克制，讨厌别人用命令的语气叫他“快点”。',
       quote: '灯灭之前，我至少还能替你照一次路。'
@@ -198,7 +203,7 @@
     {
       id: 'cth-04', name: '疯诗人·卡尔科', title: '沉钟疯诗人', style: 'abyss', role: '赌徒',
       passiveKey: 'onFlipLoseShield',
-      active: { name: '狂乱预言', uses: 1, effects: { bless: 1 }, quote: '听好了，下一句预言只收一次命。' },
+      active: { name: '狂乱预言', uses: 1, effects: { bless: 1, draw: 1 }, quote: '听好了，下一句预言只收一次命。' },
       bio: '他在钟声里写诗，每一行都预言了自己的死法。至今没有一行应验，这让他非常恼火。',
       temper: '神经质、浪漫、嘴硬，越害怕越要大笑。',
       quote: '失败不是终点，是押韵。'
@@ -214,7 +219,7 @@
     {
       id: 'stm-02', name: '黄铜枪手·杰克', title: '穹顶赏金枪手', style: 'steam', role: '输出',
       passiveKey: 'bloodlust',
-      active: { name: '过载射击', uses: 2, effects: { dmg: 2, selfDmg: 1 }, quote: '枪管红了，正好。' },
+      active: { name: '过载射击', uses: 2, effects: { dmg: 2, power: 1, selfDmg: 1 }, quote: '枪管红了，正好。' },
       bio: '他的左臂是一把过时的蒸汽枪，右臂是更过时的骄傲。杰克接活只看两件事：钱和能不能开枪。',
       temper: '直率、好战，讨厌绕弯子，觉得防守是“给别人添麻烦”。',
       quote: '能一枪解决的事，别开会。'
@@ -230,7 +235,7 @@
     {
       id: 'stm-04', name: '试飞员·露西', title: '黄铜试飞员', style: 'steam', role: '赌徒',
       passiveKey: 'onRerollBoost',
-      active: { name: '俯冲轰炸', uses: 1, effects: { dmg: 2, pierce: 1 }, quote: '安全带？那玩意儿影响我发挥。' },
+      active: { name: '俯冲轰炸', uses: 1, effects: { dmg: 2, pierce: 1, weak: 1 }, quote: '安全带？那玩意儿影响我发挥。' },
       bio: '露西试飞过十七架理论上不能飞的机器。她说坠毁不可怕，可怕的是按照说明书活着。',
       temper: '莽、乐观、拒绝承认害怕；被劝稳一点会翻白眼。',
       quote: '别怕，地面总会来接我们。'
@@ -262,7 +267,7 @@
     {
       id: 'cul-04', name: '逆天散修·无咎', title: '逆天散修', style: 'cultivation', role: '赌徒',
       passiveKey: 'bloodlust',
-      active: { name: '夺天造化', uses: 1, effects: { bless: 1 }, quote: '天要收我？先问过这枚硬币。' },
+      active: { name: '夺天造化', uses: 1, effects: { bless2: 1 }, quote: '天要收我？先问过这枚硬币。' },
       bio: '无咎没有师门、没有灵根、没有退路。他靠偷来的半卷心法走到今天，坚信天命是个可以赖账的债主。',
       temper: '桀骜、爱挑衅、嘴上不认输；被关心时会先愣住再嘴硬。',
       quote: '我这条命，从来没打算按规矩用。'
@@ -278,7 +283,7 @@
     {
       id: 'fan-02', name: '影刃游侠·塞拉', title: '影刃游侠', style: 'fantasy', role: '输出',
       passiveKey: 'onFlipWinShield',
-      active: { name: '背刺', uses: 2, effects: { dmg: 1, discard: 1 }, quote: '正面？那是给骑士准备的。' },
+      active: { name: '背刺', uses: 2, effects: { dmg: 1, weak: 1 }, quote: '正面？那是给骑士准备的。' },
       bio: '塞拉在圣誓原野的边境长大，学会的第一件事是分清誓言和谎言。她的匕首上刻着七个名字，最后一个还没划掉。',
       temper: '冷淡、戒备、偶尔毒舌；信任建立得很慢，但一旦认下队友就极其护短。',
       quote: '别站在我身后，除非你是我的人。'
@@ -294,7 +299,7 @@
     {
       id: 'fan-04', name: '命运赌徒·维克', title: '金杯赌徒', style: 'fantasy', role: '赌徒',
       passiveKey: 'onFlipLoseShield',
-      active: { name: '命运重掷', uses: 1, effects: { bless: 1 }, quote: '别急，真正的赌局才刚开始。' },
+      active: { name: '命运重掷', uses: 1, effects: { bless: 1, energize: 1 }, quote: '别急，真正的赌局才刚开始。' },
       bio: '维克赢过一座王国，也输过自己的影子。他现在替回廊发牌，偶尔偷偷把一张好牌塞给看得顺眼的人。',
       temper: '潇洒、轻浮、看穿不说穿；最讨厌别人破坏赌局的乐趣。',
       quote: '输赢都只是故事的一部分，别皱眉。'
@@ -326,7 +331,7 @@
     {
       id: 'neo-04', name: '量子浪人·阿瞬', title: '量子浪人', style: 'neon', role: '赌徒',
       passiveKey: 'onRerollBoost',
-      active: { name: '相位跃迁', uses: 2, effects: { shield: 1, draw: 1 }, quote: '你打中的那个我，可能已经不在这个相位了。' },
+      active: { name: '相位跃迁', uses: 2, effects: { shield: 1, draw: 1, guard: 1 }, quote: '你打中的那个我，可能已经不在这个相位了。' },
       bio: '阿瞬同时欠七个帮派的钱，却总能从八个方向逃走。他说自己不是躲债，只是在测试哪一条世界线最不亏。',
       temper: '散漫、机灵、怕麻烦；被认真托付时会突然变得可靠。',
       quote: '别急，总有另一条路——通常也更贵。'
@@ -358,7 +363,7 @@
     {
       id: 'wa-04', name: '百鬼·夜行', title: '百鬼夜行', style: 'wa', role: '赌徒',
       passiveKey: 'onFlipLoseShield',
-      active: { name: '鬼火焚身', uses: 1, effects: { dmg: 2, selfDmg: 1 }, quote: '疼吗？那就说明还活着。' },
+      active: { name: '鬼火焚身', uses: 1, effects: { dmg: 2, hpBurn: 1, selfDmg: 1 }, quote: '疼吗？那就说明还活着。' },
       bio: '没人知道夜行是一个鬼，还是一群鬼共用的名字。他在灯町的阴影里收集失败者的叹息，把它们酿成酒。',
       temper: '疯癫、诗意、故意让人不舒服；被真诚对待时会显得手足无措。',
       quote: '失败的味道，比胜利耐放。'
@@ -390,7 +395,7 @@
     {
       id: 'wes-04', name: '亡命徒·薇丝', title: '无名亡命徒', style: 'west', role: '赌徒',
       passiveKey: 'onRerollBoost',
-      active: { name: '俄罗斯轮盘', uses: 1, effects: { dmg: 3, selfDmg: 1 }, quote: '六分之一，够了。' },
+      active: { name: '俄罗斯轮盘', uses: 1, effects: { dmg: 3, power: 1, selfDmg: 1 }, quote: '六分之一，够了。' },
       bio: '薇丝被四个州通缉，罪名一次比一次荒唐。她把左轮里的子弹倒出来又装回去，只为听那个声音。',
       temper: '狂、直白、享受刺激；会怂恿队友加注，也会在最后一刻挡在前面。',
       quote: '活着没意思，赢才有一点。'
@@ -398,7 +403,7 @@
     {
       id: 'ani-01', name: '齐天斗士·悟空', title: '万象书脊斗士', style: 'anime', role: '输出',
       passiveKey: 'bloodlust',
-      active: { name: '如意一棒', uses: 2, effects: { dmg: 2 }, quote: '俺老孙的结局，轮不到别人写。' },
+      active: { name: '如意一棒', uses: 2, effects: { dmg: 2, choke: 1 }, quote: '俺老孙的结局，轮不到别人写。' },
       bio: '他是万象书脊里最古老的公共角色，被无数作者改写、重启、打败又复活。如今他拒绝任何剧本，只想把庄家的终章一棒打碎。',
       temper: '张扬、机敏、天不怕地不怕；被叫“工具人”会真的生气。',
       quote: '主角？我早就不演了。'
@@ -422,10 +427,74 @@
     {
       id: 'ani-04', name: '星轨勇者·洛', title: '星轨勇者', style: 'anime', role: '赌徒',
       passiveKey: 'onFlipLoseShield',
-      active: { name: '勇者之证', uses: 1, effects: { bless: 1, draw: 1 }, quote: '主角运气差的时候，说明高潮要来了。' },
+      active: { name: '勇者之证', uses: 1, effects: { bless2: 1, draw: 1 }, quote: '主角运气差的时候，说明高潮要来了。' },
       bio: '洛是第十三批被召唤的勇者，前十二批都死在同一页。他保留了所有前任的记忆，因此既天真又疲惫。',
       temper: '热血、话多、用玩笑掩饰恐惧；但关键时刻意外可靠。',
       quote: '这次不一样——我有队友。'
+    },
+    {
+      id: 'new-01', name: '赌坊老板·钟离', title: '回廊第一庄家', style: 'west', role: '赌徒',
+      passiveKey: 'onFlipLoseDraw',
+      active: { name: '通杀局', uses: 2, effects: { bless2: 1, dmg: 1 }, quote: '坐下了，就别想空手走。' },
+      bio: '钟离在回廊开了七家赌坊，每家都赔过钱，但他从来没输过。他说真正的赌局不是赌输赢，是赌别人敢不敢跟注。',
+      temper: '从容、笑面虎、喜欢在最紧张的时候讲冷笑话。',
+      quote: '硬币会记住每一个不敢下注的人。'
+    },
+    {
+      id: 'new-02', name: '铸币师·欧泊', title: '回廊铸币师', style: 'steam', role: '功能',
+      passiveKey: 'startShield',
+      active: { name: '熔铸偷盾', uses: 2, effects: { stealShield: 1, heal: 1 }, quote: '你的盾，现在归我了。' },
+      bio: '欧泊是回廊唯一会铸币的人。她铸的每一枚硬币都有两面，一面写着命运，一面写着价格。她从不告诉别人哪面是哪面。',
+      temper: '精明、话少、喜欢用零件比喻人际关系。',
+      quote: '护盾和信用一样，借来的总是要还的。'
+    },
+    {
+      id: 'new-03', name: '血祭司·卡尔娜', title: '血月祭司', style: 'wa', role: '输出',
+      passiveKey: 'onFlipWinShield',
+      active: { name: '血月献祭', uses: 2, effects: { lifesteal: 2, hpBurn: 1 }, quote: '用血来换，最公平。' },
+      bio: '卡尔娜侍奉血月，她相信所有力量都有价，而血是唯一的硬通货。她在回廊设了一张祭坛，专门收赢来的硬币。',
+      temper: '阴郁、虔诚、把伤害当成仪式。',
+      quote: '你流的每一滴血，都会变成我的硬币。'
+    },
+    {
+      id: 'new-04', name: '逆命者·零', title: '拒绝结局的人', style: 'abyss', role: '赌徒',
+      passiveKey: 'onFlipWinDraw',
+      active: { name: '重写命运', uses: 1, effects: { draw: 2, discard: 1 }, quote: '这个结局，我不同意。' },
+      bio: '零是唯一一个从回廊里逃出去过的人。他记得所有没发生的可能，因此永远活在"如果当初"里。他回来是为了赌最后一局。',
+      temper: '沉默、偏执、偶尔笑一下比哭还吓人。',
+      quote: '硬币落定之前，一切都还能改。'
+    },
+    {
+      id: 'new-05', name: '义体狂徒·断码', title: '过载的义体', style: 'neon', role: '输出',
+      passiveKey: 'bloodPrice',
+      active: { name: '义体过载', uses: 2, effects: { dmg: 3, selfDmg: 1 }, quote: '疼？疼就对了。' },
+      bio: '断码全身 80% 是黑市二手义体。他把疼痛当作电量表：伤得越重，回路越亮。医生说他的身体撑不过下个雨季，他把"下个雨季"赌成了纹身。',
+      temper: '暴躁、逞强、把示弱当犯罪。',
+      quote: '义体过热之前，没人能让我停下。'
+    },
+    {
+      id: 'new-06', name: '灰誓者·科林', title: '被龙遗忘的圣骑士', style: 'fantasy', role: '防御',
+      passiveKey: 'grimHarvest',
+      active: { name: '誓约壁垒', uses: 2, effects: { shield: 2, guard: 1 }, quote: '我的誓言，就是你的盾。' },
+      bio: '科林的骑士团发誓守护圣誓原野上最后一条龙，可龙在百年前就忘了他们。誓言生锈，骑士却还在站岗。他把每一条誓言刻在盾牌上，直到盾牌再容不下一道刻痕。',
+      temper: '沉稳、固执、把"背誓"看作比死亡更重的事。',
+      quote: '誓言会生锈，但锈也是一种守护。'
+    },
+    {
+      id: 'new-07', name: '织梦者·三叶', title: '三千年的连载作者', style: 'anime', role: '功能',
+      passiveKey: 'luckySeven',
+      active: { name: '强行续更', uses: 2, effects: { draw: 2, oppDraw: 1 }, quote: '断更的代价，你自己想清楚。' },
+      bio: '三叶的小说连载了三千年，是万象书脊最古老的连载。读者不让她完结，她也不敢完结——因为一旦打出"全剧终"，她这个角色就会从书脊上消失。她把伏笔当武器，把催更当民意。',
+      temper: '温柔、爱唠叨、用"这章先写到这"逃避所有正面冲突。',
+      quote: '主角光环不是我的，是我的读者的。'
+    },
+    {
+      id: 'new-08', name: '赌命枪手·罗珊', title: '左轮上的赌徒', style: 'west', role: '赌徒',
+      passiveKey: 'highRoller',
+      active: { name: '左轮审判', uses: 2, effects: { dmg: 2, draw: 1 }, quote: '扳机扣下去之前，人人平等。' },
+      bio: '罗珊的左轮只有一发子弹，其余五格装的全是赌注。她相信命运就该一次性清算：赢家拿走一切，输家连遗言都省了。她在无名边境开了间赌命酒馆，门口写着"生死自负，概不赊账"。',
+      temper: '潇洒、冷幽默、极度尊重"认赌服输"的人。',
+      quote: '子弹和硬币，我分不清哪个更快。'
     }
   ];
 
@@ -505,39 +574,47 @@
   const CARD_TEMPLATES = {
     attack: [
       [{ dmg: 1, draw: 1 }, { selfDmg: 1 }],
-      [{ dmg: 2 }, { oppHeal: 1 }],
+      [{ dmg: 2, power: 1 }, { oppHeal: 1 }],
       [{ dmg: 2 }, { selfDmg: 1 }],
       [{ dmg: 1, discard: 1 }, { selfDmg: 1 }],
       [{ dmg: 3 }, { oppShield: 1 }],
       [{ dmg: 2, strip: 1 }, { selfDmg: 1 }],
       [{ dmg: 1, shield: 1 }, { oppHeal: 1 }],
-      [{ dmg: 2, choke: 1 }, { selfDmg: 1 }],
+      [{ dmg: 2, weak: 1 }, { selfDmg: 1 }],
       [{ dmg: 3 }, { selfDmg: 2 }],
-      [{ dmg: 2, pierce: 1 }, { selfDmg: 1 }]
+      [{ dmg: 2, pierce: 1 }, { selfDmg: 1 }],
+      [{ lifesteal: 2 }, { oppHeal: 1 }],
+      [{ lifesteal: 1, draw: 1 }, { selfDmg: 1 }],
+      [{ dmg: 2, hpBurn: 1 }, { selfDmg: 1 }],
+      [{ stealShield: 1 }, { oppDraw: 1 }]
     ],
     defense: [
-      [{ heal: 2 }, { selfDmg: 1 }],
+      [{ heal: 2, guard: 1 }, { selfDmg: 1 }],
       [{ shield: 2 }, { selfDiscard: 1 }],
       [{ heal: 1, shield: 1 }, { oppDraw: 1 }],
       [{ heal: 3 }, { oppHeal: 1 }],
-      [{ shield: 3 }, { selfDmg: 1 }],
+      [{ shield: 2, reflect: 1 }, { selfDmg: 1 }],
       [{ heal: 1, draw: 1 }, { oppShield: 1 }],
       [{ shield: 1, draw: 1 }, { selfDmg: 1 }],
       [{ heal: 2, shield: 1 }, { selfDiscard: 1 }],
-      [{ heal: 1 }, { oppDraw: 1 }],
-      [{ shield: 2, heal: 1 }, { oppHeal: 1 }]
+      [{ heal: 1, energize: 1 }, { oppDraw: 1 }],
+      [{ shield: 2, heal: 1 }, { oppHeal: 1 }],
+      [{ stealShield: 1, heal: 1 }, { oppDraw: 1 }],
+      [{ bless2: 1 }, { selfDmg: 2 }]
     ],
     control: [
       [{ discard: 1 }, { oppDraw: 1 }],
       [{ strip: 1 }, { selfDmg: 1 }],
       [{ choke: 1 }, { oppDraw: 1 }],
-      [{ seal: 1 }, { selfDmg: 1 }],
+      [{ seal: 1, weak: 1 }, { selfDmg: 1 }],
       [{ draw: 2 }, { selfDiscard: 1 }],
       [{ discard: 1, draw: 1 }, { selfDmg: 1 }],
       [{ seal: 1, discard: 1 }, { selfDmg: 2 }],
       [{ choke: 1, discard: 1 }, { oppDraw: 1 }],
       [{ strip: 1, dmg: 1 }, { selfDmg: 1 }],
-      [{ draw: 1, choke: 1 }, { oppHeal: 1 }]
+      [{ draw: 1, choke: 1 }, { oppHeal: 1 }],
+      [{ hpBurn: 2, discard: 1 }, { selfDmg: 1 }],
+      [{ bless2: 1, draw: 1 }, { selfDmg: 2 }]
     ],
     risk: [
       [{ dmg: 3 }, { selfDmg: 2, oppHeal: 1 }],
@@ -546,42 +623,45 @@
       [{ draw: 3 }, { selfDiscard: 2 }],
       [{ dmg: 3, pierce: 1 }, { oppHeal: 2 }],
       [{ shield: 3, draw: 1 }, { oppHeal: 2 }],
-      [{ dmg: 2, discard: 1 }, { selfDmg: 2 }],
+      [{ dmg: 2, power: 1, discard: 1 }, { selfDmg: 2 }],
       [{ dmg: 3, choke: 1 }, { selfDmg: 2, selfDiscard: 1 }],
       [{ heal: 2, shield: 2 }, { selfDiscard: 2 }],
-      [{ dmg: 2, draw: 2 }, { selfDmg: 2 }]
+      [{ dmg: 2, draw: 2 }, { selfDmg: 2 }],
+      [{ lifesteal: 3 }, { selfDmg: 2 }],
+      [{ bless2: 1, dmg: 1 }, { selfDmg: 3 }],
+      [{ hpBurn: 3 }, { oppHeal: 2 }]
     ],
     style: [
       [{ dmg: 1, discard: 1 }, { selfDmg: 1 }],          // 深渊低语
       [{ heal: 1, shield: 1 }, { oppHeal: 1 }],           // 旧神之血
       [{ choke: 1, strip: 1 }, { selfDmg: 1 }],           // 不可名状
       [{ draw: 2, bless: 1 }, { selfDmg: 2 }],            // 疯狂馈赠
-      [{ dmg: 2 }, { selfDmg: 1 }],                       // 齿轮齐射
-      [{ shield: 2 }, { selfDiscard: 1 }],                // 压力护罩
+      [{ dmg: 2, power: 1 }, { selfDmg: 1 }],             // 齿轮齐射
+      [{ shield: 2, guard: 1 }, { selfDiscard: 1 }],       // 压力护罩
       [{ draw: 1, shield: 1 }, { oppDraw: 1 }],           // 发条工坊
       [{ dmg: 3 }, { selfDmg: 2 }],                       // 锅炉过载
       [{ dmg: 2, pierce: 1 }, { oppHeal: 1 }],            // 御剑千里
-      [{ heal: 2 }, { selfDiscard: 1 }],                  // 吐纳回春
-      [{ draw: 2 }, { selfDmg: 1 }],                      // 天机推演
-      [{ dmg: 3 }, { selfDmg: 1, oppHeal: 1 }],           // 渡劫飞升
-      [{ dmg: 2, strip: 1 }, { selfDmg: 1 }],             // 圣剑裁决
-      [{ heal: 2, shield: 1 }, { selfDiscard: 1 }],       // 圣光洗礼
-      [{ draw: 2 }, { selfDmg: 1 }],                      // 奥术预兆
-      [{ dmg: 3 }, { oppShield: 2 }],                     // 龙焰吐息
-      [{ dmg: 2, pierce: 1 }, { selfDmg: 1 }],            // 等离子拔刀
+      [{ heal: 2 }, { selfDiscard: 1 }],                   // 吐纳回春
+      [{ draw: 2, energize: 1 }, { selfDmg: 1 }],          // 天机推演
+      [{ dmg: 3 }, { selfDmg: 1, oppHeal: 1 }],            // 渡劫飞升
+      [{ dmg: 2, strip: 1 }, { selfDmg: 1 }],              // 圣剑裁决
+      [{ heal: 2, shield: 1 }, { selfDiscard: 1 }],        // 圣光洗礼
+      [{ draw: 2 }, { selfDmg: 1 }],                        // 奥术预兆
+      [{ dmg: 3 }, { oppShield: 2 }],                      // 龙焰吐息
+      [{ dmg: 2, pierce: 1 }, { selfDmg: 1 }],              // 等离子拔刀
       [{ shield: 2, heal: 1 }, { selfDiscard: 1 }],       // 纳米护甲
-      [{ draw: 1, dmg: 1 }, { selfDmg: 1 }],              // 神经加速
-      [{ dmg: 3 }, { selfDmg: 2 }],                       // 超频临界
-      [{ dmg: 2, discard: 1 }, { selfDmg: 2 }],           // 居合·一线
-      [{ shield: 2, heal: 1 }, { selfDmg: 1 }],           // 结界·神乐
-      [{ draw: 1, discard: 1 }, { oppDraw: 1 }],          // 式神·纸语
-      [{ dmg: 2, choke: 1 }, { selfDmg: 1 }],             // 百鬼夜行
-      [{ dmg: 2 }, { oppHeal: 1 }],                       // 快枪三响
-      [{ shield: 2 }, { selfDmg: 1 }],                    // 掩体伏击
-      [{ dmg: 3, discard: 1 }, { selfDmg: 2 }],           // 最后通牒
-      [{ dmg: 2, shield: 1 }, { selfDmg: 1 }],            // 星爆斩
-      [{ heal: 2, draw: 1 }, { oppHeal: 1 }],             // 羁绊共鸣
-      [{ dmg: 2, draw: 1 }, { selfDmg: 1, oppHeal: 1 }]   // 主角光环
+      [{ draw: 1, dmg: 1, power: 1 }, { selfDmg: 1 }],    // 神经加速
+      [{ dmg: 3 }, { selfDmg: 2 }],                        // 超频临界
+      [{ dmg: 2, weak: 1 }, { selfDmg: 2 }],               // 居合·一线
+      [{ shield: 2, heal: 1 }, { selfDmg: 1 }],             // 结界·神乐
+      [{ draw: 1, discard: 1 }, { oppDraw: 1 }],           // 式神·纸语
+      [{ dmg: 2, choke: 1 }, { selfDmg: 1 }],               // 百鬼夜行
+      [{ dmg: 2 }, { oppHeal: 1 }],                        // 快枪三响
+      [{ shield: 2, reflect: 1 }, { selfDmg: 1 }],         // 掩体伏击
+      [{ dmg: 3, discard: 1 }, { selfDmg: 2 }],            // 最后通牒
+      [{ dmg: 2, shield: 1 }, { selfDmg: 1 }],             // 星爆斩
+      [{ heal: 2, draw: 1 }, { oppHeal: 1 }],              // 羁绊共鸣
+      [{ dmg: 2, draw: 1 }, { selfDmg: 1, oppHeal: 1 }]    // 主角光环
     ]
   };
 
@@ -754,19 +834,28 @@
     if (!effect) return '';
     const parts = [];
     if (effect.dmg) parts.push(`造成 ${effect.dmg} 点${effect.pierce ? '无视护盾的' : ''}伤害`);
+    if (effect.lifesteal) parts.push(`造成 ${effect.lifesteal} 点伤害并回复等量生命`);
     if (effect.heal) parts.push(`回复 ${effect.heal} 点生命`);
     if (effect.shield) parts.push(`获得 ${effect.shield} 点护盾`);
+    if (effect.stealShield) parts.push(`夺取对手全部护盾`);
     if (effect.draw) parts.push(`抽 ${effect.draw} 张牌`);
     if (effect.discard) parts.push(`令对手随机弃 ${effect.discard} 张牌`);
     if (effect.strip) parts.push('击碎对手护盾');
     if (effect.choke) parts.push(`令对手下回合少抽 ${effect.choke} 张牌`);
     if (effect.seal) parts.push('令对手下回合无法使用主动技');
     if (effect.bless) parts.push('令下一次抛币必定成功');
+    if (effect.bless2) parts.push('令接下来两次抛币必定成功');
+    if (effect.hpBurn) parts.push(`令对手下回合开始时受到 ${effect.hpBurn} 点伤害`);
     if (effect.oppHeal) parts.push(`对手回复 ${effect.oppHeal} 点生命`);
     if (effect.oppShield) parts.push(`对手获得 ${effect.oppShield} 点护盾`);
     if (effect.oppDraw) parts.push(`对手抽 ${effect.oppDraw} 张牌`);
     if (effect.selfDmg) parts.push(`自身受到 ${effect.selfDmg} 点伤害`);
     if (effect.selfDiscard) parts.push(`自身随机弃 ${effect.selfDiscard} 张牌`);
+    if (effect.power) parts.push(`本回合下一次造成的伤害 +${effect.power}`);
+    if (effect.weak) parts.push(`令对手下回合造成的伤害 -${effect.weak}`);
+    if (effect.guard) parts.push('本回合第一次受到的伤害 -1');
+    if (effect.reflect) parts.push('本回合第一次受击时反弹伤害');
+    if (effect.energize) parts.push('下回合可额外打出 1 张技能卡');
     return parts.join('，') + '。';
   }
 
@@ -796,6 +885,75 @@
     });
   });
 
+  /* ---------------------------------------------------------
+     6b. 24 张新卡（v2.0 显式定义，含新效果键与 combo）
+     --------------------------------------------------------- */
+  const NEW_CARD_DEFS = [
+    // attack +4
+    { id: 'attack-031', name: '过载铁拳', style: 'neon', cat: 'attack', pos: { dmg: 2, power: 1 }, neg: { selfDmg: 1 }, combo: 'attack' },
+    { id: 'attack-032', name: '裂誓之刃', style: 'fantasy', cat: 'attack', pos: { dmg: 2, weak: 1 }, neg: { selfDmg: 1 }, combo: 'attack' },
+    { id: 'attack-033', name: '断更预告', style: 'anime', cat: 'attack', pos: { dmg: 1, draw: 2 }, neg: { oppDraw: 1 }, combo: 'attack' },
+    { id: 'attack-034', name: '左轮审判', style: 'west', cat: 'attack', pos: { dmg: 2, draw: 1 }, neg: { selfDmg: 2 }, combo: 'attack' },
+    // defense +4
+    { id: 'defense-031', name: '义体冷却', style: 'neon', cat: 'defense', pos: { heal: 2, guard: 1 }, neg: { selfDiscard: 1 }, combo: 'defense' },
+    { id: 'defense-032', name: '誓约壁垒', style: 'fantasy', cat: 'defense', pos: { shield: 2, guard: 1 }, neg: { selfDmg: 1 }, combo: 'defense' },
+    { id: 'defense-033', name: '主角休息日', style: 'anime', cat: 'defense', pos: { heal: 1, energize: 1 }, neg: { oppDraw: 1 }, combo: 'defense' },
+    { id: 'defense-034', name: '金库铁门', style: 'west', cat: 'defense', pos: { shield: 1, reflect: 1 }, neg: { oppHeal: 1 }, combo: 'defense' },
+    // control +4
+    { id: 'control-031', name: '病毒注入', style: 'neon', cat: 'control', pos: { seal: 1, weak: 1 }, neg: { selfDmg: 1 }, combo: 'control' },
+    { id: 'control-032', name: '圣印封魔', style: 'fantasy', cat: 'control', pos: { choke: 1, discard: 1 }, neg: { oppDraw: 1 }, combo: 'control' },
+    { id: 'control-033', name: '改稿通知', style: 'anime', cat: 'control', pos: { draw: 2, discard: 1 }, neg: { selfDiscard: 1 }, combo: 'control' },
+    { id: 'control-034', name: '收缴枪械', style: 'west', cat: 'control', pos: { strip: 1, choke: 1 }, neg: { selfDmg: 1 }, combo: 'control' },
+    // risk +4
+    { id: 'risk-031', name: '赛博轮盘', style: 'neon', cat: 'risk', pos: { dmg: 2, draw: 2 }, neg: { selfDmg: 2, oppDraw: 1 }, combo: 'risk' },
+    { id: 'risk-032', name: '背誓之赌', style: 'fantasy', cat: 'risk', pos: { dmg: 3, shield: 1 }, neg: { selfDmg: 2, oppShield: 1 }, combo: 'risk' },
+    { id: 'risk-033', name: '剧情暴走', style: 'anime', cat: 'risk', pos: { dmg: 2, heal: 2 }, neg: { selfDmg: 2, oppHeal: 1 }, combo: 'risk' },
+    { id: 'risk-034', name: '亡命加注', style: 'west', cat: 'risk', pos: { dmg: 3, power: 1 }, neg: { selfDmg: 3 }, combo: 'risk' },
+    // style +8
+    { id: 'style-031', name: '庄家之眼', style: 'west', cat: 'style', pos: { draw: 2, bless: 1 }, neg: { selfDiscard: 2 } },
+    { id: 'style-032', name: '铸币秘术', style: 'steam', cat: 'style', pos: { stealShield: 1, draw: 1 }, neg: { oppDraw: 1, selfDiscard: 1 } },
+    { id: 'style-033', name: '血月祈祷', style: 'wa', cat: 'style', pos: { lifesteal: 2, hpBurn: 1 }, neg: { selfDmg: 2 } },
+    { id: 'style-034', name: '逆写悖论', style: 'abyss', cat: 'style', pos: { bless2: 1, dmg: 1 }, neg: { selfDmg: 2, oppDraw: 1 } },
+    { id: 'style-035', name: '义体暴走', style: 'neon', cat: 'style', pos: { dmg: 3, power: 1 }, neg: { selfDmg: 2 } },
+    { id: 'style-036', name: '灰誓', style: 'fantasy', cat: 'style', pos: { shield: 2, guard: 1, heal: 1 }, neg: { selfDiscard: 1, oppDraw: 1 } },
+    { id: 'style-037', name: '终章草稿', style: 'anime', cat: 'style', pos: { draw: 3 }, neg: { selfDiscard: 2 } },
+    { id: 'style-038', name: '亡命轮盘', style: 'west', cat: 'style', pos: { dmg: 2, draw: 1, bless: 1 }, neg: { selfDmg: 2, selfDiscard: 1 } }
+  ];
+
+  NEW_CARD_DEFS.forEach(function (def, i) {
+    const style = STYLES[def.style];
+    const rarityKey = RARITY_KEYS[(30 + i) % RARITY_KEYS.length];
+    const rarity = RARITIES[rarityKey];
+    const flavor = CARD_FLAVOR[def.cat][i % CARD_FLAVOR[def.cat].length];
+    const card = {
+      id: def.id, name: def.name, category: def.cat, categoryName: CATEGORIES[def.cat].name,
+      style: def.style, styleName: style.name, realm: style.realm,
+      rarity: rarityKey, rarityName: rarity.name, rarityColor: rarity.color,
+      posEffects: def.pos, negEffects: def.neg,
+      posText: effectText(def.pos), negText: effectText(def.neg),
+      combo: def.combo || null,
+      flavor,
+      artPrompt: `${ART_DIRECTIVE}。卡牌：「${def.name}」。类型：${CATEGORIES[def.cat].name}。世界观：${style.realm}（${style.name}）。视觉：${style.art}；${CATEGORIES[def.cat].art}。稀有度气质：${rarity.name}。`
+    };
+    CARDS.push(card);
+  });
+
+  /* ---------------------------------------------------------
+     硬币皮肤（10 套）
+     --------------------------------------------------------- */
+  const COIN_SKINS = [
+    { id: 'bronze', name: '青铜', trait: '平衡：无加成', playbackRate: 1.0, glow: '#c8a06a', particle: '#d8b878' },
+    { id: 'silver', name: '白银', trait: '每回合第一次抛币失败时获得 1 护盾', playbackRate: 1.06, glow: '#d8e0e8', particle: '#eef2f8' },
+    { id: 'gold', name: '黄金', trait: '抛币成功后 15% 概率免费再抛一次', playbackRate: 1.12, glow: '#ffd35c', particle: '#ffe89a' },
+    { id: 'amethyst', name: '紫晶', trait: '每回合第一次抛币成功时抽 1 张牌', playbackRate: 1.04, glow: '#c88be8', particle: '#e0b8ff' },
+    { id: 'jade', name: '翡翠', trait: '开局获得 1 护盾；每回合第一次成功时再得 1 护盾', playbackRate: 0.96, glow: '#7fe0b8', particle: '#a8f0d0' },
+    { id: 'bloodmoon', name: '血月', trait: '造成的吸血效果数值 +1', playbackRate: 0.9, glow: '#e85a5a', particle: '#ff8a7a' },
+    { id: 'obsidian', name: '黑曜', trait: '开局多抽 1 张手牌', playbackRate: 0.94, glow: '#8a6ad8', particle: '#b89aff' },
+    { id: 'frost', name: '霜晶', trait: '每回合第一次受到的伤害 -1（最少 1）', playbackRate: 1.1, glow: '#a8e0f0', particle: '#d8f4ff' },
+    { id: 'molten', name: '熔心', trait: '每回合打出的第一张攻击牌伤害 +1', playbackRate: 0.92, glow: '#ff7a3c', particle: '#ffb06a' },
+    { id: 'bone', name: '龙骨', trait: '每局一次，濒死时保留 1 点生命', playbackRate: 0.86, glow: '#e0dcc8', particle: '#f0ecdc' }
+  ];
+
   const BOSSES = STORY.chapters.map(function (chapter) {
     const style = STYLES[chapter.style];
     return {
@@ -817,11 +975,11 @@
   });
 
   const DATA = {
-    version: '1.0.0',
+    version: '2.0.0',
     title: '命途回廊',
     subtitle: 'COINFALL',
     STYLES, STYLE_ORDER, WORLD, PASSIVES, CHARACTERS, ROLE_META,
-    CATEGORIES, CARDS, RARITIES, MODES, STORY, BOSSES,
+    CATEGORIES, CARDS, RARITIES, MODES, STORY, BOSSES, COIN_SKINS,
     effectText,
     byId: {
       character: function (id) { return CHARACTERS.find(function (c) { return c.id === id; }); },

@@ -14,10 +14,10 @@
   const LS_KEY = 'coinfall.ai.config.v1';
 
   const DEFAULT_CONFIG = {
-    enabled: false,
+    enabled: true,
     baseUrl: 'https://maas.qianwenaiapi.com/compatible-mode/v1',
-    apiKey: '',
-    model: 'deepseek1017',
+    apiKey: 'sk-ws-H.PXHLLDE.6wsk.MEYCIQD8cgiyAECrPQo11SxSA1tB54ZCOWArjK-PGsMqQS4TUAIhALb8uR1K0SOMlEQL9cX42-uzYqsMNcjEwbUy8WBrHP8S',
+    model: 'deepseek-v4.1-flash-1017',
     remoteBattle: false,
     temperature: 0.75,
     timeoutMs: 12000
@@ -64,7 +64,7 @@
           'Authorization': 'Bearer ' + config.apiKey
         },
         body: JSON.stringify({
-          model: config.model || 'deepseek1017',
+          model: config.model || 'deepseek-v4.1-flash-1017',
           messages: messages,
           temperature: options && options.temperature != null ? options.temperature : config.temperature,
           max_tokens: options && options.maxTokens ? options.maxTokens : 420,
@@ -676,6 +676,15 @@
     if (effects.choke) score += effects.choke * 0.38;
     if (effects.seal) score += (target && !target.sealNext) ? 0.65 : 0.1;
     if (effects.bless) score += 1.1;
+    if (effects.bless2) score += 2.0;
+    if (effects.lifesteal) score += Math.min(effects.lifesteal * mult, 3) * 1.1;
+    if (effects.hpBurn) score += Math.min(effects.hpBurn * mult, 3) * 0.9;
+    if (effects.stealShield) score += tShield ? 0.8 + tShield * 0.3 : 0.2;
+    if (effects.power) score += effects.power * 0.9;
+    if (effects.weak && target) score += effects.weak * 0.55;
+    if (effects.guard) score += myHp <= 2 ? 1.4 : 0.7;
+    if (effects.reflect) score += myHp <= 3 ? 1.0 : 0.4;
+    if (effects.energize) score += 0.9;
     if (effects.oppHeal) score -= effects.oppHeal * mult * 1.15;
     if (effects.oppShield) score -= effects.oppShield * mult * 0.8;
     if (effects.oppDraw) score -= effects.oppDraw * mult * 0.4;

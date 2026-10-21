@@ -1,0 +1,1346 @@
+[
+ {
+  "id": "cth-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cth-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a brooding male lamplighter in a dark teal hooded cloak holding a lantern with cold blue-green flame, aggressive forward-leaning stance, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "cth-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cth-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a calm female tidal priestess in pale seafoam ritual robes with a coral bead veil, grounded protective stance, shield-forward posture, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "cth-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cth-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. an androgynous astral seer wrapped in star charts, one eye replaced by a cluster of cold white stars, composed calculating posture, one hand raised in a gesture, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "cth-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cth-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a wild-eyed poet with ink-stained fingers clutching a crumpled scroll, wild hair, a quill and spilled ink, reckless playful posture, mid-gesture, a hint of a grin, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "stm-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/stm-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a pragmatic female brass surgeon in an oil-stained leather apron with brass goggles pushed up on her forehead, holding a heavy wrench like a surgical tool, grounded protective stance, shield-forward posture, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "stm-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/stm-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a hard-bitten male bounty gunslinger with a brass steam-powered rifle braced on his shoulder, scarred face, half mechanical left arm, aggressive forward-leaning stance, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "stm-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/stm-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. an eccentric male clockwork inventor with brass gears fused into one arm, round goggles, blueprints scattered, composed calculating posture, one hand raised in a gesture, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "stm-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/stm-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a reckless female test pilot in a leather flight jacket and goggles, wind-blown hair, a brass plane propeller behind her, reckless playful posture, mid-gesture, a hint of a grin, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "cul-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cul-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a stern male sword sovereign in layered jade-and-white robes, a slender longsword held level, hair tied high, aggressive forward-leaning stance, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "cul-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cul-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. an elderly male turtle hermit in coarse grey-blue daoist robes, long white beard, a tortoise-shell motif on his back, grounded protective stance, shield-forward posture, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "cul-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cul-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a gentle female elixir immortal in soft cinnabar and jade silk, a small medicine gourd and glowing herb, sad gentle eyes, composed calculating posture, one hand raised in a gesture, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "cul-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/cul-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a arrogant male rogue cultivator with unbound hair and a torn black-gold robe, one hand wreathed in rebellious lightning, reckless playful posture, mid-gesture, a hint of a grin, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "fan-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/fan-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a noble male templar knight in burnished plate armor and a white tabard with a gold sun, a heavy tower shield, grounded protective stance, shield-forward posture, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "fan-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/fan-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a cold female shadow-blade ranger in dark green leather, twin short blades, a hood low over her eyes, aggressive forward-leaning stance, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "fan-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/fan-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a detached female astral sorceress in layered violet robes covered in star charts, a floating orrery of brass rings, composed calculating posture, one hand raised in a gesture, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "fan-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/fan-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a suave male fortune gambler in white and gold with dice and cards in hand, a fox-like smile, reckless playful posture, mid-gesture, a hint of a grin, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "neo-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/neo-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a cold male neon blade in a black techwear coat, a glowing cyan energy katana held low, rain streaks, aggressive forward-leaning stance, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "neo-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/neo-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a stoic male cybernetic monk in grey prayer beads over carbon armor, one arm of brushed metal, faint jade HUD light, grounded protective stance, shield-forward posture, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "neo-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/neo-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a fast-talking male data-scribe with a shaved head, holographic code scrolling over his eyes, finger raised mid-explanation, composed calculating posture, one hand raised in a gesture, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "neo-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/neo-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a laid-back male quantum ronin with a headset and a long magenta scarf, a half-transparent hologram blade, reckless playful posture, mid-gesture, a hint of a grin, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wa-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wa-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a graceful female cherry-blossom demon in white and vermilion kimono with a fox mask pushed to her side, petals in the air, aggressive forward-leaning stance, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wa-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wa-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a gentle female shrine maiden in white and red miko robes holding a paper lantern and a wand of purification paper, grounded protective stance, shield-forward posture, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wa-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wa-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a composed male origami onmyoji in layered paper-folded robes, floating folded paper talismans, composed calculating posture, one hand raised in a gesture, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wa-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wa-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a maddening male hundred-flower ghost in ragged indigo robes, hollow glowing eyes, ink dripping upward, reckless playful posture, mid-gesture, a hint of a grin, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wes-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wes-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a terse male bounty hunter in a dust-covered duster coat and wide-brim hat, a single-cylinder revolver held low, aggressive forward-leaning stance, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wes-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wes-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a resolute female railroad guard in a worn leather coat with a lantern, iron rail spikes on her gauntlets, grounded protective stance, shield-forward posture, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wes-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wes-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a worldly old male saloon owner with a thick moustache, a bar towel over his shoulder, half-full glasses, composed calculating posture, one hand raised in a gesture, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "wes-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/wes-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a reckless female daredevil in a fringed red jacket and a bandana, twin revolvers, laughing, reckless playful posture, mid-gesture, a hint of a grin, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "ani-01",
+  "kind": "portrait",
+  "out": "assets/art/portraits/ani-01.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a cocky male champion swordsman with a golden circlet and a cloud-patterned cape, holding a jade-energised staff, blazing aura, aggressive forward-leaning stance, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "ani-02",
+  "kind": "portrait",
+  "out": "assets/art/portraits/ani-02.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a serious female moon-shadow swordswoman in a white and violet haori, katana held in a perfect stance, moonlight, grounded protective stance, shield-forward posture, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "ani-03",
+  "kind": "portrait",
+  "out": "assets/art/portraits/ani-03.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. an arrogant male fog-city detective in a long trench coat and fedora, one hand raised in a stop gesture, magnifying lens glinting, composed calculating posture, one hand raised in a gesture, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "ani-04",
+  "kind": "portrait",
+  "out": "assets/art/portraits/ani-04.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game character portrait. a hot-blooded female star-rail hero in a red and white pilot suit, a radiant spiral of light behind her, determined grin, reckless playful posture, mid-gesture, a hint of a grin, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, cinematic rim lighting, painterly digital art, strong silhouette, dark unobtrusive background, no text, no logo, no watermark, no letters, vertical 3:4 upper body hero composition,"
+ },
+ {
+  "id": "attack-001",
+  "kind": "card",
+  "out": "assets/art/cards/attack-001.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lunging strike symbolizing the skill \"试探性刺击\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-002",
+  "kind": "card",
+  "out": "assets/art/cards/attack-002.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a downward cleave symbolizing the skill \"双重下注\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-003",
+  "kind": "card",
+  "out": "assets/art/cards/attack-003.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a precise thrust symbolizing the skill \"裂颅回响\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-004",
+  "kind": "card",
+  "out": "assets/art/cards/attack-004.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a spinning whirlwind slash symbolizing the skill \"碎银弹幕\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-005",
+  "kind": "card",
+  "out": "assets/art/cards/attack-005.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sudden ambush symbolizing the skill \"三连突刺\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-006",
+  "kind": "card",
+  "out": "assets/art/cards/attack-006.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a charging bull rush symbolizing the skill \"破甲重击\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-007",
+  "kind": "card",
+  "out": "assets/art/cards/attack-007.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a cracking whip strike symbolizing the skill \"边打边撤\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-008",
+  "kind": "card",
+  "out": "assets/art/cards/attack-008.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lightning-fast flick symbolizing the skill \"锁喉斩\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-009",
+  "kind": "card",
+  "out": "assets/art/cards/attack-009.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lunging strike symbolizing the skill \"终局宣言\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-010",
+  "kind": "card",
+  "out": "assets/art/cards/attack-010.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a downward cleave symbolizing the skill \"暗巷冷刀\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-011",
+  "kind": "card",
+  "out": "assets/art/cards/attack-011.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a precise thrust symbolizing the skill \"锈蚀弹头\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-012",
+  "kind": "card",
+  "out": "assets/art/cards/attack-012.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a spinning whirlwind slash symbolizing the skill \"过载斩\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-013",
+  "kind": "card",
+  "out": "assets/art/cards/attack-013.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sudden ambush symbolizing the skill \"追命连击\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-014",
+  "kind": "card",
+  "out": "assets/art/cards/attack-014.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a charging bull rush symbolizing the skill \"逆风挥砍\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-015",
+  "kind": "card",
+  "out": "assets/art/cards/attack-015.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a cracking whip strike symbolizing the skill \"断桥狙击\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-016",
+  "kind": "card",
+  "out": "assets/art/cards/attack-016.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lightning-fast flick symbolizing the skill \"血月突袭\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-017",
+  "kind": "card",
+  "out": "assets/art/cards/attack-017.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lunging strike symbolizing the skill \"磁场裂刃\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-018",
+  "kind": "card",
+  "out": "assets/art/cards/attack-018.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a downward cleave symbolizing the skill \"纸鹤割喉\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-019",
+  "kind": "card",
+  "out": "assets/art/cards/attack-019.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a precise thrust symbolizing the skill \"马蹄惊雷\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-020",
+  "kind": "card",
+  "out": "assets/art/cards/attack-020.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a spinning whirlwind slash symbolizing the skill \"星屑斩\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-021",
+  "kind": "card",
+  "out": "assets/art/cards/attack-021.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sudden ambush symbolizing the skill \"借命一击\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-022",
+  "kind": "card",
+  "out": "assets/art/cards/attack-022.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a charging bull rush symbolizing the skill \"白刃风暴\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-023",
+  "kind": "card",
+  "out": "assets/art/cards/attack-023.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a cracking whip strike symbolizing the skill \"熔炉铁拳\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-024",
+  "kind": "card",
+  "out": "assets/art/cards/attack-024.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lightning-fast flick symbolizing the skill \"飞剑穿云\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-025",
+  "kind": "card",
+  "out": "assets/art/cards/attack-025.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lunging strike symbolizing the skill \"雷切\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-026",
+  "kind": "card",
+  "out": "assets/art/cards/attack-026.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a downward cleave symbolizing the skill \"毒牙\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-027",
+  "kind": "card",
+  "out": "assets/art/cards/attack-027.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a precise thrust symbolizing the skill \"荒原枪火\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-028",
+  "kind": "card",
+  "out": "assets/art/cards/attack-028.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a spinning whirlwind slash symbolizing the skill \"断罪之光\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-029",
+  "kind": "card",
+  "out": "assets/art/cards/attack-029.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sudden ambush symbolizing the skill \"影缝\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "attack-030",
+  "kind": "card",
+  "out": "assets/art/cards/attack-030.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a charging bull rush symbolizing the skill \"最后一枚子弹\", category mood: a dynamic weapon strike, a blade or gun mid-swing, sharp motion streaks and sparks, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-001",
+  "kind": "card",
+  "out": "assets/art/cards/defense-001.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a braced stance behind a barrier symbolizing the skill \"缩进壳里\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-002",
+  "kind": "card",
+  "out": "assets/art/cards/defense-002.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a bandaged arm holding firm symbolizing the skill \"铜墙铁壁\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-003",
+  "kind": "card",
+  "out": "assets/art/cards/defense-003.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a temple shield raised symbolizing the skill \"以伤换守\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-004",
+  "kind": "card",
+  "out": "assets/art/cards/defense-004.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a woven paper screen symbolizing the skill \"潮汐护符\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-005",
+  "kind": "card",
+  "out": "assets/art/cards/defense-005.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a mirrored reflection ward symbolizing the skill \"圣光壁垒\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-006",
+  "kind": "card",
+  "out": "assets/art/cards/defense-006.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heavy iron guard symbolizing the skill \"铁轨掩体\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-007",
+  "kind": "card",
+  "out": "assets/art/cards/defense-007.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a moonlit aegis symbolizing the skill \"呼吸回春\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-008",
+  "kind": "card",
+  "out": "assets/art/cards/defense-008.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a broken shell re-forming symbolizing the skill \"巫女结界\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-009",
+  "kind": "card",
+  "out": "assets/art/cards/defense-009.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a braced stance behind a barrier symbolizing the skill \"纳米修复\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-010",
+  "kind": "card",
+  "out": "assets/art/cards/defense-010.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a bandaged arm holding firm symbolizing the skill \"酒馆打烊\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-011",
+  "kind": "card",
+  "out": "assets/art/cards/defense-011.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a temple shield raised symbolizing the skill \"旧神庇佑\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-012",
+  "kind": "card",
+  "out": "assets/art/cards/defense-012.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a woven paper screen symbolizing the skill \"拆招\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-013",
+  "kind": "card",
+  "out": "assets/art/cards/defense-013.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a mirrored reflection ward symbolizing the skill \"镜面反射\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-014",
+  "kind": "card",
+  "out": "assets/art/cards/defense-014.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heavy iron guard symbolizing the skill \"命硬\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-015",
+  "kind": "card",
+  "out": "assets/art/cards/defense-015.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a moonlit aegis symbolizing the skill \"玉髓护体\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-016",
+  "kind": "card",
+  "out": "assets/art/cards/defense-016.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a broken shell re-forming symbolizing the skill \"纸盾\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-017",
+  "kind": "card",
+  "out": "assets/art/cards/defense-017.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a braced stance behind a barrier symbolizing the skill \"咬紧牙关\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-018",
+  "kind": "card",
+  "out": "assets/art/cards/defense-018.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a bandaged arm holding firm symbolizing the skill \"轮回一息\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-019",
+  "kind": "card",
+  "out": "assets/art/cards/defense-019.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a temple shield raised symbolizing the skill \"交给我\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-020",
+  "kind": "card",
+  "out": "assets/art/cards/defense-020.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a woven paper screen symbolizing the skill \"锅盖护头\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-021",
+  "kind": "card",
+  "out": "assets/art/cards/defense-021.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a mirrored reflection ward symbolizing the skill \"黄铜装甲\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-022",
+  "kind": "card",
+  "out": "assets/art/cards/defense-022.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heavy iron guard symbolizing the skill \"月下无伤\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-023",
+  "kind": "card",
+  "out": "assets/art/cards/defense-023.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a moonlit aegis symbolizing the skill \"归零重启\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-024",
+  "kind": "card",
+  "out": "assets/art/cards/defense-024.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a broken shell re-forming symbolizing the skill \"赌徒的保险\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-025",
+  "kind": "card",
+  "out": "assets/art/cards/defense-025.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a braced stance behind a barrier symbolizing the skill \"灵脉回春\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-026",
+  "kind": "card",
+  "out": "assets/art/cards/defense-026.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a bandaged arm holding firm symbolizing the skill \"借你肩膀\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-027",
+  "kind": "card",
+  "out": "assets/art/cards/defense-027.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a temple shield raised symbolizing the skill \"牛仔护符\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-028",
+  "kind": "card",
+  "out": "assets/art/cards/defense-028.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a woven paper screen symbolizing the skill \"星轨屏障\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-029",
+  "kind": "card",
+  "out": "assets/art/cards/defense-029.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a mirrored reflection ward symbolizing the skill \"深渊呼吸\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "defense-030",
+  "kind": "card",
+  "out": "assets/art/cards/defense-030.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heavy iron guard symbolizing the skill \"最后一口酒\", category mood: a glowing ward of light, a shield of woven energy, soft protective halo, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-001",
+  "kind": "card",
+  "out": "assets/art/cards/control-001.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sealed lock of light symbolizing the skill \"缴械\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-002",
+  "kind": "card",
+  "out": "assets/art/cards/control-002.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a severed signal line symbolizing the skill \"断线\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-003",
+  "kind": "card",
+  "out": "assets/art/cards/control-003.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a whispering fog of glyphs symbolizing the skill \"迷雾低语\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-004",
+  "kind": "card",
+  "out": "assets/art/cards/control-004.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a network of chains symbolizing the skill \"封穴\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-005",
+  "kind": "card",
+  "out": "assets/art/cards/control-005.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a scrambled ledger symbolizing the skill \"偷走节奏\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-006",
+  "kind": "card",
+  "out": "assets/art/cards/control-006.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a countdown of falling numbers symbolizing the skill \"拆解公式\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-007",
+  "kind": "card",
+  "out": "assets/art/cards/control-007.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a masked false face symbolizing the skill \"关门放鬼\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-008",
+  "kind": "card",
+  "out": "assets/art/cards/control-008.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a rewritten page of fate symbolizing the skill \"混乱账本\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-009",
+  "kind": "card",
+  "out": "assets/art/cards/control-009.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sealed lock of light symbolizing the skill \"神经干扰\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-010",
+  "kind": "card",
+  "out": "assets/art/cards/control-010.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a severed signal line symbolizing the skill \"沉默契约\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-011",
+  "kind": "card",
+  "out": "assets/art/cards/control-011.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a whispering fog of glyphs symbolizing the skill \"打乱呼吸\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-012",
+  "kind": "card",
+  "out": "assets/art/cards/control-012.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a network of chains symbolizing the skill \"禁言符\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-013",
+  "kind": "card",
+  "out": "assets/art/cards/control-013.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a scrambled ledger symbolizing the skill \"视而不见\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-014",
+  "kind": "card",
+  "out": "assets/art/cards/control-014.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a countdown of falling numbers symbolizing the skill \"断桥\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-015",
+  "kind": "card",
+  "out": "assets/art/cards/control-015.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a masked false face symbolizing the skill \"数据污染\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-016",
+  "kind": "card",
+  "out": "assets/art/cards/control-016.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a rewritten page of fate symbolizing the skill \"百鬼指路\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-017",
+  "kind": "card",
+  "out": "assets/art/cards/control-017.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sealed lock of light symbolizing the skill \"鸣枪示警\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-018",
+  "kind": "card",
+  "out": "assets/art/cards/control-018.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a severed signal line symbolizing the skill \"星图错位\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-019",
+  "kind": "card",
+  "out": "assets/art/cards/control-019.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a whispering fog of glyphs symbolizing the skill \"深渊凝视\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-020",
+  "kind": "card",
+  "out": "assets/art/cards/control-020.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a network of chains symbolizing the skill \"黄铜迷雾\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-021",
+  "kind": "card",
+  "out": "assets/art/cards/control-021.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a scrambled ledger symbolizing the skill \"锁魂\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-022",
+  "kind": "card",
+  "out": "assets/art/cards/control-022.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a countdown of falling numbers symbolizing the skill \"纸人替身\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-023",
+  "kind": "card",
+  "out": "assets/art/cards/control-023.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a masked false face symbolizing the skill \"假动作\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-024",
+  "kind": "card",
+  "out": "assets/art/cards/control-024.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a rewritten page of fate symbolizing the skill \"倒计时\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-025",
+  "kind": "card",
+  "out": "assets/art/cards/control-025.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sealed lock of light symbolizing the skill \"心魔低语\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-026",
+  "kind": "card",
+  "out": "assets/art/cards/control-026.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a severed signal line symbolizing the skill \"拆台\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-027",
+  "kind": "card",
+  "out": "assets/art/cards/control-027.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a whispering fog of glyphs symbolizing the skill \"空城计\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-028",
+  "kind": "card",
+  "out": "assets/art/cards/control-028.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a network of chains symbolizing the skill \"缄默\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-029",
+  "kind": "card",
+  "out": "assets/art/cards/control-029.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a scrambled ledger symbolizing the skill \"抽走底牌\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "control-030",
+  "kind": "card",
+  "out": "assets/art/cards/control-030.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a countdown of falling numbers symbolizing the skill \"命运剪刀\", category mood: binding chains of light, floating rune seals and precision mechanisms, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-001",
+  "kind": "card",
+  "out": "assets/art/cards/risk-001.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a coin balanced on a knife edge symbolizing the skill \"全押\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-002",
+  "kind": "card",
+  "out": "assets/art/cards/risk-002.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a burning stack of chips symbolizing the skill \"命悬一线\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-003",
+  "kind": "card",
+  "out": "assets/art/cards/risk-003.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a red thread of fate being cut symbolizing the skill \"燃烧血本\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-004",
+  "kind": "card",
+  "out": "assets/art/cards/risk-004.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a die rolling past the edge symbolizing the skill \"三倍加注\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-005",
+  "kind": "card",
+  "out": "assets/art/cards/risk-005.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heart offered on a scale symbolizing the skill \"空手夺白刃\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-006",
+  "kind": "card",
+  "out": "assets/art/cards/risk-006.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a leap into empty air symbolizing the skill \"孤注一掷\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-007",
+  "kind": "card",
+  "out": "assets/art/cards/risk-007.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a soul poured into a furnace symbolizing the skill \"过载核心\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-008",
+  "kind": "card",
+  "out": "assets/art/cards/risk-008.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a final desperate surge symbolizing the skill \"饮鸩止渴\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-009",
+  "kind": "card",
+  "out": "assets/art/cards/risk-009.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a coin balanced on a knife edge symbolizing the skill \"断头台\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-010",
+  "kind": "card",
+  "out": "assets/art/cards/risk-010.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a burning stack of chips symbolizing the skill \"赌上灵魂\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-011",
+  "kind": "card",
+  "out": "assets/art/cards/risk-011.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a red thread of fate being cut symbolizing the skill \"血契\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-012",
+  "kind": "card",
+  "out": "assets/art/cards/risk-012.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a die rolling past the edge symbolizing the skill \"极限换家\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-013",
+  "kind": "card",
+  "out": "assets/art/cards/risk-013.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heart offered on a scale symbolizing the skill \"破釜沉舟\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-014",
+  "kind": "card",
+  "out": "assets/art/cards/risk-014.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a leap into empty air symbolizing the skill \"双刃风暴\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-015",
+  "kind": "card",
+  "out": "assets/art/cards/risk-015.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a soul poured into a furnace symbolizing the skill \"拿命过牌\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-016",
+  "kind": "card",
+  "out": "assets/art/cards/risk-016.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a final desperate surge symbolizing the skill \"深渊回本\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-017",
+  "kind": "card",
+  "out": "assets/art/cards/risk-017.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a coin balanced on a knife edge symbolizing the skill \"黄铜轮盘\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-018",
+  "kind": "card",
+  "out": "assets/art/cards/risk-018.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a burning stack of chips symbolizing the skill \"渡劫\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-019",
+  "kind": "card",
+  "out": "assets/art/cards/risk-019.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a red thread of fate being cut symbolizing the skill \"生死一息\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-020",
+  "kind": "card",
+  "out": "assets/art/cards/risk-020.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a die rolling past the edge symbolizing the skill \"最后一搏\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-021",
+  "kind": "card",
+  "out": "assets/art/cards/risk-021.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heart offered on a scale symbolizing the skill \"千术\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-022",
+  "kind": "card",
+  "out": "assets/art/cards/risk-022.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a leap into empty air symbolizing the skill \"借命\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-023",
+  "kind": "card",
+  "out": "assets/art/cards/risk-023.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a soul poured into a furnace symbolizing the skill \"天雷灌顶\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-024",
+  "kind": "card",
+  "out": "assets/art/cards/risk-024.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a final desperate surge symbolizing the skill \"黑市交易\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-025",
+  "kind": "card",
+  "out": "assets/art/cards/risk-025.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a coin balanced on a knife edge symbolizing the skill \"以牙还牙\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-026",
+  "kind": "card",
+  "out": "assets/art/cards/risk-026.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a burning stack of chips symbolizing the skill \"无路可退\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-027",
+  "kind": "card",
+  "out": "assets/art/cards/risk-027.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a red thread of fate being cut symbolizing the skill \"埋骨之地\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-028",
+  "kind": "card",
+  "out": "assets/art/cards/risk-028.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a die rolling past the edge symbolizing the skill \"逆天改命\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-029",
+  "kind": "card",
+  "out": "assets/art/cards/risk-029.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a heart offered on a scale symbolizing the skill \"终局梭哈\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "risk-030",
+  "kind": "card",
+  "out": "assets/art/cards/risk-030.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a leap into empty air symbolizing the skill \"命途截断\", category mood: a burning stack of gold chips on a knife edge, a split second before the fall, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-001",
+  "kind": "card",
+  "out": "assets/art/cards/style-001.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a proud clan emblem symbolizing the skill \"深渊低语\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-002",
+  "kind": "card",
+  "out": "assets/art/cards/style-002.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a signature relic held aloft symbolizing the skill \"旧神之血\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-003",
+  "kind": "card",
+  "out": "assets/art/cards/style-003.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a regional banner unfurling symbolizing the skill \"不可名状\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-004",
+  "kind": "card",
+  "out": "assets/art/cards/style-004.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a beast of legend in silhouette symbolizing the skill \"疯狂馈赠\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 克苏鲁 — deep sea ink-green and pale cyan, drowned stone temple, cold bioluminescent glow, black tarot composition, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-005",
+  "kind": "card",
+  "out": "assets/art/cards/style-005.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sworn oath taken symbolizing the skill \"齿轮齐射\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-006",
+  "kind": "card",
+  "out": "assets/art/cards/style-006.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a talisman burning to ash symbolizing the skill \"压力护罩\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-007",
+  "kind": "card",
+  "out": "assets/art/cards/style-007.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lone figure against a vast landscape symbolizing the skill \"发条工坊\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-008",
+  "kind": "card",
+  "out": "assets/art/cards/style-008.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, an heirloom blade drawn symbolizing the skill \"锅炉过载\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 蒸汽朋克 — brass gold and coal black, Victorian clockwork workshop, rivets and steam haze, warm gaslight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-009",
+  "kind": "card",
+  "out": "assets/art/cards/style-009.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a proud clan emblem symbolizing the skill \"御剑千里\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-010",
+  "kind": "card",
+  "out": "assets/art/cards/style-010.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a signature relic held aloft symbolizing the skill \"吐纳回春\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-011",
+  "kind": "card",
+  "out": "assets/art/cards/style-011.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a regional banner unfurling symbolizing the skill \"天机推演\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-012",
+  "kind": "card",
+  "out": "assets/art/cards/style-012.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a beast of legend in silhouette symbolizing the skill \"渡劫飞升\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 修仙 — jade green and cold white, sea of clouds and floating stone peaks, ink-wash minimalism, eastern xianxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-013",
+  "kind": "card",
+  "out": "assets/art/cards/style-013.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sworn oath taken symbolizing the skill \"圣剑裁决\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-014",
+  "kind": "card",
+  "out": "assets/art/cards/style-014.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a talisman burning to ash symbolizing the skill \"圣光洗礼\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-015",
+  "kind": "card",
+  "out": "assets/art/cards/style-015.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lone figure against a vast landscape symbolizing the skill \"奥术预兆\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-016",
+  "kind": "card",
+  "out": "assets/art/cards/style-016.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, an heirloom blade drawn symbolizing the skill \"龙焰吐息\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 西式奇幻 — antique gold and deep violet-blue, gothic cathedral arches, stained glass, knightly heraldry, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-017",
+  "kind": "card",
+  "out": "assets/art/cards/style-017.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a proud clan emblem symbolizing the skill \"等离子拔刀\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-018",
+  "kind": "card",
+  "out": "assets/art/cards/style-018.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a signature relic held aloft symbolizing the skill \"纳米护甲\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-019",
+  "kind": "card",
+  "out": "assets/art/cards/style-019.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a regional banner unfurling symbolizing the skill \"神经加速\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-020",
+  "kind": "card",
+  "out": "assets/art/cards/style-020.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a beast of legend in silhouette symbolizing the skill \"超频临界\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 未来武侠 — cyan and magenta, rain-soaked neon alley, holographic hanzi signage, cyber wuxia, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-021",
+  "kind": "card",
+  "out": "assets/art/cards/style-021.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sworn oath taken symbolizing the skill \"居合·一线\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-022",
+  "kind": "card",
+  "out": "assets/art/cards/style-022.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a talisman burning to ash symbolizing the skill \"结界·神乐\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-023",
+  "kind": "card",
+  "out": "assets/art/cards/style-023.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a lone figure against a vast landscape symbolizing the skill \"式神·纸语\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-024",
+  "kind": "card",
+  "out": "assets/art/cards/style-024.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, an heirloom blade drawn symbolizing the skill \"百鬼夜行\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 日式和风 — vermilion and indigo, torii gate and cherry blossoms, paper lanterns, ukiyo-e dark fantasy, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-025",
+  "kind": "card",
+  "out": "assets/art/cards/style-025.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a proud clan emblem symbolizing the skill \"快枪三响\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-026",
+  "kind": "card",
+  "out": "assets/art/cards/style-026.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a signature relic held aloft symbolizing the skill \"掩体伏击\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-027",
+  "kind": "card",
+  "out": "assets/art/cards/style-027.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a regional banner unfurling symbolizing the skill \"最后通牒\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 西部牛仔 — amber and dusty grey, desert sunset and tumbleweed, revolver and saloon, cinematic widescreen, rarity mood: violet and gold dramatic light, drifting motes, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-028",
+  "kind": "card",
+  "out": "assets/art/cards/style-028.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a beast of legend in silhouette symbolizing the skill \"星爆斩\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: blazing molten gold rim light, radiant halo, ornate filigree of light, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-029",
+  "kind": "card",
+  "out": "assets/art/cards/style-029.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a sworn oath taken symbolizing the skill \"羁绊共鸣\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: restrained muted lighting, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "style-030",
+  "kind": "card",
+  "out": "assets/art/cards/style-030.webp",
+  "size": "1024x1536",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game illustration, a talisman burning to ash symbolizing the skill \"主角光环\", category mood: a distinctive regional emblem, a symbolic weapon and a proud crest, world: 经典动漫/小说 — bright pink and deep blue, starfield and torn book pages, cel-shaded anime, dramatic backlight, rarity mood: clean cool key light with a faint aura, single strong subject centered with clear silhouette, cinematic lighting, painterly digital art, no text, no logo, no watermark, no letters, no UI frame, vertical 3:4 composition"
+ },
+ {
+  "id": "bg-abyss",
+  "kind": "bg",
+  "out": "assets/art/bg/abyss.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, a vast flooded cathedral of black stone, half-drowned bronze bells, sickly teal luminescence, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-steam",
+  "kind": "bg",
+  "out": "assets/art/bg/steam.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, the interior of a colossal brass dome city, endless gearworks and pipe forests, amber gaslight haze, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-cultivation",
+  "kind": "bg",
+  "out": "assets/art/bg/cultivation.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, nine floating cloud seas above a severed heaven gate, jade pillars, vast empty sky, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-fantasy",
+  "kind": "bg",
+  "out": "assets/art/bg/fantasy.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, a cathedral of a shattered oath, banners and shattered stained glass, cold gold light, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-neon",
+  "kind": "bg",
+  "out": "assets/art/bg/neon.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, a rain-drenched cyberpunk jianghu alley, neon kanji signs reflected in puddles, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-wa",
+  "kind": "bg",
+  "out": "assets/art/bg/wa.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, an endless stone stairway under a torii gate at night, drifting cherry blossoms and paper lanterns, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-west",
+  "kind": "bg",
+  "out": "assets/art/bg/west.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, a dust-choked frontier railroad at sunset, an empty town that does not exist, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-anime",
+  "kind": "bg",
+  "out": "assets/art/bg/anime.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game background art, a continent of stacked unfinished storybook pages floating in the void, a spinning coin of light, no people, wide empty space in the center, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-corridor",
+  "kind": "bg",
+  "out": "assets/art/bg/corridor.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game main menu background, the central hall of a timeless casino between eight worlds, a colossal double-faced coin suspended in the air, eight arched doorways each glowing with a different color, dark gold and deep ink palette, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ },
+ {
+  "id": "bg-battle",
+  "kind": "bg",
+  "out": "assets/art/bg/battle.webp",
+  "size": "1920x1080",
+  "prompt": "Chinese Three Kingdoms fantasy trading card game battle table background, a dark oval gambling table of black lacquer and gold inlay seen from a low angle, two empty card wells facing each other, coin dust floating in a shaft of light, deep ink black and antique gold palette, dark cinematic value range kept low in the middle for UI overlay, painterly digital art, no text, no logo, no watermark, no letters, no characters, 16:9 wide composition"
+ }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "neo-01",
+    "src": "generated-images\\batch-b\\neo-01\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-33-40.png",
+    "out": "assets/art/portraits/neo-01.webp"
+  },
+  {
+    "id": "neo-02",
+    "src": "generated-images\\batch-b\\neo-02\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-34-05.png",
+    "out": "assets/art/portraits/neo-02.webp"
+  },
+  {
+    "id": "neo-03",
+    "src": "generated-images\\batch-b\\neo-03\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-34-27.png",
+    "out": "assets/art/portraits/neo-03.webp"
+  },
+  {
+    "id": "neo-04",
+    "src": "generated-images\\batch-b\\neo-04\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-34-51.png",
+    "out": "assets/art/portraits/neo-04.webp"
+  },
+  {
+    "id": "wa-01",
+    "src": "generated-images\\batch-b\\wa-01\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-35-07.png",
+    "out": "assets/art/portraits/wa-01.webp"
+  },
+  {
+    "id": "wa-02",
+    "src": "generated-images\\batch-b\\wa-02\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-35-30.png",
+    "out": "assets/art/portraits/wa-02.webp"
+  },
+  {
+    "id": "wa-03",
+    "src": "generated-images\\batch-b\\wa-03\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-35-56.png",
+    "out": "assets/art/portraits/wa-03.webp"
+  },
+  {
+    "id": "wa-04",
+    "src": "generated-images\\batch-b\\wa-04\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-36-27.png",
+    "out": "assets/art/portraits/wa-04.webp"
+  },
+  {
+    "id": "wes-01",
+    "src": "generated-images\\batch-b\\wes-01\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-36-50.png",
+    "out": "assets/art/portraits/wes-01.webp"
+  },
+  {
+    "id": "wes-02",
+    "src": "generated-images\\batch-b\\wes-02\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-37-11.png",
+    "out": "assets/art/portraits/wes-02.webp"
+  },
+  {
+    "id": "wes-03",
+    "src": "generated-images\\batch-b\\wes-03\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-37-35.png",
+    "out": "assets/art/portraits/wes-03.webp"
+  },
+  {
+    "id": "wes-04",
+    "src": "generated-images\\batch-b\\wes-04\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-37-51.png",
+    "out": "assets/art/portraits/wes-04.webp"
+  },
+  {
+    "id": "ani-01",
+    "src": "generated-images\\batch-b\\ani-01\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-38-15.png",
+    "out": "assets/art/portraits/ani-01.webp"
+  },
+  {
+    "id": "ani-02",
+    "src": "generated-images\\batch-b\\ani-02\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-38-31.png",
+    "out": "assets/art/portraits/ani-02.webp"
+  },
+  {
+    "id": "ani-03",
+    "src": "generated-images\\batch-b\\ani-03\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-38-56.png",
+    "out": "assets/art/portraits/ani-03.webp"
+  },
+  {
+    "id": "ani-04",
+    "src": "generated-images\\batch-b\\ani-04\\Chinese_Three_Kingdoms_fantasy_2026-10-21T00-39-25.png",
+    "out": "assets/art/portraits/ani-04.webp"
+  }
+]

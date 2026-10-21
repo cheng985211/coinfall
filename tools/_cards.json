@@ -1,0 +1,1248 @@
+{
+ "cards": [
+  {
+   "id": "attack-001",
+   "name": "试探性刺击",
+   "cat": "attack",
+   "style": "abyss",
+   "rar": "common"
+  },
+  {
+   "id": "attack-002",
+   "name": "双重下注",
+   "cat": "attack",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "attack-003",
+   "name": "裂颅回响",
+   "cat": "attack",
+   "style": "abyss",
+   "rar": "epic"
+  },
+  {
+   "id": "attack-004",
+   "name": "碎银弹幕",
+   "cat": "attack",
+   "style": "steam",
+   "rar": "legendary"
+  },
+  {
+   "id": "attack-005",
+   "name": "三连突刺",
+   "cat": "attack",
+   "style": "cultivation",
+   "rar": "common"
+  },
+  {
+   "id": "attack-006",
+   "name": "破甲重击",
+   "cat": "attack",
+   "style": "fantasy",
+   "rar": "rare"
+  },
+  {
+   "id": "attack-007",
+   "name": "边打边撤",
+   "cat": "attack",
+   "style": "neon",
+   "rar": "epic"
+  },
+  {
+   "id": "attack-008",
+   "name": "锁喉斩",
+   "cat": "attack",
+   "style": "wa",
+   "rar": "legendary"
+  },
+  {
+   "id": "attack-009",
+   "name": "终局宣言",
+   "cat": "attack",
+   "style": "anime",
+   "rar": "common"
+  },
+  {
+   "id": "attack-010",
+   "name": "暗巷冷刀",
+   "cat": "attack",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "attack-011",
+   "name": "锈蚀弹头",
+   "cat": "attack",
+   "style": "steam",
+   "rar": "epic"
+  },
+  {
+   "id": "attack-012",
+   "name": "过载斩",
+   "cat": "attack",
+   "style": "neon",
+   "rar": "legendary"
+  },
+  {
+   "id": "attack-013",
+   "name": "追命连击",
+   "cat": "attack",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "attack-014",
+   "name": "逆风挥砍",
+   "cat": "attack",
+   "style": "cultivation",
+   "rar": "rare"
+  },
+  {
+   "id": "attack-015",
+   "name": "断桥狙击",
+   "cat": "attack",
+   "style": "west",
+   "rar": "epic"
+  },
+  {
+   "id": "attack-016",
+   "name": "血月突袭",
+   "cat": "attack",
+   "style": "abyss",
+   "rar": "legendary"
+  },
+  {
+   "id": "attack-017",
+   "name": "磁场裂刃",
+   "cat": "attack",
+   "style": "neon",
+   "rar": "common"
+  },
+  {
+   "id": "attack-018",
+   "name": "纸鹤割喉",
+   "cat": "attack",
+   "style": "wa",
+   "rar": "rare"
+  },
+  {
+   "id": "attack-019",
+   "name": "马蹄惊雷",
+   "cat": "attack",
+   "style": "west",
+   "rar": "epic"
+  },
+  {
+   "id": "attack-020",
+   "name": "星屑斩",
+   "cat": "attack",
+   "style": "anime",
+   "rar": "legendary"
+  },
+  {
+   "id": "attack-021",
+   "name": "借命一击",
+   "cat": "attack",
+   "style": "abyss",
+   "rar": "common"
+  },
+  {
+   "id": "attack-022",
+   "name": "白刃风暴",
+   "cat": "attack",
+   "style": "fantasy",
+   "rar": "rare"
+  },
+  {
+   "id": "attack-023",
+   "name": "熔炉铁拳",
+   "cat": "attack",
+   "style": "steam",
+   "rar": "epic"
+  },
+  {
+   "id": "attack-024",
+   "name": "飞剑穿云",
+   "cat": "attack",
+   "style": "cultivation",
+   "rar": "legendary"
+  },
+  {
+   "id": "attack-025",
+   "name": "雷切",
+   "cat": "attack",
+   "style": "neon",
+   "rar": "common"
+  },
+  {
+   "id": "attack-026",
+   "name": "毒牙",
+   "cat": "attack",
+   "style": "wa",
+   "rar": "rare"
+  },
+  {
+   "id": "attack-027",
+   "name": "荒原枪火",
+   "cat": "attack",
+   "style": "west",
+   "rar": "epic"
+  },
+  {
+   "id": "attack-028",
+   "name": "断罪之光",
+   "cat": "attack",
+   "style": "fantasy",
+   "rar": "legendary"
+  },
+  {
+   "id": "attack-029",
+   "name": "影缝",
+   "cat": "attack",
+   "style": "abyss",
+   "rar": "common"
+  },
+  {
+   "id": "attack-030",
+   "name": "最后一枚子弹",
+   "cat": "attack",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-001",
+   "name": "缩进壳里",
+   "cat": "defense",
+   "style": "abyss",
+   "rar": "common"
+  },
+  {
+   "id": "defense-002",
+   "name": "铜墙铁壁",
+   "cat": "defense",
+   "style": "steam",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-003",
+   "name": "以伤换守",
+   "cat": "defense",
+   "style": "cultivation",
+   "rar": "epic"
+  },
+  {
+   "id": "defense-004",
+   "name": "潮汐护符",
+   "cat": "defense",
+   "style": "abyss",
+   "rar": "legendary"
+  },
+  {
+   "id": "defense-005",
+   "name": "圣光壁垒",
+   "cat": "defense",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "defense-006",
+   "name": "铁轨掩体",
+   "cat": "defense",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-007",
+   "name": "呼吸回春",
+   "cat": "defense",
+   "style": "cultivation",
+   "rar": "epic"
+  },
+  {
+   "id": "defense-008",
+   "name": "巫女结界",
+   "cat": "defense",
+   "style": "wa",
+   "rar": "legendary"
+  },
+  {
+   "id": "defense-009",
+   "name": "纳米修复",
+   "cat": "defense",
+   "style": "neon",
+   "rar": "common"
+  },
+  {
+   "id": "defense-010",
+   "name": "酒馆打烊",
+   "cat": "defense",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-011",
+   "name": "旧神庇佑",
+   "cat": "defense",
+   "style": "abyss",
+   "rar": "epic"
+  },
+  {
+   "id": "defense-012",
+   "name": "拆招",
+   "cat": "defense",
+   "style": "cultivation",
+   "rar": "legendary"
+  },
+  {
+   "id": "defense-013",
+   "name": "镜面反射",
+   "cat": "defense",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "defense-014",
+   "name": "命硬",
+   "cat": "defense",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-015",
+   "name": "玉髓护体",
+   "cat": "defense",
+   "style": "cultivation",
+   "rar": "epic"
+  },
+  {
+   "id": "defense-016",
+   "name": "纸盾",
+   "cat": "defense",
+   "style": "wa",
+   "rar": "legendary"
+  },
+  {
+   "id": "defense-017",
+   "name": "咬紧牙关",
+   "cat": "defense",
+   "style": "west",
+   "rar": "common"
+  },
+  {
+   "id": "defense-018",
+   "name": "轮回一息",
+   "cat": "defense",
+   "style": "wa",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-019",
+   "name": "交给我",
+   "cat": "defense",
+   "style": "fantasy",
+   "rar": "epic"
+  },
+  {
+   "id": "defense-020",
+   "name": "锅盖护头",
+   "cat": "defense",
+   "style": "steam",
+   "rar": "legendary"
+  },
+  {
+   "id": "defense-021",
+   "name": "黄铜装甲",
+   "cat": "defense",
+   "style": "steam",
+   "rar": "common"
+  },
+  {
+   "id": "defense-022",
+   "name": "月下无伤",
+   "cat": "defense",
+   "style": "anime",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-023",
+   "name": "归零重启",
+   "cat": "defense",
+   "style": "neon",
+   "rar": "epic"
+  },
+  {
+   "id": "defense-024",
+   "name": "赌徒的保险",
+   "cat": "defense",
+   "style": "west",
+   "rar": "legendary"
+  },
+  {
+   "id": "defense-025",
+   "name": "灵脉回春",
+   "cat": "defense",
+   "style": "cultivation",
+   "rar": "common"
+  },
+  {
+   "id": "defense-026",
+   "name": "借你肩膀",
+   "cat": "defense",
+   "style": "anime",
+   "rar": "rare"
+  },
+  {
+   "id": "defense-027",
+   "name": "牛仔护符",
+   "cat": "defense",
+   "style": "west",
+   "rar": "epic"
+  },
+  {
+   "id": "defense-028",
+   "name": "星轨屏障",
+   "cat": "defense",
+   "style": "anime",
+   "rar": "legendary"
+  },
+  {
+   "id": "defense-029",
+   "name": "深渊呼吸",
+   "cat": "defense",
+   "style": "abyss",
+   "rar": "common"
+  },
+  {
+   "id": "defense-030",
+   "name": "最后一口酒",
+   "cat": "defense",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "control-001",
+   "name": "缴械",
+   "cat": "control",
+   "style": "steam",
+   "rar": "common"
+  },
+  {
+   "id": "control-002",
+   "name": "断线",
+   "cat": "control",
+   "style": "neon",
+   "rar": "rare"
+  },
+  {
+   "id": "control-003",
+   "name": "迷雾低语",
+   "cat": "control",
+   "style": "abyss",
+   "rar": "epic"
+  },
+  {
+   "id": "control-004",
+   "name": "封穴",
+   "cat": "control",
+   "style": "cultivation",
+   "rar": "legendary"
+  },
+  {
+   "id": "control-005",
+   "name": "偷走节奏",
+   "cat": "control",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "control-006",
+   "name": "拆解公式",
+   "cat": "control",
+   "style": "steam",
+   "rar": "rare"
+  },
+  {
+   "id": "control-007",
+   "name": "关门放鬼",
+   "cat": "control",
+   "style": "wa",
+   "rar": "epic"
+  },
+  {
+   "id": "control-008",
+   "name": "混乱账本",
+   "cat": "control",
+   "style": "west",
+   "rar": "legendary"
+  },
+  {
+   "id": "control-009",
+   "name": "神经干扰",
+   "cat": "control",
+   "style": "neon",
+   "rar": "common"
+  },
+  {
+   "id": "control-010",
+   "name": "沉默契约",
+   "cat": "control",
+   "style": "fantasy",
+   "rar": "rare"
+  },
+  {
+   "id": "control-011",
+   "name": "打乱呼吸",
+   "cat": "control",
+   "style": "abyss",
+   "rar": "epic"
+  },
+  {
+   "id": "control-012",
+   "name": "禁言符",
+   "cat": "control",
+   "style": "cultivation",
+   "rar": "legendary"
+  },
+  {
+   "id": "control-013",
+   "name": "视而不见",
+   "cat": "control",
+   "style": "abyss",
+   "rar": "common"
+  },
+  {
+   "id": "control-014",
+   "name": "断桥",
+   "cat": "control",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "control-015",
+   "name": "数据污染",
+   "cat": "control",
+   "style": "neon",
+   "rar": "epic"
+  },
+  {
+   "id": "control-016",
+   "name": "百鬼指路",
+   "cat": "control",
+   "style": "wa",
+   "rar": "legendary"
+  },
+  {
+   "id": "control-017",
+   "name": "鸣枪示警",
+   "cat": "control",
+   "style": "west",
+   "rar": "common"
+  },
+  {
+   "id": "control-018",
+   "name": "星图错位",
+   "cat": "control",
+   "style": "fantasy",
+   "rar": "rare"
+  },
+  {
+   "id": "control-019",
+   "name": "深渊凝视",
+   "cat": "control",
+   "style": "abyss",
+   "rar": "epic"
+  },
+  {
+   "id": "control-020",
+   "name": "黄铜迷雾",
+   "cat": "control",
+   "style": "steam",
+   "rar": "legendary"
+  },
+  {
+   "id": "control-021",
+   "name": "锁魂",
+   "cat": "control",
+   "style": "wa",
+   "rar": "common"
+  },
+  {
+   "id": "control-022",
+   "name": "纸人替身",
+   "cat": "control",
+   "style": "wa",
+   "rar": "rare"
+  },
+  {
+   "id": "control-023",
+   "name": "假动作",
+   "cat": "control",
+   "style": "anime",
+   "rar": "epic"
+  },
+  {
+   "id": "control-024",
+   "name": "倒计时",
+   "cat": "control",
+   "style": "neon",
+   "rar": "legendary"
+  },
+  {
+   "id": "control-025",
+   "name": "心魔低语",
+   "cat": "control",
+   "style": "cultivation",
+   "rar": "common"
+  },
+  {
+   "id": "control-026",
+   "name": "拆台",
+   "cat": "control",
+   "style": "steam",
+   "rar": "rare"
+  },
+  {
+   "id": "control-027",
+   "name": "空城计",
+   "cat": "control",
+   "style": "anime",
+   "rar": "epic"
+  },
+  {
+   "id": "control-028",
+   "name": "缄默",
+   "cat": "control",
+   "style": "wa",
+   "rar": "legendary"
+  },
+  {
+   "id": "control-029",
+   "name": "抽走底牌",
+   "cat": "control",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "control-030",
+   "name": "命运剪刀",
+   "cat": "control",
+   "style": "anime",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-001",
+   "name": "全押",
+   "cat": "risk",
+   "style": "west",
+   "rar": "common"
+  },
+  {
+   "id": "risk-002",
+   "name": "命悬一线",
+   "cat": "risk",
+   "style": "abyss",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-003",
+   "name": "燃烧血本",
+   "cat": "risk",
+   "style": "steam",
+   "rar": "epic"
+  },
+  {
+   "id": "risk-004",
+   "name": "三倍加注",
+   "cat": "risk",
+   "style": "fantasy",
+   "rar": "legendary"
+  },
+  {
+   "id": "risk-005",
+   "name": "空手夺白刃",
+   "cat": "risk",
+   "style": "cultivation",
+   "rar": "common"
+  },
+  {
+   "id": "risk-006",
+   "name": "孤注一掷",
+   "cat": "risk",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-007",
+   "name": "过载核心",
+   "cat": "risk",
+   "style": "steam",
+   "rar": "epic"
+  },
+  {
+   "id": "risk-008",
+   "name": "饮鸩止渴",
+   "cat": "risk",
+   "style": "abyss",
+   "rar": "legendary"
+  },
+  {
+   "id": "risk-009",
+   "name": "断头台",
+   "cat": "risk",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "risk-010",
+   "name": "赌上灵魂",
+   "cat": "risk",
+   "style": "abyss",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-011",
+   "name": "血契",
+   "cat": "risk",
+   "style": "wa",
+   "rar": "epic"
+  },
+  {
+   "id": "risk-012",
+   "name": "极限换家",
+   "cat": "risk",
+   "style": "neon",
+   "rar": "legendary"
+  },
+  {
+   "id": "risk-013",
+   "name": "破釜沉舟",
+   "cat": "risk",
+   "style": "cultivation",
+   "rar": "common"
+  },
+  {
+   "id": "risk-014",
+   "name": "双刃风暴",
+   "cat": "risk",
+   "style": "neon",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-015",
+   "name": "拿命过牌",
+   "cat": "risk",
+   "style": "anime",
+   "rar": "epic"
+  },
+  {
+   "id": "risk-016",
+   "name": "深渊回本",
+   "cat": "risk",
+   "style": "abyss",
+   "rar": "legendary"
+  },
+  {
+   "id": "risk-017",
+   "name": "黄铜轮盘",
+   "cat": "risk",
+   "style": "steam",
+   "rar": "common"
+  },
+  {
+   "id": "risk-018",
+   "name": "渡劫",
+   "cat": "risk",
+   "style": "cultivation",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-019",
+   "name": "生死一息",
+   "cat": "risk",
+   "style": "wa",
+   "rar": "epic"
+  },
+  {
+   "id": "risk-020",
+   "name": "最后一搏",
+   "cat": "risk",
+   "style": "anime",
+   "rar": "legendary"
+  },
+  {
+   "id": "risk-021",
+   "name": "千术",
+   "cat": "risk",
+   "style": "west",
+   "rar": "common"
+  },
+  {
+   "id": "risk-022",
+   "name": "借命",
+   "cat": "risk",
+   "style": "wa",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-023",
+   "name": "天雷灌顶",
+   "cat": "risk",
+   "style": "cultivation",
+   "rar": "epic"
+  },
+  {
+   "id": "risk-024",
+   "name": "黑市交易",
+   "cat": "risk",
+   "style": "steam",
+   "rar": "legendary"
+  },
+  {
+   "id": "risk-025",
+   "name": "以牙还牙",
+   "cat": "risk",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "risk-026",
+   "name": "无路可退",
+   "cat": "risk",
+   "style": "anime",
+   "rar": "rare"
+  },
+  {
+   "id": "risk-027",
+   "name": "埋骨之地",
+   "cat": "risk",
+   "style": "west",
+   "rar": "epic"
+  },
+  {
+   "id": "risk-028",
+   "name": "逆天改命",
+   "cat": "risk",
+   "style": "cultivation",
+   "rar": "legendary"
+  },
+  {
+   "id": "risk-029",
+   "name": "终局梭哈",
+   "cat": "risk",
+   "style": "anime",
+   "rar": "common"
+  },
+  {
+   "id": "risk-030",
+   "name": "命途截断",
+   "cat": "risk",
+   "style": "abyss",
+   "rar": "rare"
+  },
+  {
+   "id": "style-001",
+   "name": "深渊低语",
+   "cat": "style",
+   "style": "abyss",
+   "rar": "common"
+  },
+  {
+   "id": "style-002",
+   "name": "旧神之血",
+   "cat": "style",
+   "style": "abyss",
+   "rar": "rare"
+  },
+  {
+   "id": "style-003",
+   "name": "不可名状",
+   "cat": "style",
+   "style": "abyss",
+   "rar": "epic"
+  },
+  {
+   "id": "style-004",
+   "name": "疯狂馈赠",
+   "cat": "style",
+   "style": "abyss",
+   "rar": "legendary"
+  },
+  {
+   "id": "style-005",
+   "name": "齿轮齐射",
+   "cat": "style",
+   "style": "steam",
+   "rar": "common"
+  },
+  {
+   "id": "style-006",
+   "name": "压力护罩",
+   "cat": "style",
+   "style": "steam",
+   "rar": "rare"
+  },
+  {
+   "id": "style-007",
+   "name": "发条工坊",
+   "cat": "style",
+   "style": "steam",
+   "rar": "epic"
+  },
+  {
+   "id": "style-008",
+   "name": "锅炉过载",
+   "cat": "style",
+   "style": "steam",
+   "rar": "legendary"
+  },
+  {
+   "id": "style-009",
+   "name": "御剑千里",
+   "cat": "style",
+   "style": "cultivation",
+   "rar": "common"
+  },
+  {
+   "id": "style-010",
+   "name": "吐纳回春",
+   "cat": "style",
+   "style": "cultivation",
+   "rar": "rare"
+  },
+  {
+   "id": "style-011",
+   "name": "天机推演",
+   "cat": "style",
+   "style": "cultivation",
+   "rar": "epic"
+  },
+  {
+   "id": "style-012",
+   "name": "渡劫飞升",
+   "cat": "style",
+   "style": "cultivation",
+   "rar": "legendary"
+  },
+  {
+   "id": "style-013",
+   "name": "圣剑裁决",
+   "cat": "style",
+   "style": "fantasy",
+   "rar": "common"
+  },
+  {
+   "id": "style-014",
+   "name": "圣光洗礼",
+   "cat": "style",
+   "style": "fantasy",
+   "rar": "rare"
+  },
+  {
+   "id": "style-015",
+   "name": "奥术预兆",
+   "cat": "style",
+   "style": "fantasy",
+   "rar": "epic"
+  },
+  {
+   "id": "style-016",
+   "name": "龙焰吐息",
+   "cat": "style",
+   "style": "fantasy",
+   "rar": "legendary"
+  },
+  {
+   "id": "style-017",
+   "name": "等离子拔刀",
+   "cat": "style",
+   "style": "neon",
+   "rar": "common"
+  },
+  {
+   "id": "style-018",
+   "name": "纳米护甲",
+   "cat": "style",
+   "style": "neon",
+   "rar": "rare"
+  },
+  {
+   "id": "style-019",
+   "name": "神经加速",
+   "cat": "style",
+   "style": "neon",
+   "rar": "epic"
+  },
+  {
+   "id": "style-020",
+   "name": "超频临界",
+   "cat": "style",
+   "style": "neon",
+   "rar": "legendary"
+  },
+  {
+   "id": "style-021",
+   "name": "居合·一线",
+   "cat": "style",
+   "style": "wa",
+   "rar": "common"
+  },
+  {
+   "id": "style-022",
+   "name": "结界·神乐",
+   "cat": "style",
+   "style": "wa",
+   "rar": "rare"
+  },
+  {
+   "id": "style-023",
+   "name": "式神·纸语",
+   "cat": "style",
+   "style": "wa",
+   "rar": "epic"
+  },
+  {
+   "id": "style-024",
+   "name": "百鬼夜行",
+   "cat": "style",
+   "style": "wa",
+   "rar": "legendary"
+  },
+  {
+   "id": "style-025",
+   "name": "快枪三响",
+   "cat": "style",
+   "style": "west",
+   "rar": "common"
+  },
+  {
+   "id": "style-026",
+   "name": "掩体伏击",
+   "cat": "style",
+   "style": "west",
+   "rar": "rare"
+  },
+  {
+   "id": "style-027",
+   "name": "最后通牒",
+   "cat": "style",
+   "style": "west",
+   "rar": "epic"
+  },
+  {
+   "id": "style-028",
+   "name": "星爆斩",
+   "cat": "style",
+   "style": "anime",
+   "rar": "legendary"
+  },
+  {
+   "id": "style-029",
+   "name": "羁绊共鸣",
+   "cat": "style",
+   "style": "anime",
+   "rar": "common"
+  },
+  {
+   "id": "style-030",
+   "name": "主角光环",
+   "cat": "style",
+   "style": "anime",
+   "rar": "rare"
+  }
+ ],
+ "chars": [
+  {
+   "id": "cth-01",
+   "name": "执灯人·伊莱",
+   "style": "abyss",
+   "role": "输出"
+  },
+  {
+   "id": "cth-02",
+   "name": "潮汐祭司·涅瑞",
+   "style": "abyss",
+   "role": "防御"
+  },
+  {
+   "id": "cth-03",
+   "name": "星眷·阿撒",
+   "style": "abyss",
+   "role": "功能"
+  },
+  {
+   "id": "cth-04",
+   "name": "疯诗人·卡尔科",
+   "style": "abyss",
+   "role": "赌徒"
+  },
+  {
+   "id": "stm-01",
+   "name": "齿轮医师·薇拉",
+   "style": "steam",
+   "role": "防御"
+  },
+  {
+   "id": "stm-02",
+   "name": "黄铜枪手·杰克",
+   "style": "steam",
+   "role": "输出"
+  },
+  {
+   "id": "stm-03",
+   "name": "发明家·霍恩",
+   "style": "steam",
+   "role": "功能"
+  },
+  {
+   "id": "stm-04",
+   "name": "试飞员·露西",
+   "style": "steam",
+   "role": "赌徒"
+  },
+  {
+   "id": "cul-01",
+   "name": "青霄剑尊·沈渡",
+   "style": "cultivation",
+   "role": "输出"
+  },
+  {
+   "id": "cul-02",
+   "name": "玄龟道人·陆沉",
+   "style": "cultivation",
+   "role": "防御"
+  },
+  {
+   "id": "cul-03",
+   "name": "丹霞药仙·苏芷",
+   "style": "cultivation",
+   "role": "功能"
+  },
+  {
+   "id": "cul-04",
+   "name": "逆天散修·无咎",
+   "style": "cultivation",
+   "role": "赌徒"
+  },
+  {
+   "id": "fan-01",
+   "name": "圣殿骑士·加雷斯",
+   "style": "fantasy",
+   "role": "防御"
+  },
+  {
+   "id": "fan-02",
+   "name": "影刃游侠·塞拉",
+   "style": "fantasy",
+   "role": "输出"
+  },
+  {
+   "id": "fan-03",
+   "name": "星辰法师·奥莉",
+   "style": "fantasy",
+   "role": "功能"
+  },
+  {
+   "id": "fan-04",
+   "name": "命运赌徒·维克",
+   "style": "fantasy",
+   "role": "赌徒"
+  },
+  {
+   "id": "neo-01",
+   "name": "霓虹刀客·零",
+   "style": "neon",
+   "role": "输出"
+  },
+  {
+   "id": "neo-02",
+   "name": "义体武僧·铁山",
+   "style": "neon",
+   "role": "防御"
+  },
+  {
+   "id": "neo-03",
+   "name": "数据术士·比特",
+   "style": "neon",
+   "role": "功能"
+  },
+  {
+   "id": "neo-04",
+   "name": "量子浪人·阿瞬",
+   "style": "neon",
+   "role": "赌徒"
+  },
+  {
+   "id": "wa-01",
+   "name": "樱鬼·千鹤",
+   "style": "wa",
+   "role": "输出"
+  },
+  {
+   "id": "wa-02",
+   "name": "神社巫女·铃",
+   "style": "wa",
+   "role": "防御"
+  },
+  {
+   "id": "wa-03",
+   "name": "折纸阴阳师·晴明",
+   "style": "wa",
+   "role": "功能"
+  },
+  {
+   "id": "wa-04",
+   "name": "百鬼·夜行",
+   "style": "wa",
+   "role": "赌徒"
+  },
+  {
+   "id": "wes-01",
+   "name": "赏金猎人·科尔",
+   "style": "west",
+   "role": "输出"
+  },
+  {
+   "id": "wes-02",
+   "name": "铁轨守卫·玛拉",
+   "style": "west",
+   "role": "防御"
+  },
+  {
+   "id": "wes-03",
+   "name": "酒馆老板·老乔",
+   "style": "west",
+   "role": "功能"
+  },
+  {
+   "id": "wes-04",
+   "name": "亡命徒·薇丝",
+   "style": "west",
+   "role": "赌徒"
+  },
+  {
+   "id": "ani-01",
+   "name": "齐天斗士·悟空",
+   "style": "anime",
+   "role": "输出"
+  },
+  {
+   "id": "ani-02",
+   "name": "月影剑心·绯",
+   "style": "anime",
+   "role": "防御"
+  },
+  {
+   "id": "ani-03",
+   "name": "雾都侦探·夏洛",
+   "style": "anime",
+   "role": "功能"
+  },
+  {
+   "id": "ani-04",
+   "name": "星轨勇者·洛",
+   "style": "anime",
+   "role": "赌徒"
+  }
+ ]
+}

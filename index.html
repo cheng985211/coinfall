@@ -11,6 +11,7 @@
 </head>
 <body>
   <canvas id="fx-canvas" aria-hidden="true"></canvas>
+  <div class="bg-layer" id="bg-layer" aria-hidden="true"></div>
   <div class="atmosphere" aria-hidden="true">
     <div class="atmosphere__vignette"></div>
     <div class="atmosphere__grain"></div>
@@ -25,6 +26,7 @@
       <nav class="main-nav" aria-label="主导航">
         <button data-nav="collection" class="nav-link">命途图鉴</button>
         <button data-nav="world" class="nav-link">八域档案</button>
+        <button data-nav="codex" class="nav-link">知识库</button>
         <button data-nav="lobby" class="nav-link">联机大厅</button>
         <button data-action="rules" class="nav-link">规则</button>
       </nav>
@@ -253,6 +255,15 @@
                 <div><h3>场景与对手</h3><p>背景主题会改变音乐、粒子与光效。</p></div>
               </div>
               <div class="field">
+                <span>血量倍率</span>
+                <div class="segmented" id="hp-multiplier-seg">
+                  <button data-hp-mult="1" class="is-active">1× · 标准（5血）</button>
+                  <button data-hp-mult="1.5">1.5× · 容错（8血）</button>
+                  <button data-hp-mult="2">2× · 休闲（10血）</button>
+                  <button data-hp-mult="3">3× · 持久战（15血）</button>
+                </div>
+              </div>
+              <div class="field">
                 <span>回廊场景</span>
                 <div class="theme-grid" id="theme-grid"></div>
               </div>
@@ -335,19 +346,48 @@
         </div>
       </section>
 
+      <!-- ================= CODEX / 知识库 ================= -->
+      <section id="screen-codex" class="screen" aria-label="知识库">
+        <div class="codex-screen">
+          <div class="codex-header">
+            <h1>命途知识库</h1>
+            <p>八域世界观 · 英雄传记 · 卡牌来历 · 玩法规则</p>
+          </div>
+          <nav class="codex-nav" id="codex-nav">
+            <button data-codex-tab="world" class="active">世界观总纲</button>
+            <button data-codex-tab="realms">八域设定</button>
+            <button data-codex-tab="heroes">英雄背景</button>
+            <button data-codex-tab="cards">卡牌来历</button>
+            <button data-codex-tab="rules">玩法规则</button>
+          </nav>
+          <div class="codex-content" id="codex-content">
+            <div class="codex-section" data-codex-section="world">
+              <h2>世界观总纲</h2>
+              <p>在时间之外，有一座不存在的赌场。八个世界的故事被抵押在这里，每一次抛币，都是一段命运被重新裁定。</p>
+              <h3>核心法则</h3>
+              <ul>
+                <li><strong>双面律</strong>：任何选择都必须同时拥有正面与反面。只想要好结局的人，不配坐在这张桌前。</li>
+                <li><strong>逆写权</strong>：每名执币者整局只有一次"逆写"：重抛刚刚落下的硬币。回廊只保存一个未发生的可能。</li>
+                <li><strong>一牌律</strong>：每回合只能打出一张技能卡。角色主动技不占出牌次数，但有使用上限。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ================= LOBBY ================= -->
       <section id="screen-lobby" class="screen" aria-label="联机大厅">
         <div class="subpage-head">
           <button class="back-btn" data-nav="home">← 返回回廊</button>
           <div class="eyebrow">THE NETWORKED TABLE</div>
           <h1>联机大厅</h1>
-          <p>局域网用 PeerJS 点对点直连；公网用 Supabase 免费 Realtime 同步。房间号就是暗号，密码只做门槛。</p>
+          <p>公网联机（零配置）：无需任何配置，公网直连，WebRTC 点对点。房间号就是暗号，密码只做门槛。Supabase 已降级为高级自定义项。</p>
         </div>
         <div class="lobby-layout">
           <div class="lobby-main">
             <div class="segmented lobby-tabs" id="lobby-tabs">
-              <button data-transport="peer" class="is-active">局域网 · PeerJS</button>
-              <button data-transport="supabase">公网 · Supabase</button>
+              <button data-transport="peer" class="is-active">公网联机（零配置）</button>
+              <button data-transport="supabase">高级自定义 · Supabase</button>
             </div>
             <div class="lobby-forms">
               <section class="panel lobby-panel">
@@ -404,9 +444,9 @@
               <button class="btn btn--quiet btn--block" id="leave-room">离开房间</button>
             </div>
             <div class="panel" id="net-setup-panel">
-              <div class="panel-head"><span class="panel-index">⚙</span><div><h3>联机配置</h3><p>公网联机需要 Supabase 项目；PeerJS 默认使用公共信令。</p></div></div>
+              <div class="panel-head"><span class="panel-index">⚙</span><div><h3>联机配置</h3><p>公网联机默认零配置，无需任何设置。</p></div></div>
               <button class="btn btn--secondary btn--block btn--sm" data-action="net-config">打开联机配置</button>
-              <p class="microcopy">不填 Supabase 也可玩单机、人机、本地双人与局域网。公网模式会显示配置引导。</p>
+              <p class="microcopy">默认使用 PeerJS 公网信令，局域网与公网均可直连。仅在需要自建信令或 Supabase 时点开高级自定义。</p>
             </div>
           </aside>
         </div>
@@ -528,6 +568,9 @@
   <noscript><div class="noscript">命途回廊需要启用 JavaScript 才能抛币。</div></noscript>
 
   <script src="data.js"></script>
+  <script src="assets/codex-data.js"></script>
+  <script src="assets/assets.js"></script>
+  <script src="assets/voice-lines.js"></script>
   <script src="ai.js"></script>
   <script src="net.js"></script>
   <script src="game.js"></script>

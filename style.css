@@ -53,10 +53,7 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(1200px 700px at 78% -10%, rgba(231, 184, 106, .09), transparent 58%),
-    radial-gradient(900px 600px at 8% 18%, rgba(107, 212, 192, .045), transparent 60%),
-    linear-gradient(180deg, #08090d 0%, #07080b 45%, #090a0e 100%);
+  background: #07080b;
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 15px;
@@ -65,8 +62,20 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* 主界面背景图 */
+body:not(.in-battle) {
+  background:
+    linear-gradient(180deg, rgba(6,7,10,.75) 0%, rgba(6,7,10,.85) 100%),
+    url('assets/art/bg/menu-bg.jpg') center / cover no-repeat fixed;
+}
+
 body.has-modal { overflow: hidden; }
-body.in-battle { background: #06070a; }
+body.in-battle {
+  background:
+    linear-gradient(180deg, rgba(6,7,10,.7) 0%, rgba(6,7,10,.85) 100%),
+    url('assets/art/bg/battle-bg.jpg') center / cover no-repeat fixed;
+}
 
 h1, h2, h3, h4, p, blockquote, figure { margin: 0; }
 h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 500; letter-spacing: .01em; }
@@ -2113,3 +2122,754 @@ body.flash-fail .atmosphere::after { background: radial-gradient(circle at 50% 4
   body { background: #fff; color: #111; }
   .screen { display: block !important; }
 }
+
+/* =========================================================
+   资源增强层（三国杀风格卡面 / 立绘图片 / 背景层）
+   说明：本块为叠加增强，不改动上方既有规则；
+         图片缺失时 onerror 已移除对应元素，自动回退程序化美术。
+   ========================================================= */
+
+/* ---- 真实角色立绘 ---- */
+.portrait__img {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 20%;
+  pointer-events: none;
+}
+.portrait.has-media .portrait__initial,
+.portrait.has-media .portrait__rings { opacity: 0; }
+.portrait.has-media .portrait__aurora { opacity: .25; }
+.portrait.has-media {
+  border-color: color-mix(in srgb, var(--style-color) 60%, transparent);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.45), inset 0 -34px 46px -18px rgba(0,0,0,.85);
+}
+.portrait.has-media .portrait__glyph,
+.portrait.has-media .portrait__realm {
+  text-shadow: 0 1px 4px rgba(0,0,0,.9);
+  background: rgba(0,0,0,.28); border-radius: 4px; padding: 1px 4px;
+}
+
+/* ---- 真实卡面插画 ---- */
+.card-art__img {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; pointer-events: none;
+}
+.card-art:has(.card-art__img) { background: #0a0b10; }
+.card-art:has(.card-art__img)::before { opacity: .35; }
+.card-art__img + .card-art__ring,
+.card-art__img + .card-art__ring ~ .card-art__glyph { opacity: .85; text-shadow: 0 0 12px #000, 0 1px 3px #000; }
+
+/* ---- 三国杀风格：稀有度边框与光效 ---- */
+.fate-card {
+  border-width: 1px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+  transition: transform .18s ease, box-shadow .25s ease, border-color .2s ease;
+}
+/* 普通：素雅钢灰 */
+.fate-card[data-rarity="common"] { border-color: rgba(150,160,175,.35); }
+/* 稀有：青蓝描边 */
+.fate-card[data-rarity="rare"] {
+  border-color: color-mix(in srgb, var(--rarity) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--rarity) 22%, transparent),
+              inset 0 0 18px -8px color-mix(in srgb, var(--rarity) 35%, transparent);
+}
+/* 史诗：紫辉 + 双层内框 */
+.fate-card[data-rarity="epic"] {
+  border-color: color-mix(in srgb, var(--rarity) 70%, #fff 8%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--rarity) 30%, transparent),
+              0 0 18px -4px color-mix(in srgb, var(--rarity) 45%, transparent),
+              inset 0 0 22px -8px color-mix(in srgb, var(--rarity) 40%, transparent);
+}
+/* 传说：鎏金烫边 + 外发光 */
+.fate-card[data-rarity="legendary"] {
+  border-color: color-mix(in srgb, var(--rarity) 80%, #fff 12%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--rarity) 45%, transparent),
+              0 0 26px -2px color-mix(in srgb, var(--rarity) 60%, transparent),
+              inset 0 0 26px -8px color-mix(in srgb, var(--rarity) 50%, transparent);
+}
+.fate-card[data-rarity="legendary"]:not(:disabled):hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--rarity) 60%, transparent),
+              0 10px 34px -6px color-mix(in srgb, var(--rarity) 70%, transparent),
+              inset 0 0 30px -8px color-mix(in srgb, var(--rarity) 55%, transparent);
+}
+/* 稀有度角标升级为圆点徽章 */
+.fate-card__rarity {
+  width: 9px; height: 9px;
+  border: 1px solid rgba(255,255,255,.5);
+}
+
+/* ---- 主界面 / 对战背景层（背景图存在时叠加，不存在则无影响）---- */
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-size: cover; background-position: center;
+  opacity: .5; filter: saturate(.9);
+}
+body.in-battle .bg-layer { opacity: .38; }
+
+/* ---- 对战区敌我立绘 ---- */
+.combatant__img {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 18%;
+  pointer-events: none;
+}
+.combatant__art.has-media .combatant__initial { opacity: 0; }
+.combatant__art.has-media .combatant__aurora { opacity: .25; }
+.combatant__art.has-media {
+  box-shadow: inset 0 -30px 40px -16px rgba(0,0,0,.85), inset 0 0 0 1px rgba(0,0,0,.4);
+}
+.combatant__art.has-media .combatant__glyph { text-shadow: 0 1px 4px rgba(0,0,0,.9); }
+@media (prefers-reduced-motion: reduce) {
+  .portrait__scan { animation: none; }
+}
+
+/* =========================================================
+   硬币皮肤系统（Coin Skins）
+   ========================================================= */
+:root {
+  --coin-face-a: #e8c98a;
+  --coin-face-b: #d4a85c;
+  --coin-edge: #9d7137;
+  --coin-glow: rgba(231, 184, 106, .4);
+  --coin-text: #3a2810;
+  --coin-text-b: #5a4020;
+}
+
+/* 青铜（默认） */
+html[data-coin-skin="bronze"] {
+  --coin-face-a: #c9a06a;
+  --coin-face-b: #a87f4a;
+  --coin-edge: #7a5a2a;
+  --coin-glow: rgba(201, 160, 106, .35);
+  --coin-text: #2a1a08;
+  --coin-text-b: #4a3015;
+}
+
+/* 白银 */
+html[data-coin-skin="silver"] {
+  --coin-face-a: #e8e8ec;
+  --coin-face-b: #c8c8d0;
+  --coin-edge: #9a9aa5;
+  --coin-glow: rgba(232, 232, 236, .4);
+  --coin-text: #2a2a35;
+  --coin-text-b: #4a4a55;
+}
+
+/* 黄金 */
+html[data-coin-skin="gold"] {
+  --coin-face-a: #f6d98a;
+  --coin-face-b: #e8b84a;
+  --coin-edge: #b8862a;
+  --coin-glow: rgba(246, 217, 138, .5);
+  --coin-text: #4a2f08;
+  --coin-text-b: #6a4a18;
+}
+
+/* 紫晶 */
+html[data-coin-skin="amethyst"] {
+  --coin-face-a: #c8a0e8;
+  --coin-face-b: #9a6ac8;
+  --coin-edge: #6a3a98;
+  --coin-glow: rgba(200, 160, 232, .45);
+  --coin-text: #2a1040;
+  --coin-text-b: #4a2068;
+}
+
+/* 翡翠 */
+html[data-coin-skin="jade"] {
+  --coin-face-a: #8ae8c8;
+  --coin-face-b: #5ac8a0;
+  --coin-edge: #2a9870;
+  --coin-glow: rgba(138, 232, 200, .4);
+  --coin-text: #083a28;
+  --coin-text-b: #185a40;
+}
+
+/* 血月 */
+html[data-coin-skin="bloodmoon"] {
+  --coin-face-a: #e88a8a;
+  --coin-face-b: #c85a5a;
+  --coin-edge: #982a2a;
+  --coin-glow: rgba(232, 138, 138, .45);
+  --coin-text: #400808;
+  --coin-text-b: #681818;
+}
+
+/* 硬币皮肤应用到硬币元素 */
+.coin, .hero-coin {
+  --coin-face-a: var(--coin-face-a);
+  --coin-face-b: var(--coin-face-b);
+  --coin-edge: var(--coin-edge);
+}
+
+.coin__face--front, .hero-coin__face--front {
+  background: linear-gradient(135deg, var(--coin-face-a) 0%, var(--coin-face-b) 100%);
+}
+
+.coin__face--front span, .hero-coin__face--front span {
+  color: var(--coin-text);
+  text-shadow: 0 1px 0 rgba(255,255,255,.2);
+}
+
+.coin__face--front small, .hero-coin__face--front small {
+  color: var(--coin-text-b);
+}
+
+.coin__face--back, .hero-coin__face--back {
+  background: linear-gradient(135deg, var(--coin-face-b) 0%, var(--coin-edge) 100%);
+}
+
+.coin__face--back span, .hero-coin__face--back span {
+  color: var(--coin-text);
+}
+
+.coin__edge, .hero-coin__rim {
+  border-color: var(--coin-edge);
+}
+
+.coin--success {
+  filter: drop-shadow(0 0 20px var(--coin-glow));
+}
+
+.coin--fail {
+  filter: drop-shadow(0 0 20px rgba(224, 108, 95, .4));
+}
+
+/* =========================================================
+   知识库界面（Codex）
+   ========================================================= */
+.codex-screen {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.codex-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.codex-header h1 {
+  font-size: 32px;
+  color: var(--gold-2);
+  margin-bottom: 8px;
+}
+
+.codex-header p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.codex-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.codex-nav button {
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--panel);
+  color: var(--ink-soft);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.codex-nav button:hover,
+.codex-nav button.active {
+  background: var(--gold);
+  color: var(--theme-ink);
+  border-color: var(--gold);
+}
+
+.codex-content {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  min-height: 400px;
+}
+
+.codex-section h2 {
+  font-size: 22px;
+  color: var(--gold-2);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.codex-section h3 {
+  font-size: 17px;
+  color: var(--ink);
+  margin: 20px 0 10px;
+}
+
+.codex-section p, .codex-section li {
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.codex-section ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.codex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.codex-card {
+  background: var(--panel-raised);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.codex-card h4 {
+  font-size: 15px;
+  color: var(--gold-2);
+  margin-bottom: 8px;
+}
+
+.codex-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* =========================================================
+   设置面板增强（音色选择）
+   ========================================================= */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.settings-row:last-child { border-bottom: 0; }
+
+.settings-row label {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.settings-row select,
+.settings-row input[type="range"] {
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.voice-preview-btn {
+  margin-left: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  background: var(--gold);
+  color: var(--theme-ink);
+  cursor: pointer;
+}
+
+/* =========================================================
+   硬币图片素材（替换CSS渐变）
+   ========================================================= */
+.coin__face, .hero-coin__face {
+  background-size: cover !important;
+  background-position: center !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.coin__face::before, .coin__face::after,
+.hero-coin__face::before, .hero-coin__face::after {
+  display: none !important;
+}
+
+.coin__face span, .coin__face small,
+.hero-coin__face span, .hero-coin__face small {
+  display: none !important;
+}
+
+.coin__edge, .hero-coin__rim {
+  display: none !important;
+}
+
+/* 各皮肤正面图 */
+html[data-coin-skin="bronze"] .coin__face--front,
+html[data-coin-skin="bronze"] .hero-coin__face--front {
+  background-image: url('assets/art/coins/bronze-front.jpg');
+}
+html[data-coin-skin="bronze"] .coin__face--back,
+html[data-coin-skin="bronze"] .hero-coin__face--back {
+  background-image: url('assets/art/coins/bronze-back.jpg');
+}
+
+html[data-coin-skin="silver"] .coin__face--front,
+html[data-coin-skin="silver"] .hero-coin__face--front {
+  background-image: url('assets/art/coins/silver-front.jpg');
+}
+html[data-coin-skin="silver"] .coin__face--back,
+html[data-coin-skin="silver"] .hero-coin__face--back {
+  background-image: url('assets/art/coins/silver-back.jpg');
+}
+
+html[data-coin-skin="gold"] .coin__face--front,
+html[data-coin-skin="gold"] .hero-coin__face--front {
+  background-image: url('assets/art/coins/gold-front.jpg');
+}
+html[data-coin-skin="gold"] .coin__face--back,
+html[data-coin-skin="gold"] .hero-coin__face--back {
+  background-image: url('assets/art/coins/gold-back.jpg');
+}
+
+html[data-coin-skin="amethyst"] .coin__face--front,
+html[data-coin-skin="amethyst"] .hero-coin__face--front {
+  background-image: url('assets/art/coins/amethyst-front.jpg');
+}
+html[data-coin-skin="amethyst"] .coin__face--back,
+html[data-coin-skin="amethyst"] .hero-coin__face--back {
+  background-image: url('assets/art/coins/amethyst-back.jpg');
+}
+
+html[data-coin-skin="jade"] .coin__face--front,
+html[data-coin-skin="jade"] .hero-coin__face--front {
+  background-image: url('assets/art/coins/jade-front.jpg');
+}
+html[data-coin-skin="jade"] .coin__face--back,
+html[data-coin-skin="jade"] .hero-coin__face--back {
+  background-image: url('assets/art/coins/jade-back.jpg');
+}
+
+html[data-coin-skin="bloodmoon"] .coin__face--front,
+html[data-coin-skin="bloodmoon"] .hero-coin__face--front {
+  background-image: url('assets/art/coins/bloodmoon-front.jpg');
+}
+html[data-coin-skin="bloodmoon"] .coin__face--back,
+html[data-coin-skin="bloodmoon"] .hero-coin__face--back {
+  background-image: url('assets/art/coins/bloodmoon-back.jpg');
+}
+
+/* =========================================================
+   硬币成功/失败状态光效
+   ========================================================= */
+.coin--success {
+  filter: drop-shadow(0 0 24px rgba(246, 217, 138, .55));
+}
+.coin--fail {
+  filter: drop-shadow(0 0 24px rgba(224, 108, 95, .45));
+}
+
+/* =========================================================
+   三国杀风格战斗界面简化
+   ========================================================= */
+.battle-screen {
+  background: #06070a;
+}
+
+.battle-main {
+  gap: 12px;
+  padding: 12px clamp(12px, 2vw, 20px) 16px;
+}
+
+/* 简化战斗单位卡片：去掉多余渐变，用边框区分 */
+.combatant {
+  border: 1px solid rgba(231, 184, 106, .2);
+  border-radius: 8px;
+  background: rgba(12, 14, 20, .85);
+  padding: 8px;
+}
+
+.combatant.is-current {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px rgba(231, 184, 106, .3), 0 0 20px rgba(231, 184, 106, .1);
+}
+
+.combatant.is-target {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 1px rgba(224, 108, 95, .4), 0 0 20px rgba(224, 108, 95, .15);
+}
+
+/* 硬币舞台简化 */
+.coin-stage {
+  height: 140px;
+}
+
+.coin {
+  width: 120px;
+  height: 120px;
+}
+
+/* 手牌区域简化 */
+.hand .fate-card {
+  flex: 0 0 150px;
+  width: 150px;
+}
+
+.hand .card-art {
+  height: 88px;
+}
+
+/* 右侧面板简化 */
+.battle-side {
+  border-left: 1px solid rgba(231, 184, 106, .12);
+}
+
+/* 顶栏简化 */
+.battle-topbar {
+  background: rgba(6, 7, 10, .92);
+  border-bottom: 1px solid rgba(231, 184, 106, .18);
+}
+
+/* 通用按钮三国杀风格 */
+.btn--primary {
+  background: linear-gradient(180deg, #e7b86a, #b8862a);
+  color: #1a1208;
+  border: 1px solid #f6d9a3;
+  font-weight: 600;
+}
+
+.btn--secondary {
+  background: rgba(231, 184, 106, .1);
+  color: var(--gold);
+  border: 1px solid rgba(231, 184, 106, .3);
+}
+
+.icon-btn {
+  background: rgba(231, 184, 106, .06);
+  border: 1px solid rgba(231, 184, 106, .15);
+  color: var(--gold);
+}
+/* =========================================================
+   v2.0 — 硬币真实贴图 / 皮肤图卡 / 折叠高级块 / 知识库
+   ========================================================= */
+.coin__face--front, .coin__face--back,
+.hero-coin__face--front, .hero-coin__face--back {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.coin__face--img span, .coin__face--img small,
+.hero-coin__face--img span, .hero-coin__face--img small {
+  display: none;
+}
+.coin__face--img {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.35);
+}
+
+/* 皮肤图卡选择器 */
+.skin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.skin-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  background: rgba(231,184,106,.05);
+  border: 1px solid rgba(231,184,106,.18);
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--ink, #e9e3d6);
+  text-align: center;
+  transition: border-color .15s, transform .15s;
+}
+.skin-card img {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,.4);
+}
+.skin-card__name { font-size: 12px; font-weight: 700; }
+.skin-card__trait { font-size: 10px; opacity: .65; line-height: 1.2; }
+.skin-card:hover { transform: translateY(-2px); }
+.skin-card.is-active {
+  border-color: var(--gold, #e7b86a);
+  box-shadow: 0 0 0 2px rgba(231,184,106,.35);
+}
+
+/* 高级自定义折叠块 */
+.advanced-block {
+  margin-top: 12px;
+  border: 1px dashed rgba(231,184,106,.3);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+.advanced-block summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--gold, #e7b86a);
+  margin-bottom: 6px;
+}
+
+/* 知识库 */
+.codex-body {
+  background: #14100c;
+}
+.codex-hero {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  position: relative;
+  margin-bottom: 12px;
+}
+.codex-hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,.75));
+  border-radius: 12px;
+}
+.codex-realm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.codex-realm-card {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(231,184,106,.2);
+}
+.codex-realm-card__head {
+  height: 80px;
+  background-size: cover;
+  background-position: center;
+}
+.codex-realm-card__body { padding: 8px 10px; }
+.codex-char-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 8px; border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.codex-char-row img {
+  width: 56px; height: 72px; object-fit: cover; border-radius: 6px; flex: 0 0 auto;
+}
+.codex-char-detail { font-size: 12px; opacity: .8; margin-top: 4px; white-space: pre-wrap; }
+
+@media (max-width: 640px) {
+  .skin-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+}
+.codex-content { background: linear-gradient(rgba(10,8,6,.82), rgba(10,8,6,.92)), url('assets/art/bg/codex.jpg') center/cover no-repeat, #14100c; border-radius: 12px; padding: 16px; }
+
+/* =========================================================
+   v2.0 — 三国杀式战斗布局：竖版英雄牌 / 中央牌桌 / 动效
+   ========================================================= */
+
+/* 战斗页整体：敌方竖牌 → 中央牌桌 → 我方竖牌 → 手牌 */
+.battle-main { gap: 8px; }
+
+/* 竖版英雄牌（立绘在上，信息在下） */
+.combatant {
+  grid-template-columns: 1fr !important;
+  gap: 0;
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.combatant__art {
+  min-height: 132px !important;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--style-color) 40%, transparent);
+}
+.combatant__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; z-index: 1; }
+.combatant.has-media .combatant__initial,
+.combatant.has-media .combatant__glyph { opacity: 0; }
+.combatant__body { padding: 6px 8px 7px; gap: 2px; }
+.combatant__body h3 { font-size: 13px; margin: 1px 0 2px; }
+.combatant__meta { font-size: 7px; }
+.combatant__footer { font-size: 6.5px; gap: 6px; flex-wrap: wrap; }
+.combatant.is-defeated { filter: grayscale(1) brightness(.6); }
+
+/* 棋盘行：横向排开竖牌 */
+.board-row { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.board-row .combatant { flex: 0 0 132px; width: 132px; }
+
+/* 中央牌桌：主题背景 + 大硬币 */
+.arena {
+  background-image:
+    linear-gradient(180deg, rgba(10,12,17,.78), rgba(8,9,13,.9)),
+    url('assets/art/bg/battle-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 230px;
+}
+.arena__center { grid-template-columns: minmax(0,1fr) 150px minmax(0,1fr); }
+.coin-stage { height: 150px; }
+.coin { width: 132px; height: 132px; }
+
+/* 手牌：选中上浮 */
+.hand .fate-card { transition: transform .18s ease, box-shadow .18s ease; }
+.hand .fate-card.is-selected,
+.hand .fate-card.selected { transform: translateY(-14px); box-shadow: 0 14px 30px rgba(0,0,0,.5), 0 0 0 1px var(--gold); }
+
+/* ---------- 战斗动效 ---------- */
+@keyframes cfHit { 0%{box-shadow:0 0 0 0 rgba(224,80,70,.0);} 25%{box-shadow:0 0 24px 4px rgba(224,80,70,.85);} 100%{box-shadow:0 0 0 0 rgba(224,80,70,0);} }
+.combatant.is-hit { animation: cfHit .5s ease; }
+
+@keyframes cfHeal { 0%{box-shadow:0 0 0 0 rgba(90,220,140,0);} 30%{box-shadow:0 0 22px 3px rgba(90,220,140,.7);} 100%{box-shadow:0 0 0 0 rgba(90,220,140,0);} }
+.combatant.is-heal { animation: cfHeal .6s ease; }
+
+@keyframes cfShieldRing { 0%{box-shadow:0 0 0 0 rgba(120,170,240,0);} 40%{box-shadow:0 0 0 6px rgba(120,170,240,.55);} 100%{box-shadow:0 0 0 12px rgba(120,170,240,0);} }
+.combatant.is-shield { animation: cfShieldRing .7s ease; }
+
+@keyframes cfBurn { 0%,100%{ filter: brightness(1);} 50%{ filter: brightness(1.35) sepia(.3) saturate(1.6);} }
+.combatant.is-burn { animation: cfBurn .9s ease-in-out 3; }
+
+@keyframes cfLifesteal { 0%{box-shadow:0 0 0 0 rgba(140,20,30,0);} 40%{box-shadow:0 0 26px 5px rgba(140,20,30,.8);} 100%{box-shadow:0 0 0 0 rgba(140,20,30,0);} }
+.combatant.is-lifesteal { animation: cfLifesteal .7s ease; }
+
+@keyframes cfSteal { 0%{transform:translateY(0);opacity:1;} 100%{transform:translateY(10px);opacity:.2;filter:grayscale(1);} }
+.combatant.is-steal { animation: cfSteal .55s ease; }
+
+/* 数字上浮 */
+.float-text { position: absolute; z-index: 20; font-family: var(--font-serif); font-size: 20px; font-weight: 700; pointer-events: none; animation: cfFloatUp .9s ease forwards; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+.float-text--damage { color:#ff7a6b; } .float-text--heal{ color:#6fe09a; } .float-text--shield{ color:#8db8ff; }
+@keyframes cfFloatUp { 0%{transform:translateY(0);opacity:0;} 15%{opacity:1;} 100%{transform:translateY(-46px);opacity:0;} }
+
+/* 抛币判定闪光 */
+@keyframes cfFlipFlash { 0%{filter:brightness(1);} 40%{filter:brightness(2.2) drop-shadow(0 0 24px currentColor);} 100%{filter:brightness(1);} }
+.coin--success { animation: cfFlipFlash .6s ease; color:#e7b86a; }
+.coin--fail { animation: cfFlipFlash .6s ease; color:#e06c5f; }
+
+@media (prefers-reduced-motion: reduce) {
+  .combatant.is-hit,.combatant.is-heal,.combatant.is-shield,.combatant.is-burn,
+  .combatant.is-lifesteal,.combatant.is-steal,.float-text,.coin--success,.coin--fail { animation: none !important; }
+  .hand .fate-card.is-selected { transform: none; }
+}
+
+/* 移动端纵向堆叠 */
+@media (max-width: 640px) {
+  .arena { min-height: 200px; }
+  .arena__center { grid-template-columns: 1fr; gap: 8px; padding: 10px; }
+  .coin-stage { height: 110px; }
+  .coin { width: 92px; height: 92px; }
+  .board-row .combatant { flex: 0 0 104px; width: 104px; }
+  .combatant__art { min-height: 96px !important; }
+  .combatant__body h3 { font-size: 11px; }
+  .hand .fate-card { flex: 0 0 128px; width: 128px; }
+}
+
+/* setup 屏 575px 横向溢出修复 */
+.field-row { flex-wrap: wrap; }
+.field-row .field { flex: 1 1 140px; min-width: 0; }
+.segmented { flex-wrap: wrap; }

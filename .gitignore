@@ -24,3 +24,7 @@ desktop.ini
 *.log
 npm-debug.log*
 pnpm-debug.log*
+# generated candidate art (not needed at runtime)
+generated-images/
+# runtime zip
+coinfall-v2.0.zip

@@ -1,0 +1,18 @@
+[
+  {"id": "cth-01", "dir": "w_cth01", "out": "assets/art/portraits/cth-01.webp"},
+  {"id": "cth-02", "dir": "w_cth02", "out": "assets/art/portraits/cth-02.webp"},
+  {"id": "cth-03", "dir": "w_cth03", "out": "assets/art/portraits/cth-03.webp"},
+  {"id": "cth-04", "dir": "w_cth04", "out": "assets/art/portraits/cth-04.webp"},
+  {"id": "stm-01", "dir": "w_stm01", "out": "assets/art/portraits/stm-01.webp"},
+  {"id": "stm-02", "dir": "w_stm02", "out": "assets/art/portraits/stm-02.webp"},
+  {"id": "stm-03", "dir": "w_stm03", "out": "assets/art/portraits/stm-03.webp"},
+  {"id": "stm-04", "dir": "w_stm04", "out": "assets/art/portraits/stm-04.webp"},
+  {"id": "cul-01", "dir": "w_cul01", "out": "assets/art/portraits/cul-01.webp"},
+  {"id": "cul-02", "dir": "w_cul02", "out": "assets/art/portraits/cul-02.webp"},
+  {"id": "cul-03", "dir": "w_cul03", "out": "assets/art/portraits/cul-03.webp"},
+  {"id": "cul-04", "dir": "w_cul04", "out": "assets/art/portraits/cul-04.webp"},
+  {"id": "fan-01", "dir": "w_fan01", "out": "assets/art/portraits/fan-01.webp"},
+  {"id": "fan-02", "dir": "w_fan02", "out": "assets/art/portraits/fan-02.webp"},
+  {"id": "fan-03", "dir": "w_fan03", "out": "assets/art/portraits/fan-03.webp"},
+  {"id": "fan-04", "dir": "w_fan04", "out": "assets/art/portraits/fan-04.webp"}
+]

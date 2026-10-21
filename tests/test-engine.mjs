@@ -41,7 +41,7 @@ for (const mode of modes) {
         }
       } else if (g.phase === 'flip') {
         const p = E.playerById(g, g.pending.actorId);
-        const choice = (rng() < 0.08 && p.rerolls > 0 && !g.pending.rerolled) ? 'reroll' : 'accept';
+        const choice = (rng() < 0.08 && g.pending.canReroll && !g.pending.rerolled) ? 'reroll' : 'accept';
         const r = E.resolveFlip(g, p.id, choice);
         if (!r.ok) throw new Error('flip fail ' + mode + ': ' + r.reason);
       } else if (g.phase === 'reveal') {
