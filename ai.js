@@ -19,8 +19,9 @@
     apiKey: 'sk-ws-H.PXHLLDE.6wsk.MEYCIQD8cgiyAECrPQo11SxSA1tB54ZCOWArjK-PGsMqQS4TUAIhALb8uR1K0SOMlEQL9cX42-uzYqsMNcjEwbUy8WBrHP8S',
     model: 'deepseek-v4.1-flash-1017',
     remoteBattle: false,
+    disableThinking: true,
     temperature: 0.75,
-    timeoutMs: 12000
+    timeoutMs: 30000
   };
 
   function loadConfig() {
@@ -52,41 +53,71 @@
   /* ---------------------------------------------------------
      远程模型：OpenAI 兼容 Chat Completions
      --------------------------------------------------------- */
-  async function remoteChat(messages, options) {
-    if (!apiReady()) throw new Error('AI 接口未启用或缺少密钥');
+  async function requestOnce(messages, options, attempt) {
     const controller = new AbortController();
-    const timer = setTimeout(function () { controller.abort(); }, config.timeoutMs || 12000);
+    const timeoutMs = attempt.timeoutMs || config.timeoutMs || 30000;
+    const timer = setTimeout(function () { controller.abort(); }, timeoutMs);
     try {
+      const body = {
+        model: config.model || 'deepseek-v4.1-flash-1017',
+        messages: messages,
+        temperature: options && options.temperature != null ? options.temperature : config.temperature,
+        max_tokens: attempt.maxTokens,
+        stream: false
+      };
+      // 多数推理模型支持关闭思考以获得更快响应；不支持的接口会在下一轮自动去掉该字段重试。
+      if (attempt.thinking === false) body.enable_thinking = false;
       const res = await fetch(endpoint(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + config.apiKey
         },
-        body: JSON.stringify({
-          model: config.model || 'deepseek-v4.1-flash-1017',
-          messages: messages,
-          temperature: options && options.temperature != null ? options.temperature : config.temperature,
-          max_tokens: options && options.maxTokens ? options.maxTokens : 420,
-          stream: false
-        }),
+        body: JSON.stringify(body),
         signal: controller.signal
       });
       if (!res.ok) {
         const detail = await res.text().catch(function () { return ''; });
-        throw new Error('AI 接口 ' + res.status + ': ' + detail.slice(0, 180));
+        const error = new Error('AI 接口 ' + res.status + ': ' + detail.slice(0, 180));
+        error.status = res.status;
+        throw error;
       }
       const data = await res.json();
-      const content = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
-      if (!content) throw new Error('AI 接口返回为空');
-      lastError = '';
+      const message = data && data.choices && data.choices[0] && data.choices[0].message;
+      const content = message && message.content;
+      if (!content) {
+        const error = new Error('AI 接口返回为空');
+        error.empty = true;
+        throw error;
+      }
       return String(content).trim();
-    } catch (err) {
-      lastError = err.name === 'AbortError' ? 'AI 请求超时' : (err.message || String(err));
-      throw err;
     } finally {
       clearTimeout(timer);
     }
+  }
+
+  async function remoteChat(messages, options) {
+    if (!apiReady()) throw new Error('AI 接口未启用或缺少密钥');
+    options = options || {};
+    const baseTokens = options.maxTokens || 420;
+    const attempts = [];
+    if (config.disableThinking !== false) {
+      attempts.push({ maxTokens: Math.max(baseTokens, 96), thinking: false, timeoutMs: config.timeoutMs || 30000 });
+    }
+    attempts.push({ maxTokens: Math.max(baseTokens, 640), thinking: true, timeoutMs: (config.timeoutMs || 30000) + 10000 });
+
+    let lastErr = null;
+    for (let i = 0; i < attempts.length; i++) {
+      try {
+        const content = await requestOnce(messages, options, attempts[i]);
+        lastError = '';
+        return content;
+      } catch (err) {
+        lastErr = err;
+        lastError = err.name === 'AbortError' ? 'AI 请求超时' : (err.message || String(err));
+      }
+    }
+    throw lastErr || new Error('AI 请求失败');
   }
 
   async function remoteJson(messages, options) {
@@ -556,7 +587,7 @@
       const out = await remoteJson([
         { role: 'system', content: system },
         { role: 'user', content: '请判断并回复。只输出 JSON。' }
-      ], { temperature: 0.8, maxTokens: 260 });
+      ], { temperature: 0.8, maxTokens: 700 });
       const target = out.target ? findTarget(game, player, out.target) : null;
       return {
         intent: out.intent || 'unknown',
@@ -869,7 +900,7 @@
     const out = await remoteJson([
       { role: 'system', content: '你是严谨的卡牌游戏 AI，只输出 JSON，不解释。' },
       { role: 'user', content: prompt }
-    ], { temperature: 0.4, maxTokens: 180 });
+    ], { temperature: 0.4, maxTokens: 640 });
     if (!out || typeof out !== 'object') return null;
     const idx = Number.isInteger(out.cardIndex) ? out.cardIndex : -1;
     const validIndex = idx >= 0 && idx < player.hand.length ? idx : -1;
@@ -938,7 +969,7 @@
       return cleanReply(await remoteChat([
         { role: 'system', content: system },
         { role: 'user', content: text }
-      ], { maxTokens: 160 }));
+      ], { maxTokens: 512 }));
     } catch (e) {
       return '';
     }
@@ -987,6 +1018,7 @@
     chooseAction,
     chooseReroll,
     eventLine,
+    chat,
     taunt,
     proactive,
     initPlayer,

@@ -28,7 +28,20 @@
       frenzy: { hp: 5, chars: 1, teamSize: 1, deck: 18, mult: 1, rerolls: 1, switchChars: false, maxCards: 3, multiPlay: true },
       sudden: { hp: 1, chars: 1, teamSize: 1, deck: 10, mult: 1, rerolls: 1, switchChars: false, healToShield: true },
       chain: { hp: 5, chars: 1, teamSize: 1, deck: 16, mult: 1, rerolls: 1, switchChars: false, chain: 3 },
-      chaos: { hp: 5, chars: 1, teamSize: 1, deck: 18, mult: 1, rerolls: 1, switchChars: false, chaos: true }
+      chaos: { hp: 5, chars: 1, teamSize: 1, deck: 18, mult: 1, rerolls: 1, switchChars: false, chaos: true },
+      'random-rules': { hp: 5, chars: 1, teamSize: 1, deck: 15, mult: 1, rerolls: 1, switchChars: false, randomRules: true },
+      draft: { hp: 5, chars: 1, teamSize: 1, deck: 12, mult: 1, rerolls: 1, switchChars: false, draft: true },
+      'double-stakes': { hp: 5, chars: 1, teamSize: 1, deck: 15, mult: 2, rerolls: 1, switchChars: false }
+    };
+
+    // v2.1 random-rules 法则池（1..6）
+    const RANDOM_RULES = {
+      1: '昭面成功时额外造成 1 点伤害',
+      2: '昧面也触发正面效果',
+      3: '本回合每名角色可打出 2 张技能卡',
+      4: '本回合第一张技能卡伤害 +1',
+      5: '本回合治疗与护盾数值 +1',
+      6: '本回合开始双方各抽 1 张牌'
     };
 
     let gameSeq = 0;
@@ -62,6 +75,22 @@
       const picked = (ids || []).map(function (id) { return D.byId.card(id); }).filter(Boolean);
       if (picked.length >= 10) return picked.slice(0, 10).map(cloneCard);
       return randomDeck(fallbackSize || 15, rng);
+    }
+
+    // v2.1 draft 轮抽赌局：从全卡池按类别均衡 A-B-A-B 交替组 12 张卡组（每方 6）。
+    // 返回 { a:[card...], b:[card...] }，供战前展示与重抽。
+    function buildDraftDeck(rng) {
+      rng = rng || Math.random;
+      function poolOf(cat) { return shuffle(D.CARDS.filter(function (c) { return c.category === cat; }), rng); }
+      var attack = poolOf('attack'), defense = poolOf('defense'), control = poolOf('control');
+      function take(arr, n) { return arr.splice(0, n); }
+      // 每方近似 6 攻击 / 3 防御 / 3 控制 = 12
+      var aAttack = take(attack, 6), bAttack = take(attack, 6);
+      var aDef = take(defense, 3), bDef = take(defense, 3);
+      var aCtl = take(control, 3), bCtl = take(control, 3);
+      var a = [].concat(aAttack, aDef, aCtl).map(cloneCard);
+      var b = [].concat(bAttack, bDef, bCtl).map(cloneCard);
+      return { a: a, b: b };
     }
 
     function createUnit(char, options) {
@@ -162,6 +191,16 @@
       };
 
       const onlineGuest = online && online.guestName ? online.guestName : null;
+      const onlineGuests = online
+        ? (Array.isArray(online.guests) && online.guests.length
+          ? online.guests
+          : (onlineGuest ? [{ name: onlineGuest, seat: 1 }] : []))
+        : [];
+      const guestNames = {};
+      onlineGuests.forEach(function (g) {
+        const seat = Number(g && g.seat);
+        if (seat > 0) guestNames[seat] = String((g && g.name) || '访客').slice(0, 12);
+      });
       const hpMult = config.hpMultiplier || 1;
       const hp = Math.round(rules.hp * hpMult);
 
@@ -224,9 +263,11 @@
       }
 
       const p0Chars = makeUnits(rules.chars === 2 ? 2 : 1, config.charId, config.charId2, used, null);
-      const p0Deck = (config.deckMode === 'custom' && (config.deckIds || []).length >= 10)
+      const p0Deck = (rules.draft && config.draftDeckIdsA && config.draftDeckIdsA.length)
+        ? deckFromIds(config.draftDeckIdsA, rules.deck, rng)
+        : (config.deckMode === 'custom' && (config.deckIds || []).length >= 10
         ? deckFromIds(config.deckIds, rules.deck, rng)
-        : randomDeck(rules.deck, rng);
+        : randomDeck(rules.deck, rng));
 
       function charsForSeat(spec) {
         if (modeId === 'story' && spec.team === 'B') return [bossUnit];
@@ -244,17 +285,20 @@
 
       game.players = seats.map(function (spec) {
         const chars = charsForSeat(spec);
-        const isGuestSeat = spec.team === 'B' && spec.teamIndex === 1;
-        const localP1 = !!(options.localHumanP1 && isGuestSeat && teamA === 1 && teamB === 1 && modeId !== 'story');
-        const human = spec.seat === 0 || (isGuestSeat && (!!onlineGuest || localP1));
+        const guestName = guestNames[spec.seat] != null ? guestNames[spec.seat] : null;
+        const isGuestSeat = guestName != null;
+        const isMirrorSeat = spec.team === 'B' && spec.teamIndex === 1;
+        const localP1 = !!(options.localHumanP1 && isMirrorSeat && !isGuestSeat && teamA === 1 && teamB === 1 && modeId !== 'story');
+        const human = spec.seat === 0 || isGuestSeat || localP1;
         let name;
         if (spec.seat === 0) name = config.playerName || '无名执币者';
-        else if (isGuestSeat && onlineGuest) name = onlineGuest;
-        else if (isGuestSeat && localP1) name = '玩家二';
+        else if (guestName) name = guestName;
+        else if (localP1) name = '玩家二';
         else name = (chars[0] && chars[0].name) || (spec.team === 'A' ? '同注者' : '敌方');
         let deck;
         if (spec.seat === 0) deck = p0Deck;
-        else if (isGuestSeat && rules.mirror) deck = p0Deck.map(function (c) { return cloneCard(c); });
+        else if (isMirrorSeat && rules.mirror) deck = p0Deck.map(function (c) { return cloneCard(c); });
+        else if (rules.draft && config.draftDeckIdsB && config.draftDeckIdsB.length) deck = deckFromIds(config.draftDeckIdsB, rules.deck, rng);
         else deck = randomDeck(rules.deck + (isGuestSeat && teamA === 1 && teamB === 1 && modeId !== 'team' ? 2 : 0), rng);
 
         const player = createPlayer({
@@ -494,6 +538,22 @@
       p.playedCategories = p.playedCategories || {};
       p.orders = (p.orders || []).filter(function (o) { return o.status === 'accepted' && (!o.expiresTurn || o.expiresTurn >= game.turn); });
 
+      // v2.1 random-rules 乱序法则：每回合开始 roll 一条当回合法则
+      if (game.rules.randomRules && !first) {
+        game.turnRule = 1 + Math.floor(Math.random() * 6);
+        game.turnRuleText = RANDOM_RULES[game.turnRule];
+        addEvent(game, { type: 'rule', turn: game.turn, rule: game.turnRule, text: game.turnRuleText });
+        addLog(game, '本回合法则：' + game.turnRuleText, 'system');
+        if (game.turnRule === 6) {
+          game.players.forEach(function (pl) { if (playerAlive(pl)) drawCards(game, pl, 1, { silent: true }); });
+          addLog(game, '法则：双方各抽 1 张牌。', 'draw');
+        }
+      }
+      // 法则③：本回合每人可打 2 张技能卡
+      if (game.turnRule === 3) p.turnMaxCards = Math.max(p.turnMaxCards, 2);
+      // 法则⑤：治疗与护盾数值 +1
+      game.ruleHealBonus = (game.turnRule === 5) ? 1 : 0;
+
       // 混沌换手：每个新回合开始时，所有玩家弃掉手牌并重新抽至 3 张。
       if (game.rules.chaos && !first && game.round > 1 && game.lastChaosRound !== game.round) {
         game.lastChaosRound = game.round;
@@ -546,6 +606,20 @@
         drawCards(game, p, 1);
         addEvent(game, { type: 'passive', playerId: p.id, name: '幸运转', text: '未出牌，抽 1 张牌' });
         addLog(game, p.name + ' 的幸运转动了一下，补到 1 张牌。', 'draw');
+      }
+      // v2.1 被动：underdogDraw 死线——回合结束时若自身生命低于对手，抽 1
+      if (endUnit && endUnit.passiveKey === 'underdogDraw' && playerAlive(p)) {
+        var opp = null;
+        for (var oi = 0; oi < game.players.length; oi++) {
+          var pl = game.players[oi];
+          if (pl.id !== p.id && playerAlive(pl) && activeUnit(pl)) { opp = pl; break; }
+        }
+        var oppUnit = opp ? activeUnit(opp) : null;
+        if (oppUnit && endUnit.hp < oppUnit.hp) {
+          drawCards(game, p, 1);
+          addEvent(game, { type: 'passive', playerId: p.id, name: '死线', text: '生命低于对手，抽 1 张牌' });
+          addLog(game, p.name + ' 在死线上补到 1 张牌。', 'draw');
+        }
       }
       game.pending = null;
       advanceToNext(game);
@@ -677,9 +751,16 @@
       if (lost > 0) {
         targetPlayer.stats.damageTaken += lost;
         if (source && source.id !== targetPlayer.id) source.stats.damageDealt += lost;
+        targetPlayer.turnFlags.tookDamage = true;
         // v2.0：血价被动——自身每受到 1 点伤害，本回合下一次造成的伤害 +1（可叠加）
         if (target.passiveKey === 'bloodPrice') {
           targetPlayer.pendingDamageBonus = (targetPlayer.pendingDamageBonus || 0) + lost;
+        }
+        // v2.1 被动：hitToShield 吸热——每回合第一次受到伤害时获得 1 护盾
+        if (target.passiveKey === 'hitToShield' && !targetPlayer.turnFlags.hitToShieldUsed) {
+          targetPlayer.turnFlags.hitToShieldUsed = true;
+          shieldUnit(game, targetPlayer, target, 1);
+          addEvent(game, { type: 'passive', playerId: targetPlayer.id, name: '吸热', text: '首次受击，获得 1 护盾' });
         }
       }
       addEvent(game, {
@@ -741,6 +822,7 @@
     }
 
     function healUnit(game, player, unit, amount, label) {
+      amount = amount + (game.ruleHealBonus || 0);
       if (game.rules.healToShield) {
         const gained = shieldUnit(game, player, unit, amount);
         if (gained) addLog(game, unit.name + ' 的治疗转化为 ' + gained + ' 点护盾。', 'shield');
@@ -758,6 +840,7 @@
     }
 
     function shieldUnit(game, player, unit, amount) {
+      amount = amount + (game.ruleHealBonus || 0);
       const before = unit.shield;
       unit.shield = Math.min(SHIELD_MAX, unit.shield + amount);
       const gained = unit.shield - before;
@@ -857,6 +940,19 @@
       }
       if (effects.oppDraw && targetResolved) drawCards(game, targetResolved, n(effects.oppDraw));
       if (effects.selfDiscard) discardRandom(game, actor, n(effects.selfDiscard));
+      // v2.1 被动：lootOnDiscard 打劫——自己弃牌时抽 1（每回合限 1）
+      if (effects.selfDiscard && activeUnit(actor) && activeUnit(actor).passiveKey === 'lootOnDiscard' && !actor.turnFlags.lootUsed) {
+        actor.turnFlags.lootUsed = true;
+        drawCards(game, actor, 1);
+        addEvent(game, { type: 'passive', playerId: actor.id, name: '打劫', text: '弃牌时抽 1 张牌' });
+      }
+      // v2.1 主动技效果键 nextDmg：本回合下一次伤害 +N（已受伤则 +N+1，用于过载回响）
+      if (effects.nextDmg) {
+        var bonus = n(effects.nextDmg) + (actor.turnFlags.tookDamage ? 1 : 0);
+        actor.pendingDamageBonus = (actor.pendingDamageBonus || 0) + bonus;
+        addEvent(game, { type: 'status', targetId: actor.id, status: 'power' });
+        addLog(game, actor.name + ' 蓄力，本回合下一次伤害 +' + bonus + '。', 'action');
+      }
       // v2.0 新效果键
       if (effects.power) {
         actor.pendingDamageBonus = (actor.pendingDamageBonus || 0) + n(effects.power);
@@ -926,6 +1022,11 @@
           drawCards(game, actor, 1);
           addLog(game, '黄金财运发动，免费再掷出一次好运：抽 1 张牌。', 'coin');
           addEvent(game, { type: 'passive', playerId: actor.id, name: '黄金', text: '免费再抛一次' });
+        }
+        // v2.1 random-rules 法则①：昭面成功时额外造成 1 点伤害
+        if (game.turnRule === 1) {
+          const opp = resolveTarget(game, actor);
+          if (opp) dealDamage(game, actor, opp, 1, {});
         }
       } else {
         if (unit.passiveKey === 'onFlipLoseShield' && !actor.turnFlags.loseShieldUsed) {
@@ -998,6 +1099,17 @@
         drawCards(game, actor, 1);
         addEvent(game, { type: 'passive', playerId: actor.id, name: '连锁', text: '出牌后抽 1 张牌' });
       }
+      // v2.1 被动：onStyleDraw 代笔——每回合第一次打出风格牌抽 1
+      if (card.category === 'style' && activeUnit(actor) && activeUnit(actor).passiveKey === 'onStyleDraw' && !actor.turnFlags.styleDrawUsed) {
+        actor.turnFlags.styleDrawUsed = true;
+        drawCards(game, actor, 1);
+        addEvent(game, { type: 'passive', playerId: actor.id, name: '代笔', text: '打出风格牌，抽 1 张牌' });
+      }
+      // v2.1 random-rules：法则④本回合第一张技能卡伤害 +1
+      if (game.turnRule === 4 && !(actor.turnFlags.firstCardDmgApplied)) {
+        actor.turnFlags.firstCardDmgApplied = true;
+        actor.pendingDamageBonus = (actor.pendingDamageBonus || 0) + 1;
+      }
       return { ok: true, state: game, pending: game.pending };
     }
 
@@ -1033,7 +1145,13 @@
       triggerFlipPassives(game, actor, success);
       addEvent(game, { type: 'flipResult', playerId: actor.id, result: success, cardName: card.name, blessed: pending.blessed, rerolled: pending.rerolled });
       addLog(game, '硬币落定：' + (success ? '昭面 · 技能成立。' : '昧面 · 技能反噬。'), 'coin');
-      const effects = success ? card.posEffects : card.negEffects;
+      // v2.1 random-rules 法则②：昧面也触发正面效果
+      let useSuccess = success;
+      if (!success && game.turnRule === 2) {
+        useSuccess = true;
+        addLog(game, '法则「昧面转正」生效，昧面亦按正面结算。', 'system');
+      }
+      const effects = useSuccess ? card.posEffects : card.negEffects;
       const target = playerById(game, pending.targetId) || resolveTarget(game, actor);
       addLog(game, '「' + card.name + '」' + (success ? '正面' : '负面') + '：' + (success ? card.posText : card.negText), success ? 'action' : 'damage');
       // v2.0 combo：本回合已打出过同类卡时，正面追加同类加成
@@ -1192,6 +1310,7 @@
       enemiesOf, alliesOf, resolveTarget, setTarget, drawCards, discardRandom, addLog, addChat, addEvent,
       beginTurn, endTurn, forceAdvanceAfterReveal, playCard, resolveFlip, useActive, switchCharacter,
       checkVictory, serializeFor, flipCoin, randomSetup, randomDeck, cloneCard, shuffle,
+      buildDraftDeck,
       HAND_MAX, SHIELD_MAX
     };
   })();
@@ -1225,8 +1344,20 @@
 
   const SETTINGS = readJSON(SETTINGS_KEY, {
     music: true, sfx: true, voice: true, reducedMotion: false, hideHints: false,
-    coinSkin: 'bronze', voiceTone: 'default', voicePack: 'house'
+    coinSkin: 'bronze', voicePack: 'house',
+    bgmTrack: 'theme', bgmVolume: 0.45,
+    ambient: false, ambientTheme: 'theme', ambientVolume: 0.35,
+    homeBg: 'menu', battleBg: 'theme',
+    aiTimeoutMs: 30000, aiThink: false
   });
+  SETTINGS.bgmVolume = Math.max(0, Math.min(1, Number(SETTINGS.bgmVolume)));
+  if (isNaN(SETTINGS.bgmVolume)) SETTINGS.bgmVolume = 0.45;
+  SETTINGS.ambientVolume = Math.max(0, Math.min(1, Number(SETTINGS.ambientVolume)));
+  if (isNaN(SETTINGS.ambientVolume)) SETTINGS.ambientVolume = 0.35;
+  SETTINGS.homeBg = SETTINGS.homeBg || 'menu';
+  SETTINGS.battleBg = SETTINGS.battleBg || 'theme';
+  SETTINGS.bgmTrack = SETTINGS.bgmTrack || 'theme';
+  SETTINGS.ambientTheme = SETTINGS.ambientTheme || 'theme';
 
   function saveSettings() {
     try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(SETTINGS)); } catch (e) {}
@@ -1252,6 +1383,24 @@
     skin = skin || SETTINGS.coinSkin || 'bronze';
     return 'assets/art/coins/' + skin + '-' + (side === 'back' ? 'back' : 'front') + '.jpg';
   }
+
+  // v2.1 技能名播报词表（key → 中文，用于 UI/图鉴）。wav 文件位于 assets/audio/voice/say/{key}.wav。
+  const SAY_LABELS = {
+    play: '出牌', zhao: '昭面', mei: '昧面', damage: '伤害', heal: '治疗', shield: '护盾',
+    draw: '抽牌', discard: '弃牌', burn: '灼烧', drain: '吸血', steal: '夺盾', stun: '眩晕',
+    seal: '封印', win: '胜利', lose: '失败', reroll: '重掷', power: '强化', weak: '弱化',
+    guard: '警戒', reflect: '反弹', energize: '蓄能', fall: '陨落',
+    attack: '攻击牌', defend: '防御牌', control: '控制牌', risk: '风险牌', style: '签名牌', settle: '结算',
+    tongsha: '断罪', rongzhu: '熔铸', xueyue: '血月', zhongxie: '中邪', yiti: '一体', shiyue: '蚀月',
+    qiangxu: '抢跑', zuolun: '作轮', tulong: '屠龙', qiangpao: '强跑', rongke: '熔壳', guozai: '过载'
+  };
+  // 主动技 id → say key（v2.1 §1.2 的 12 个主动技播报词）。未列出的不播。
+  const ACTIVE_SAY_KEYS = {
+    'active-tongsha': 'tongsha', 'active-rongzhu': 'rongzhu', 'active-xueyue': 'xueyue',
+    'active-zhongxie': 'zhongxie', 'active-yiti': 'yiti', 'active-shiyue': 'shiyue',
+    'active-qiangxu': 'qiangxu', 'active-zuolun': 'zuolun', 'active-tulong': 'tulong',
+    'active-qiangpao': 'qiangpao', 'active-rongke': 'rongke', 'active-guozai': 'guozai'
+  };
 
   function skinCardGridHTML() {
     const skin = SETTINGS.coinSkin || 'bronze';
@@ -1299,7 +1448,7 @@
     aiBusy: false,
     overShown: false,
     currentConfig: null,
-    online: { role: null, code: null, transport: null, guestName: null, connected: false, status: '', seat: 1 },
+    online: { role: null, code: null, transport: null, guests: [], connected: false, status: '', seat: 1, matchmaking: false, hostName: '', guestSeat: 1 },
     lobby: { transport: 'peer', roomVisible: false, hosting: false },
     archive: { tab: 'characters', query: '', style: 'all', role: 'all', category: 'all' },
     deckBuilder: { query: '', category: 'all', selected: [] },
@@ -1330,7 +1479,12 @@
     let nextNote = 0;
     let step = 0;
     let currentTheme = null;
-    let voiceLast = 0;
+    let fileBgmTrack = null;
+    let ambientTimer = null;
+    let ambientGain = null;
+    let ambientNoise = null;
+    let ambientTheme = null;
+    let ambientNext = 0;
 
     function ensure() {
       if (!SETTINGS.music && !SETTINGS.sfx && !SETTINGS.voice) return null;
@@ -1342,7 +1496,7 @@
       master.gain.value = 0.8;
       master.connect(ctx.destination);
       musicGain = ctx.createGain();
-      musicGain.gain.value = SETTINGS.music ? 0.18 : 0;
+      musicGain.gain.value = SETTINGS.music ? 0.18 * (SETTINGS.bgmVolume / 0.45) : 0;
       musicGain.connect(master);
       sfxGain = ctx.createGain();
       sfxGain.gain.value = SETTINGS.sfx ? 0.42 : 0;
@@ -1357,10 +1511,13 @@
 
     function setMuted() {
       if (!ctx) return;
-      musicGain.gain.setTargetAtTime(SETTINGS.music ? 0.18 : 0, ctx.currentTime, 0.05);
+      musicGain.gain.setTargetAtTime(SETTINGS.music ? 0.18 * (SETTINGS.bgmVolume == null ? 1 : SETTINGS.bgmVolume / 0.45) : 0, ctx.currentTime, 0.05);
       sfxGain.gain.setTargetAtTime(SETTINGS.sfx ? 0.42 : 0, ctx.currentTime, 0.05);
+      if (ambientGain) ambientGain.gain.setTargetAtTime(SETTINGS.ambient ? 0.22 * SETTINGS.ambientVolume : 0, ctx.currentTime, 0.3);
       if (!SETTINGS.music) stopBgm();
       else if (!bgmTimer && currentTheme) startBgm(currentTheme, true);
+      if (!SETTINGS.ambient) stopAmbient();
+      else if (currentTheme) startAmbient(currentTheme, true);
     }
 
     function tone(freq, duration, type, gain, when, destination) {
@@ -1452,39 +1609,49 @@
       }
     }
 
+    function resolveBgmTrack(themeId) {
+      var track = SETTINGS.bgmTrack || 'theme';
+      if (track === 'off') return null;
+      if (track === 'theme') return themeId || currentTheme || 'abyss';
+      return track;
+    }
+
     function startBgm(themeId, force) {
-      if (!SETTINGS.music) { currentTheme = themeId; return; }
-      if (!force && currentTheme === themeId && bgmTimer) return;
-      // 文件优先：存在真实循环 BGM 则接管，并关闭程序化 BGM
+      if (!SETTINGS.music) { currentTheme = resolveBgmTrack(themeId) || themeId; return; }
+      var track = resolveBgmTrack(themeId);
+      if (!track) { stopBgm(); currentTheme = null; return; }
+      if (!force && currentTheme === track && (bgmTimer || fileBgmTrack === track)) return;
+      // 文件优先：存在真实循环 BGM 则接管
       try {
         if (root.CFFileAudio && root.CF_ASSETS) {
-          var bgmFile = root.CF_ASSETS.bgmUrl(themeId);
-          if (root.CFFileAudio.playBgm(bgmFile, 0.45)) {
-            stopBgm();
-            currentTheme = themeId;
+          var bgmFile = track === 'menu' ? root.CF_ASSETS.menuBgmUrl() : root.CF_ASSETS.bgmUrl(track);
+          if (root.CFFileAudio.playBgm(bgmFile, SETTINGS.bgmVolume)) {
+            stopSynthBgm();
+            currentTheme = track;
+            fileBgmTrack = track;
             return;
           }
         }
       } catch (e) { /* 回退程序化 */ }
-      const style = D.STYLES[themeId] || D.STYLES.abyss;
+      const style = D.STYLES[track] || D.STYLES.abyss;
       const profile = style.bgm || D.STYLES.abyss.bgm;
       const c = ensure();
       if (!c) return;
       stopBgm();
-      currentTheme = themeId;
+      currentTheme = track;
       step = 0;
       nextNote = c.currentTime + 0.1;
       const beat = 60 / profile.tempo;
       const scale = profile.scale;
-      const root = profile.root;
+      const rootNote = profile.root;
       const play = function () {
         if (!ctx) return;
         while (nextNote < ctx.currentTime + 0.5) {
           const degree = scale[step % scale.length];
           const octave = Math.floor(step / scale.length) % 2;
-          const freq = root * Math.pow(2, octave + degree / 12);
+          const freq = rootNote * Math.pow(2, octave + degree / 12);
           // 低音铺底
-          if (step % 4 === 0) tone(root / 2, beat * 3.4, 'sine', 0.035, nextNote, musicGain);
+          if (step % 4 === 0) tone(rootNote / 2, beat * 3.4, 'sine', 0.035, nextNote, musicGain);
           // 主旋律
           tone(freq, beat * 0.9, profile.wave, 0.035, nextNote, musicGain);
           // 高频回声
@@ -1497,87 +1664,173 @@
       bgmTimer = setInterval(play, 120);
     }
 
-    function stopBgm() {
+    function stopSynthBgm() {
       if (bgmTimer) { clearInterval(bgmTimer); bgmTimer = null; }
+    }
+
+    function stopBgm() {
+      stopSynthBgm();
+      fileBgmTrack = null;
       try { if (root.CFFileAudio) root.CFFileAudio.stopBgmFile(); } catch (e) {}
     }
 
-    function speak(text, char) {
-      if (!SETTINGS.voice || !text || !root.speechSynthesis) return;
-      const now = Date.now();
-      if (now - voiceLast < 900) return;
-      voiceLast = now;
-      try {
-        root.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(String(text).slice(0, 80));
-        utter.lang = 'zh-CN';
-        utter.rate = 1.03;
-        utter.pitch = 0.95;
-        utter.volume = 0.7;
-
-        // 根据玩家选择的音色调整音调与语速
-        const tone = SETTINGS.voiceTone || 'default';
-        if (tone === 'deep') {
-          utter.pitch = 0.6; utter.rate = 0.9;
-        } else if (tone === 'bright') {
-          utter.pitch = 1.4; utter.rate = 1.1;
-        } else if (tone === 'old') {
-          utter.pitch = 0.8; utter.rate = 0.85;
-        } else if (tone === 'heroic') {
-          utter.pitch = 1.2; utter.rate = 1.15;
-        }
-
-        // 角色风格微调（在音色基础上叠加）
-        const style = char && char.style;
-        if (style === 'wa' || style === 'anime') utter.pitch += 0.15;
-        if (style === 'abyss' || style === 'west') utter.pitch -= 0.1;
-
-        const voices = root.speechSynthesis.getVoices();
-        const zh = voices.find(function (v) { return /zh|Chinese|Yaoyao|Xiaoxiao|Huihui/i.test(v.lang + ' ' + v.name); });
-        if (zh) utter.voice = zh;
-        root.speechSynthesis.speak(utter);
-      } catch (e) { /* speech is optional */ }
+    function setBgmVolume(v) {
+      SETTINGS.bgmVolume = Math.max(0, Math.min(1, Number(v)));
+      if (isNaN(SETTINGS.bgmVolume)) SETTINGS.bgmVolume = 0.45;
+      try { if (root.CFFileAudio) root.CFFileAudio.setBgmVolume(SETTINGS.bgmVolume); } catch (e) {}
+      if (ctx && musicGain) musicGain.gain.setTargetAtTime(SETTINGS.music ? 0.18 * (SETTINGS.bgmVolume / 0.45) : 0, ctx.currentTime, 0.08);
     }
 
-    // 角色台词：真人录音文件优先；缺失时用台词脚本文案走 TTS。
-    // charId: 角色 id；scene: enter/attack/win/lose。
+    function refreshBgm() {
+      if (!SETTINGS.music) { stopBgm(); currentTheme = resolveBgmTrack(S.battleTheme || currentTheme || 'abyss'); return; }
+      startBgm(S.battleTheme || currentTheme || 'abyss', true);
+    }
+
+    /* ---------------------------------------------------------
+       背景氛围音（程序化，无音频文件依赖）
+       --------------------------------------------------------- */
+    function resolveAmbientTheme(themeId) {
+      var track = SETTINGS.ambientTheme || 'theme';
+      if (track === 'off') return null;
+      if (track === 'theme') return themeId || currentTheme || 'abyss';
+      return track;
+    }
+
+    function startAmbient(themeId, force) {
+      if (!SETTINGS.ambient) { stopAmbient(); return; }
+      var theme = resolveAmbientTheme(themeId);
+      if (!theme) { stopAmbient(); return; }
+      if (!force && ambientTimer && ambientTheme === theme) return;
+      var c = ensure();
+      if (!c) return;
+      stopAmbient();
+      ambientTheme = theme;
+      var g = ensureAmbientGain();
+      if (!g) return;
+      g.gain.setTargetAtTime(0.22 * SETTINGS.ambientVolume, c.currentTime, 1.4);
+      var profile = (D.STYLES[theme] || D.STYLES.abyss).bgm || {};
+      // 低频风声 / 空间底噪
+      var noiseBuf = c.createBuffer(1, Math.floor(c.sampleRate * 2), c.sampleRate);
+      var data = noiseBuf.getChannelData(0);
+      var last = 0;
+      for (var i = 0; i < data.length; i++) {
+        var white = Math.random() * 2 - 1;
+        last = (last + 0.02 * white) / 1.02;
+        data[i] = last * 3.2;
+      }
+      var src = c.createBufferSource();
+      src.buffer = noiseBuf;
+      src.loop = true;
+      var filter = c.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = profile.ambientFilter || 480;
+      filter.Q.value = 0.8;
+      var drone = c.createOscillator();
+      drone.type = 'sine';
+      drone.frequency.value = (profile.root || 110) / 2;
+      var droneGain = c.createGain();
+      droneGain.gain.value = 0.05;
+      src.connect(filter); filter.connect(g);
+      drone.connect(droneGain); droneGain.connect(g);
+      src.start(); drone.start();
+      ambientNoise = { src: src, drone: drone, filter: filter };
+      ambientNext = c.currentTime + 2;
+      ambientTimer = setInterval(function () {
+        if (!ctx || !ambientGain) return;
+        if (ctx.currentTime < ambientNext - 0.5) return;
+        var now = ctx.currentTime;
+        ambientNext = now + 4 + Math.random() * 7;
+        var scale = profile.scale || [0, 3, 5, 7, 10, 12];
+        var freq = (profile.root || 110) * 2 * Math.pow(2, (scale[Math.floor(Math.random() * scale.length)] || 0) / 12);
+        tone(freq, 2.4, 'sine', 0.02 * SETTINGS.ambientVolume, now, ambientGain);
+        if (Math.random() < 0.5) tone(freq * 1.5, 1.6, 'triangle', 0.012 * SETTINGS.ambientVolume, now + 0.4, ambientGain);
+      }, 1500);
+    }
+
+    function ensureAmbientGain() {
+      if (!ctx) return null;
+      if (!ambientGain) {
+        ambientGain = ctx.createGain();
+        ambientGain.gain.value = SETTINGS.ambient ? 0.22 * SETTINGS.ambientVolume : 0;
+        ambientGain.connect(master);
+      }
+      return ambientGain;
+    }
+
+    function stopAmbient() {
+      if (ambientTimer) { clearInterval(ambientTimer); ambientTimer = null; }
+      if (ambientNoise) {
+        try { ambientNoise.src.stop(); } catch (e) {}
+        try { ambientNoise.drone.stop(); } catch (e) {}
+        ambientNoise = null;
+      }
+      if (ambientGain && ctx) ambientGain.gain.setTargetAtTime(0, ctx.currentTime, 0.4);
+      ambientTheme = null;
+    }
+
+    function setAmbientVolume(v) {
+      SETTINGS.ambientVolume = Math.max(0, Math.min(1, Number(v)));
+      if (isNaN(SETTINGS.ambientVolume)) SETTINGS.ambientVolume = 0.35;
+      if (ambientGain && ctx) ambientGain.gain.setTargetAtTime(SETTINGS.ambient ? 0.22 * SETTINGS.ambientVolume : 0, ctx.currentTime, 0.2);
+    }
+
+    function setAmbientEnabled(on) {
+      SETTINGS.ambient = !!on;
+      if (on) startAmbient(S.battleTheme || currentTheme || 'abyss', true);
+      else stopAmbient();
+    }
+
+    function refreshAmbient() {
+      if (!SETTINGS.ambient) { stopAmbient(); return; }
+      startAmbient(S.battleTheme || currentTheme || 'abyss', true);
+    }
+
+    /* ---------------------------------------------------------
+       语音系统（v2.1）：全部真人 wav 文件，缺失即静默，无 TTS 兜底
+       --------------------------------------------------------- */
+    // 技能名播报：播放 assets/audio/voice/say/{key}.wav，缺词静默。
+    function say(key) {
+      if (!SETTINGS.voice || !key) return;
+      try {
+        if (root.CFFileAudio) root.CFFileAudio.playOne('assets/audio/voice/say/' + key + '.wav', 0.9);
+      } catch (e) { /* 缺词静默 */ }
+    }
+
+    // 角色台词：只播真人录音文件，缺失静默。
     function voice(charId, scene) {
       if (!SETTINGS.voice || !charId) return;
       try {
-        if (root.CFFileAudio && root.CF_ASSETS &&
-            root.CFFileAudio.playOne(root.CF_ASSETS.charVoiceUrl(charId, scene), 0.85)) return;
-      } catch (e) {}
-      var text = null;
-      try { if (root.CF_VOICE_LINES) text = root.CF_VOICE_LINES.line(charId, scene); } catch (e) {}
-      var ch = null;
-      try { ch = D.byId.character(charId) || null; } catch (e) {}
-      if (text) speak(text, ch);
+        if (root.CFFileAudio && root.CF_ASSETS) {
+          root.CFFileAudio.playOne(root.CF_ASSETS.charVoiceUrl(charId, scene), 0.85);
+        }
+      } catch (e) { /* 缺词静默 */ }
     }
 
-    // v2.0 旁白人声：优先播 assets/audio/voice/narrator/{pack}-{line}.wav；
-    // pack==='system' 或文件缺失时回退 TTS（文案取自 CF_VOICE_LINES.story['narr-'+line]）。
+    // 旁白人声：播 assets/audio/voice/narrator/{pack}-{line}.wav，缺失静默。
     function narrator(line) {
       if (!SETTINGS.voice || !line) return;
       var pack = SETTINGS.voicePack || 'house';
       try {
-        if (pack !== 'system' && root.CFFileAudio && root.CF_ASSETS &&
-            root.CFFileAudio.playOne('assets/audio/voice/narrator/' + pack + '-' + line + '.wav', 0.9)) return;
-      } catch (e) {}
-      var text = null;
-      try { if (root.CF_VOICE_LINES) text = root.CF_VOICE_LINES.storyLine('narr-' + line); } catch (e) {}
-      if (text) speak(text, null);
+        if (root.CFFileAudio) root.CFFileAudio.playOne('assets/audio/voice/narrator/' + pack + '-' + line + '.wav', 0.9);
+      } catch (e) { /* 缺词静默 */ }
     }
 
-    // v2.0 剧情语音：assets/audio/voice/story/{key}.wav 优先，缺失回退 TTS 文案。
+    // 剧情语音：assets/audio/voice/story/{key}.wav，缺失静默。
     function storyVoice(key) {
       if (!SETTINGS.voice || !key) return;
       try {
-        if (root.CFFileAudio && root.CF_ASSETS &&
-            root.CFFileAudio.playOne(root.CF_ASSETS.storyVoiceUrl(key), 0.9)) return;
-      } catch (e) {}
-      var text = null;
-      try { if (root.CF_VOICE_LINES) text = root.CF_VOICE_LINES.storyLine(key); } catch (e) {}
-      if (text) speak(text, null);
+        if (root.CFFileAudio && root.CF_ASSETS) {
+          root.CFFileAudio.playOne(root.CF_ASSETS.storyVoiceUrl(key), 0.9);
+        }
+      } catch (e) { /* 缺词静默 */ }
+    }
+
+    // 试听旁白音色包：直接播 narrator/{pack}-open.wav，缺失静默。
+    function previewNarrator(pack) {
+      pack = pack || SETTINGS.voicePack || 'house';
+      try {
+        if (root.CFFileAudio) root.CFFileAudio.playOne('assets/audio/voice/narrator/' + pack + '-open.wav', 0.9);
+      } catch (e) { /* 缺词静默 */ }
     }
 
     function toggle() {
@@ -1587,12 +1840,17 @@
       unlock();
       setMuted();
       if (next && !bgmTimer) startBgm(S.battleTheme || currentTheme || 'abyss', true);
-      if (!next) stopBgm();
+      if (next && SETTINGS.ambient) startAmbient(S.battleTheme || currentTheme || 'abyss', true);
+      if (!next) { stopBgm(); stopAmbient(); }
       updateAudioButton();
       return next;
     }
 
-    return { unlock, sfx, startBgm, stopBgm, speak, voice, narrator, storyVoice, toggle, setMuted, ensure };
+    return {
+      unlock, sfx, startBgm, stopBgm, say, voice, narrator, storyVoice, toggle, setMuted, ensure,
+      refreshBgm, refreshAmbient, setBgmVolume, setAmbientVolume, setAmbientEnabled,
+      startAmbient, stopAmbient, previewNarrator
+    };
   })();
 
   function updateAudioButton() {
@@ -1634,16 +1892,34 @@
     function setTheme(themeId) {
       theme = D.STYLES[themeId] || D.STYLES.abyss;
       document.documentElement.dataset.theme = theme.id;
-      // 背景层：主界面用 menu.jpg，对局用各主题 bg；文件缺失则透明回退
+      applyBackground();
+      try { Audio.refreshAmbient(); } catch (e) {}
+      spawn();
+    }
+
+    function resolveBgUrl(isBattle) {
+      var settings = (typeof SETTINGS !== 'undefined' && SETTINGS) || {};
+      if (isBattle) {
+        var battle = settings.battleBg || 'theme';
+        if (battle === 'theme') return root.CF_ASSETS ? root.CF_ASSETS.bgUrl(theme.id) : '';
+        if (battle === 'battle-bg') return 'assets/art/bg/battle-bg.jpg';
+        return root.CF_ASSETS ? root.CF_ASSETS.bgUrl(battle) : '';
+      }
+      var home = settings.homeBg || 'menu';
+      if (home === 'menu') return root.CF_ASSETS ? root.CF_ASSETS.menuBgUrl() : '';
+      return root.CF_ASSETS ? root.CF_ASSETS.bgUrl(home) : '';
+    }
+
+    function applyBackground() {
       try {
         var layer = document.getElementById('bg-layer');
-        if (layer && root.CF_ASSETS) {
-          var isMenu = (typeof S !== 'undefined' && (S.screen === 'home' || S.screen === 'lobby'));
-          var url = isMenu ? root.CF_ASSETS.menuBgUrl() : root.CF_ASSETS.bgUrl(theme.id);
-          layer.style.backgroundImage = 'url("' + url + '")';
-        }
+        if (!layer) return;
+        var screen = (typeof S !== 'undefined' && S.screen) || 'home';
+        var url = resolveBgUrl(screen === 'battle');
+        if (url) layer.style.backgroundImage = 'url("' + url + '")';
+        layer.classList.toggle('bg-layer--battle', screen === 'battle');
+        layer.classList.toggle('bg-layer--realm', screen !== 'battle' && (SETTINGS.homeBg || 'menu') !== 'menu');
       } catch (e) {}
-      spawn();
     }
 
     function spawn() {
@@ -1700,7 +1976,7 @@
     }
 
     function stop() { running = false; if (raf) cancelAnimationFrame(raf); }
-    return { init, setTheme, resize, stop };
+    return { init, setTheme, applyBackground, refresh: applyBackground, resolveBgUrl, resize, stop, current: function () { return theme; } };
   })();
 
   /* =========================================================
@@ -1842,10 +2118,15 @@
       $$('.main-nav .nav-link').forEach(function (b) { b.classList.toggle('is-active', b.dataset.nav === name); });
     }
     applyCoinSkin();
+    FX.applyBackground();
     window.scrollTo({ top: 0, behavior: SETTINGS.reducedMotion ? 'auto' : 'smooth' });
     if (name === 'home') {
       FX.setTheme('abyss');
       Audio.startBgm('abyss');
+      Audio.refreshAmbient();
+    } else if (name !== 'battle' && name !== 'setup') {
+      Audio.startBgm(S.battleTheme || 'abyss');
+      Audio.refreshAmbient();
     }
     if (name === 'collection') renderArchive();
     if (name === 'world') renderWorld();
@@ -2115,6 +2396,36 @@
     ];
     $('#summary-tip').textContent = tips[Math.floor(Math.random() * tips.length)];
     $('#start-match').textContent = S.setup.modeId === 'story' ? '进入 ' + D.STORY.chapters[S.setup.storyChapter].title : '开桌';
+    // v2.1 draft 轮抽赌局战前卡组预览 + 重抽一次
+    if (S.setup.modeId === 'draft') {
+      if (!S.setup.draftDeck) { S.setup.draftDeck = ENGINE.buildDraftDeck(Math.random); S.setup.draftRerolls = 1; }
+      var prev = $('#draft-preview');
+      if (!prev) {
+        prev = document.createElement('div');
+        prev.id = 'draft-preview';
+        prev.className = 'draft-preview';
+        var sm = $('#summary-tip');
+        if (sm && sm.parentNode) sm.parentNode.insertBefore(prev, sm);
+      }
+      var groups = {};
+      S.setup.draftDeck.a.forEach(function (c) { (groups[c.category] = groups[c.category] || []).push(c.name); });
+      var html = '<h4>你的轮抽卡组（12 张）</h4><div class="draft-preview__grid">';
+      Object.keys(groups).forEach(function (cat) {
+        html += '<div class="draft-preview__cat"><b>' + (D.CATEGORIES[cat] ? D.CATEGORIES[cat].name : cat) + '</b><span>' + groups[cat].join('、') + '</span></div>';
+      });
+      html += '</div><button type="button" class="btn btn--secondary btn--sm" id="draft-reroll"' + ((S.setup.draftRerolls || 0) <= 0 ? ' disabled' : '') + '>重抽一次（' + (S.setup.draftRerolls || 0) + ' 次剩余）</button>';
+      prev.innerHTML = html;
+      var rr = $('#draft-reroll');
+      if (rr) rr.onclick = function () {
+        if ((S.setup.draftRerolls || 0) <= 0) return;
+        S.setup.draftRerolls -= 1;
+        S.setup.draftDeck = ENGINE.buildDraftDeck(Math.random);
+        renderSummary();
+      };
+    } else {
+      var old = $('#draft-preview');
+      if (old) old.remove();
+    }
   }
 
   function bindSetupInputs() {
@@ -2237,6 +2548,16 @@
       const random = D.randomCharacters(S.setup.modeId === 'brawl' ? 4 : 4);
       charIds = [random[0].id, random[1].id];
     }
+    // v2.1 draft 轮抽赌局：开赛前自动轮抽组牌；战前可「重抽一次」
+    if (S.setup.modeId === 'draft') {
+      if (!S.setup.draftDeck || (S.setup.draftRerolls || 0) === 0 || S.setup.draftRolled) {
+        // 首次或已重抽：用当前已生成的牌组；否则不重生成
+      }
+      if (!S.setup.draftDeck) {
+        S.setup.draftDeck = ENGINE.buildDraftDeck(Math.random);
+        S.setup.draftRerolls = 1;
+      }
+    }
     const config = {
       modeId: S.setup.modeId,
       playerName: S.setup.playerName || '无名执币者',
@@ -2245,6 +2566,8 @@
       allyCharId: S.setup.allyCharId,
       deckMode: S.setup.deckMode,
       deckIds: S.setup.customDeck,
+      draftDeckIdsA: S.setup.draftDeck ? S.setup.draftDeck.a.map(function (c) { return c.id; }) : null,
+      draftDeckIdsB: S.setup.draftDeck ? S.setup.draftDeck.b.map(function (c) { return c.id; }) : null,
       theme: S.setup.theme,
       aiLevel: S.setup.aiLevel,
       opponent: S.setup.opponent,
@@ -2259,7 +2582,7 @@
     });
     S.game = game;
     S.viewGame = null;
-    S.online = { role: null, code: null, transport: null, guestName: null, connected: false, status: '', seat: 1 };
+    S.online = { role: null, code: null, transport: null, guests: [], connected: false, status: '', seat: 1, matchmaking: false };
     S.viewerId = 'p0';
     S.lastEventSeq = game.eventSeq;
     S.overShown = false;
@@ -2452,11 +2775,16 @@
         html += '<div class="codex-realm-grid">';
         Object.keys(CX.realms).forEach(function (id) {
           const r = CX.realms[id];
+          const title = r.name || (D.STYLES[id] && D.STYLES[id].name) || id;
+          const overview = r.overview || r.lore || r.desc || '';
+          const firstSentence = (String(overview).match(/[^。！？\n]+[。！？\n]?/) || [''])[0];
+          const tagline = r.tagline || firstSentence;
+          const body = String(overview).split(/\n+/).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
           html += '<div class="codex-realm-card">' +
             '<div class="codex-realm-card__head" style="background-image:url(\'' + bgImg(id) + '\')"></div>' +
-            '<div class="codex-realm-card__body"><h4>' + esc(r.name || id) + '</h4>' +
-            '<p style="font-size:12px">' + esc(r.tagline || '') + '</p>' +
-            '<p style="font-size:12px;opacity:.8;margin-top:4px">' + esc(r.lore || r.desc || '') + '</p>' +
+            '<div class="codex-realm-card__body"><h4>' + esc(title) + '</h4>' +
+            '<p style="font-size:12px">' + esc(tagline) + '</p>' +
+            '<div style="font-size:12px;opacity:.8;margin-top:4px;line-height:1.7">' + body + '</div>' +
             '</div></div>';
         });
         html += '</div>';
@@ -2520,6 +2848,7 @@
         if (R.coinRules) { html += '<h3>硬币机制</h3><ul>' + R.coinRules.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; }
         if (R.skins) { html += '<h3>硬币皮肤特性</h3><div class="codex-grid">' + R.skins.map(function (s) { return '<div class="codex-card"><h4>' + esc(s.name) + '</h4><p>' + esc(s.trait) + '</p></div>'; }).join('') + '</div>'; }
         if (R.statusEffects) { html += '<h3>状态效果表</h3><div class="codex-grid">' + R.statusEffects.map(function (s) { return '<div class="codex-card"><h4>' + esc(s.name) + '</h4><p>' + esc(s.desc) + '</p></div>'; }).join('') + '</div>'; }
+        if (R.modes) { html += '<h3>模式一览</h3><ul class="codex-modes">' + R.modes.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul>'; }
       } else {
         html += '<h3>胜利条件</h3><ul><li>将对方所有角色生命打到 0 即获胜。</li></ul>' +
           '<h3>回合流程</h3><ul><li>抽牌阶段补牌至 3 张。</li><li>行动阶段每回合打一张牌。</li><li>抛币判定昭/昧。</li><li>逆写整局一次。</li></ul>';
@@ -2614,8 +2943,13 @@
   function initNetwork() {
     NET.on('status', function (payload) {
       S.online.status = payload.message || payload.status;
+      if (payload.role) S.online.role = payload.role;
+      if (payload.transport) S.online.transport = payload.transport;
+      if (payload.code) S.online.code = payload.code;
+      if (payload.matchmaking != null) S.online.matchmaking = !!payload.matchmaking;
+      if (Array.isArray(payload.guests)) S.online.guests = payload.guests.slice();
       if (payload.status === 'connected') S.online.connected = true;
-      if (payload.status === 'waiting') S.online.connected = false;
+      if (payload.status === 'waiting') S.online.connected = S.online.guests.length > 0;
       if (payload.status === 'error') {
         S.online.connected = false;
         toast(payload.message, 'error');
@@ -2623,24 +2957,54 @@
       if (S.screen === 'lobby' || S.screen === 'battle') renderLobby();
     });
     NET.on('join', function (payload) {
-      S.online.guestName = payload.name;
+      if (!payload) return;
+      const guests = (S.online.guests || []).filter(function (g) { return g.seat !== payload.seat; });
+      guests.push({ name: payload.name, seat: payload.seat });
+      S.online.guests = guests;
       S.online.connected = true;
-      S.online.guestSeat = payload.seat;
       if (S.screen === 'lobby') renderLobby();
+      const seats = Math.max(2, Math.min(8, Number(S.online.seats) || onlineRoomSeats()));
+      const humans = guests.length + 1;
+      if (S.online.matchmaking && S.online.role === 'host' && S.screen === 'lobby') {
+        S.online.status = humans >= seats
+          ? ('已集齐 ' + humans + '/' + seats + ' 人，马上开桌…')
+          : (payload.name + ' 已入席（' + humans + '/' + seats + ' 人），等待其他玩家…');
+        renderLobby();
+        if (S.online.matchTimer) { clearTimeout(S.online.matchTimer); S.online.matchTimer = null; }
+        if (humans >= seats) {
+          S.online.matchTimer = setTimeout(function () {
+            S.online.matchTimer = null;
+            if (S.online.matchmaking && S.online.role === 'host' && S.screen === 'lobby') startMatchmakingBattle();
+          }, 400);
+        } else {
+          // 收集窗口：每次有人入席重置 3.8s，超时用当前人数开桌（2–8 人都能开）。
+          S.online.matchTimer = setTimeout(function () {
+            S.online.matchTimer = null;
+            if (S.online.matchmaking && S.online.role === 'host' && S.screen === 'lobby' && (S.online.guests || []).length) startMatchmakingBattle();
+          }, 3800);
+        }
+      }
     });
     NET.on('leave', function (payload) {
-      S.online.guestName = null;
-      S.online.connected = false;
+      if (payload && payload.seat) {
+        S.online.guests = (S.online.guests || []).filter(function (g) { return g.seat !== payload.seat; });
+      }
+      S.online.connected = (S.online.guests || []).length > 0;
       if (S.screen === 'lobby') {
         renderLobby();
-        toast(payload && payload.reason ? payload.reason : '对方离开了房间', 'warning');
+        toast(payload && payload.reason ? payload.reason : '玩家离开了房间', 'warning');
       }
-      if (S.screen === 'battle' && S.online.role === 'host' && S.game && S.game.phase !== 'over') {
-        S.game.phase = 'over';
-        S.game.over = { winnerTeam: 'A', winnerId: 'p0', reason: '对手离开了回廊，你获得了默认胜利。', turn: S.game.turn, forfeit: true };
-        ENGINE.addLog(S.game, '对手离开，房主获得默认胜利。', 'system');
-        renderBattle();
-        maybeShowOver();
+      if (S.screen === 'battle' && S.online.role === 'host' && S.game && S.game.phase !== 'over' && payload && payload.seat) {
+        const pid = 'p' + payload.seat;
+        const player = S.game.players.find(function (p) { return p.id === pid; });
+        if (player) {
+          player.isHuman = false;
+          player.isAI = true;
+          AI.initPlayer(player);
+          ENGINE.addLog(S.game, player.name + ' 掉线，由同注者接管。', 'system');
+          toast(player.name + ' 掉线，AI 接管该席位。', 'warning');
+          afterHostMutation();
+        }
       }
     });
     NET.on('welcome', function (payload) {
@@ -2648,15 +3012,76 @@
       S.online.connected = true;
       S.online.code = payload.code || S.online.code;
       S.online.guestSeat = payload.seat || 1;
+      S.online.matchmaking = !!payload.matchmaking;
+      if (payload.mode) S.online.mode = payload.mode;
+      if (payload.sizes) S.online.sizes = { a: Number(payload.sizes.a) || 1, b: Number(payload.sizes.b) || 1 };
+      if (payload.maxGuests != null) S.online.seats = Number(payload.maxGuests) + 1;
       S.lobby.roomVisible = true;
       S.online.hostName = payload.hostName;
       if (S.screen === 'lobby') renderLobby();
-      toast('已入席，等待房主开桌。', 'success');
+      toast(payload.matchmaking ? '匹配成功，等待房主开桌…' : '已入席，等待房主开桌。', 'success');
     });
     NET.on('error', function (payload) {
       toast(payload.message || '联机错误', 'error');
     });
+    // 匹配探测：发现更早占桌的房主后，本机从「匹配房主」降级为「匹配访客」。
+    NET.on('matchdemoted', function (result) {
+      if (!result || S.online.role !== 'host') return;
+      S.online.role = 'guest';
+      S.online.code = result.code || '匹配成功';
+      S.online.guestSeat = result.seat || 1;
+      S.online.connected = true;
+      S.online.matchmaking = true;
+      if (result.seats) S.online.seats = result.seats;
+      if (result.sizes) S.online.sizes = result.sizes;
+      if (result.mode) S.online.mode = result.mode;
+      S.online.status = '匹配成功，正在开桌…';
+      S.lobby.roomVisible = true;
+      if (S.screen === 'lobby') renderLobby();
+    });
     NET.on('message', handleNetMessage);
+  }
+
+  const ONLINE_SEATS_DEFAULT = 4;
+
+  function onlineRoomSeats() {
+    const raw = Number((($('#host-seats') || {}).value));
+    if (!isFinite(raw)) return ONLINE_SEATS_DEFAULT;
+    return Math.max(2, Math.min(8, Math.round(raw)));
+  }
+
+  function onlineSeatsBalanced(seats) {
+    const total = Math.max(2, Math.min(8, Math.round(Number(seats) || ONLINE_SEATS_DEFAULT)));
+    return { a: Math.ceil(total / 2), b: Math.floor(total / 2) };
+  }
+
+  // 引擎只有「自由组队」支持 1–4 v 1–4；其余模式固定 1v1。
+  function onlineEffectiveMode(modeId, sizes) {
+    if (modeId === 'team') return 'team';
+    const total = sizes ? (sizes.a + sizes.b) : 2;
+    return total > 2 ? 'team' : modeId;
+  }
+
+  function onlineModeSizes(modeId, seats) {
+    const target = seats == null
+      ? ((S.online && S.online.seats) || onlineRoomSeats())
+      : Math.max(2, Math.min(8, Number(seats) || ONLINE_SEATS_DEFAULT));
+    if (modeId !== 'team') {
+      return target > 2 ? onlineSeatsBalanced(target) : { a: 1, b: 1 };
+    }
+    const a = Math.max(1, Math.min(4, Number((($('#host-team-a') || {}).value)) || 2));
+    const b = Math.max(1, Math.min(4, Number((($('#host-team-b') || {}).value)) || 2));
+    return { a: a, b: b };
+  }
+
+  function onlineSeatSpecs(a, b) {
+    const out = [];
+    let ai = 0, bi = 0, index = 0;
+    while (ai < a || bi < b) {
+      if (ai < a) { out.push({ seat: index++, team: 'A', teamIndex: ai + 1 }); ai += 1; }
+      if (bi < b) { out.push({ seat: index++, team: 'B', teamIndex: bi + 1 }); bi += 1; }
+    }
+    return out;
   }
 
   function renderLobby() {
@@ -2670,44 +3095,78 @@
       hostModeSelect.value = onlineModes.some(function (m) { return m.id === previous; }) ? previous : 'standard';
       const teamFields = $('#host-team-fields');
       if (teamFields) teamFields.hidden = hostModeSelect.value !== 'team';
+      if (S.online.role === 'guest' && S.online.mode && onlineModes.some(function (m) { return m.id === S.online.mode; })) {
+        hostModeSelect.value = S.online.mode;
+        if (teamFields) teamFields.hidden = S.online.mode !== 'team';
+      }
     }
     $('#transport-hint').textContent = transport === 'peer'
-      ? '无需任何配置，公网直连，WebRTC 点对点。房间号+密码即暗号。'
-      : (NET.config.supabase.url ? 'Supabase Realtime 已配置（高级自定义）。房间状态通过 Broadcast 同步，房主权威裁定。' : 'Supabase 为高级自定义项；默认请使用上方「公网联机（零配置）」。');
+      ? '无需任何配置，公网直连，WebRTC 点对点。房间号+密码即暗号；支持 2–8 名真人同桌。'
+      : (NET.config.supabase.url ? 'Supabase Realtime 已配置（高级自定义，单访客）。' : 'Supabase 为高级自定义项；默认请使用上方「公网联机（零配置）」。');
     const room = S.online;
     const panel = $('#room-panel');
-    const visible = !!(room.role && (S.lobby.roomVisible || room.connected));
+    const visible = !!(room.role && (S.lobby.roomVisible || room.connected || room.matchmaking));
     panel.hidden = !visible;
     if (!visible) return;
 
+    const modeId = room.role === 'guest'
+      ? (room.mode || 'standard')
+      : ((($('#host-mode') || {}).value) || 'standard');
+    const sizes = room.role === 'guest' && room.sizes
+      ? { a: Number(room.sizes.a) || 1, b: Number(room.sizes.b) || 1 }
+      : onlineModeSizes(modeId);
+    const seats = Math.max(2, Math.min(8, sizes.a + sizes.b));
+    const labelMode = onlineEffectiveMode(modeId, sizes);
+    const specs = onlineSeatSpecs(sizes.a, sizes.b);
+    const slots = [];
+    slots.push({
+      role: labelMode === 'team' ? 'A1 · 房主' : '房主',
+      name: room.role === 'host' ? (room.name || (($('#host-name') || {}).value) || '房主') : (room.hostName || '房主'),
+      connected: true
+    });
+    if (room.role === 'host') {
+      specs.slice(1).forEach(function (spec) {
+        const guest = (room.guests || []).find(function (g) { return g.seat === spec.seat; });
+        const role = labelMode === 'team' ? ('真人 / AI · ' + spec.team + spec.teamIndex) : (spec.seat === 1 ? '访客' : '补位');
+        slots.push({ role: role, name: guest ? guest.name : '等待玩家…', connected: !!guest });
+      });
+    } else {
+      const selfSeat = room.guestSeat || 1;
+      specs.slice(1).forEach(function (spec) {
+        slots.push({
+          role: (spec.seat === selfSeat ? '你的席位 · ' : '座位 · ') + (labelMode === 'team' ? spec.team + spec.teamIndex : '对局'),
+          name: spec.seat === selfSeat ? (room.name || '你') : '玩家',
+          connected: spec.seat === selfSeat
+        });
+      });
+    }
     $('#room-code').textContent = room.code || 'CF-0000';
     $('#room-status').innerHTML = '<span class="status-dot status-dot--' + (room.connected ? 'on' : 'wait') + '"></span>' + esc(room.status || (room.connected ? '已连接' : '等待中…'));
-    const modeId = $('#host-mode') ? $('#host-mode').value : 'standard';
-    const slots = [
-      { role: modeId === 'team' ? 'A1 · 房主' : '房主', name: room.role === 'host' ? (room.name || $('#host-name').value || '房主') : (room.hostName || '房主'), connected: true },
-      { role: modeId === 'team' ? 'B1 · 访客' : '访客', name: room.guestName || '等待另一位执币者…', connected: !!room.guestName }
-    ];
-    if (modeId === 'team') {
-      const a = Number($('#host-team-a').value) || 2;
-      const b = Number($('#host-team-b').value) || 2;
-      const bench = Math.max(0, a - 1) + Math.max(0, b - 1);
-      if (bench) slots.push({ role: 'AI 席位', name: 'A2–A' + a + ' / B2–B' + b + ' · ' + bench + ' 名同注者', connected: true });
-    } else if ($('#host-fill-ai') && $('#host-fill-ai').checked) {
-      slots.push({ role: 'AI', name: '同注者补位', connected: true });
-    }
     $('#room-slots').innerHTML = slots.map(function (s, i) {
       return '<div class="room-slot ' + (s.connected ? 'is-on' : 'is-off') + '"><span class="room-slot__seat">' + String(i + 1).padStart(2, '0') + '</span><div><small>' + esc(s.role) + '</small><strong>' + esc(s.name) + '</strong></div><i>' + (s.connected ? '已入席' : '空位') + '</i></div>';
     }).join('');
 
     const startBtn = $('#start-online');
     if (room.role === 'host') {
+      const fillAI = $('#host-fill-ai') && $('#host-fill-ai').checked;
+      const humans = (room.guests || []).length + 1;
       startBtn.hidden = false;
-      startBtn.disabled = !(room.connected || ($('#host-fill-ai') && $('#host-fill-ai').checked));
-      startBtn.textContent = room.connected ? '开桌' : (($('#host-fill-ai') && $('#host-fill-ai').checked) ? '与 AI 开桌' : '等待玩家');
+      startBtn.disabled = !((room.guests || []).length || fillAI);
+      startBtn.textContent = (room.guests || []).length
+        ? ('开桌（' + humans + '/' + seats + ' 人）')
+        : (fillAI ? ('与 AI 开桌（' + seats + ' 人桌）') : '等待玩家');
     } else {
       startBtn.hidden = true;
     }
     $('#leave-room').textContent = room.role === 'guest' ? '离开房间' : '关闭房间';
+    const matchBtn = $('#quick-match');
+    if (matchBtn) {
+      matchBtn.disabled = !!room.role && !room.matchmaking;
+      matchBtn.textContent = room.matchmaking
+        ? (room.role === 'host' ? '匹配中…（点击取消）' : '匹配中…')
+        : '一键快速匹配';
+    }
+    updateRoomLink();
   }
 
   async function createRoom() {
@@ -2718,16 +3177,26 @@
       openSettings('network');
       return;
     }
-    const name = ($('#host-name').value || '无名执币者').trim().slice(0, 12);
-    const password = $('#host-password').value || '';
-    const mode = $('#host-mode').value || 'standard';
-    S.online = { role: 'host', code: null, transport: transport, guestName: null, connected: false, status: '正在创建房间…', seat: 0, name: name, hostName: name };
+    const name = (($('#host-name') || {}).value || '无名执币者').trim().slice(0, 12);
+    const password = ($('#host-password') || {}).value || '';
+    const mode = ($('#host-mode') || {}).value || 'standard';
+    const seats = onlineRoomSeats();
+    const sizes = onlineModeSizes(mode === 'team' || seats > 2 ? 'team' : mode, seats);
+    S.online = {
+      role: 'host', code: null, transport: transport, guests: [], connected: false,
+      status: '正在创建房间…', seat: 0, name: name, hostName: name, matchmaking: false,
+      seats: seats, mode: mode, sizes: sizes
+    };
     S.lobby.roomVisible = true;
     renderLobby();
     try {
-      const result = await NET.host({ transport: transport, code: NET.generateCode(), password: password, name: name, mode: mode });
+      const result = await NET.host({
+        transport: transport, code: NET.generateCode(), password: password,
+        name: name, mode: mode, maxGuests: Math.max(1, Math.min(7, seats - 1)),
+        sizes: sizes
+      });
       S.online.code = result.code;
-      S.online.status = '房间已开启，等待另一位执币者…';
+      S.online.status = '房间已开启，等待执币者入席…';
       S.lobby.hosting = true;
       S.lobby.roomVisible = true;
       renderLobby();
@@ -2740,6 +3209,35 @@
     }
   }
 
+  function roomLink(code) {
+    try { return location.origin + location.pathname + '?room=' + encodeURIComponent(code || ''); } catch (e) { return ''; }
+  }
+
+  async function oneClickRoom() {
+    if (S.online.role) { leaveRoom(); }
+    // 一键开房默认开一张 4 人自由组队桌（2v2），2–8 名真人可同桌。
+    if ($('#host-seats')) $('#host-seats').value = '4';
+    if ($('#host-mode')) $('#host-mode').value = 'team';
+    renderLobby();
+    await createRoom();
+    if (S.online.code) {
+      const link = roomLink(S.online.code);
+      copyText('【命途回廊】房间号 ' + S.online.code + ' ｜ 联机链接：' + link);
+      toast('一键开房成功（4 人桌），邀请链接已复制：' + S.online.code, 'success');
+    }
+  }
+
+  function updateRoomLink() {
+    const el = $('#room-link');
+    if (!el) return;
+    if (S.online.code && /^CF-/.test(S.online.code)) {
+      el.hidden = false;
+      el.textContent = roomLink(S.online.code);
+    } else {
+      el.hidden = true;
+    }
+  }
+
   async function joinRoom() {
     Audio.unlock();
     const transport = S.lobby.transport;
@@ -2748,11 +3246,15 @@
       openSettings('network');
       return;
     }
-    const name = ($('#join-name').value || '过路赌客').trim().slice(0, 12);
-    const code = NET.normalizeCode($('#join-code').value);
-    const password = $('#join-password').value || '';
+    const name = (($('#join-name') || {}).value || '过路赌客').trim().slice(0, 12);
+    const code = NET.normalizeCode(($('#join-code') || {}).value);
+    const password = ($('#join-password') || {}).value || '';
     if (!/^CF-[A-Z0-9]{4}$/.test(code)) { toast('房间号格式应为 CF-XXXX。', 'error'); return; }
-    S.online = { role: 'guest', code: code, transport: transport, guestName: null, connected: false, status: '正在递交暗号…', seat: 1, name: name };
+    S.online = {
+      role: 'guest', code: code, transport: transport, guests: [], connected: false,
+      status: '正在递交暗号…', seat: 1, name: name, matchmaking: false,
+      seats: onlineRoomSeats()
+    };
     S.lobby.roomVisible = true;
     renderLobby();
     try {
@@ -2765,26 +3267,65 @@
     }
   }
 
+  async function quickMatch() {
+    Audio.unlock();
+    if (S.online.matchmaking) { leaveRoom(); return; }
+    if (S.online.role) { leaveRoom(); }
+    const name = (($('#join-name') || {}).value || ($('#host-name') || {}).value || '匹配玩家').trim().slice(0, 12) || '匹配玩家';
+    const seats = onlineRoomSeats();
+    const matchSizes = onlineSeatsBalanced(seats);
+    S.online = {
+      role: null, code: null, transport: 'peer', guests: [], connected: false,
+      status: '正在匹配…', seat: 1, name: name, matchmaking: true,
+      seats: seats, mode: 'team', sizes: matchSizes
+    };
+    S.lobby.roomVisible = true;
+    renderLobby();
+    toast(seats > 2 ? ('正在公网匹配 ' + seats + ' 人同桌的玩家…') : '正在公网匹配对手…', 'info');
+    try {
+      const result = await NET.match({ name: name, password: '', seats: seats, mode: 'team' });
+      S.online.role = result.role;
+      S.online.code = result.code || '匹配成功';
+      S.online.matchmaking = true;
+      S.online.seats = result.seats || seats;
+      S.online.mode = result.mode || 'team';
+      S.online.sizes = result.sizes || matchSizes;
+      if (result.role === 'host') {
+        S.online.name = name;
+        S.online.status = '匹配中：已占好牌桌，等待同席玩家…';
+        renderLobby();
+      } else {
+        S.online.guestSeat = result.seat || 1;
+        S.online.status = '匹配成功，正在开桌…';
+        renderLobby();
+      }
+    } catch (err) {
+      S.online = { role: null, code: null, transport: null, guests: [], connected: false, status: '', seat: 1, matchmaking: false };
+      S.lobby.roomVisible = false;
+      renderLobby();
+      toast(err.message || '匹配失败', 'error');
+    }
+  }
+
   function leaveRoom() {
     NET.leave();
+    if (S.online.matchTimer) { clearTimeout(S.online.matchTimer); S.online.matchTimer = null; }
     const role = S.online.role;
-    S.online = { role: null, code: null, transport: null, guestName: null, connected: false, status: '', seat: 1 };
+    S.online = { role: null, code: null, transport: null, guests: [], connected: false, status: '', seat: 1, matchmaking: false };
     S.lobby.roomVisible = false;
     renderLobby();
+    updateRoomLink();
     if (role === 'guest') toast('已离开房间。', 'info');
   }
 
-  function startOnlineHost() {
-    if (S.online.role !== 'host') return;
-    const guestName = S.online.guestName;
-    const fillAI = $('#host-fill-ai') && $('#host-fill-ai').checked;
-    if (!guestName && !fillAI) { toast('还没有玩家入席。勾选 AI 补位或等待访客。', 'warning'); return; }
-    const modeId = $('#host-mode').value || 'standard';
-    const hostName = ($('#host-name').value || '房主').trim().slice(0, 12);
-    const randomChars = D.randomCharacters(4);
-    const config = {
+  function randomOnlineConfig(modeId, seats) {
+    const seatTarget = seats == null ? ((S.online && S.online.seats) || onlineRoomSeats()) : seats;
+    const sizes = onlineModeSizes(modeId, seatTarget);
+    const effectiveMode = onlineEffectiveMode(modeId, sizes);
+    const randomChars = D.randomCharacters(8);
+    return {
       modeId: modeId,
-      playerName: hostName,
+      playerName: (($('#host-name') || {}).value || '房主').trim().slice(0, 12),
       charId: randomChars[0].id,
       charId2: randomChars[1].id,
       allyCharId: randomChars[2].id,
@@ -2792,17 +3333,32 @@
       theme: randomChars[0].style,
       aiLevel: 'normal',
       opponent: 'ai',
-      teamA: Number($('#host-team-a').value) || 1,
-      teamB: Number($('#host-team-b').value) || 1
+      teamA: sizes.a,
+      teamB: sizes.b
     };
+  }
+
+  function startOnlineHost() {
+    if (S.online.role !== 'host') return;
+    const guests = (S.online.guests || []).slice();
+    const fillAI = $('#host-fill-ai') && $('#host-fill-ai').checked;
+    if (!guests.length && !fillAI) { toast('还没有玩家入席。勾选 AI 补位或等待访客。', 'warning'); return; }
+    const modeId = (($('#host-mode') || {}).value) || 'standard';
+    const seats = Math.max(2, Math.min(8, (S.online.seats || onlineRoomSeats())));
+    const sizes = onlineModeSizes(modeId === 'team' || seats > 2 ? 'team' : modeId, seats);
+    const config = randomOnlineConfig(modeId, seats);
+    const guestList = guests.map(function (g) { return { name: g.name, seat: g.seat }; });
     const game = ENGINE.createGame(config, {
-      online: { role: 'host', guestName: guestName || null, viewerId: 'p0' }
+      online: { role: 'host', guests: guestList, viewerId: 'p0' }
     });
     S.game = game;
     S.viewGame = null;
     S.online.role = 'host';
-    S.online.connected = !!guestName;
-    S.online.guestPlayerId = guestName ? 'p1' : null;
+    S.online.connected = guests.length > 0;
+    S.online.guests = guestList;
+    S.online.seats = seats;
+    S.online.sizes = sizes;
+    S.online.mode = modeId;
     S.viewerId = 'p0';
     S.lastEventSeq = game.eventSeq;
     S.overShown = false;
@@ -2814,37 +3370,85 @@
     if (hostAlly) S.allyFocus = hostAlly.id;
     S.battleTheme = game.theme;
     S.currentConfig = config;
-    if (guestName) {
-      NET.send({ type: 'start', meta: { modeId: modeId, modeName: game.modeName, hostName: hostName } });
-      broadcastState();
+    if (guests.length) {
+      if (NET.markStarted) NET.markStarted();
+      S.online.started = true;
+      NET.send({ type: 'start', meta: { modeId: onlineEffectiveMode(modeId, sizes), modeName: game.modeName, hostName: config.playerName, seats: seats, sizes: sizes } });
     }
     showScreen('battle');
     Audio.startBgm(game.theme);
     FX.setTheme(game.theme);
     renderBattle();
+    broadcastState();
+    maybeRunAI();
+  }
+
+  function startMatchmakingBattle() {
+    if (S.online.role !== 'host' || !S.online.matchmaking) return;
+    const guests = (S.online.guests || []).slice();
+    if (!guests.length) return;
+    const seats = Math.max(2, Math.min(8, Number(S.online.seats) || (guests.length + 1)));
+    const modeId = S.online.mode || 'team';
+    const sizes = onlineModeSizes(modeId, seats);
+    const config = randomOnlineConfig(modeId, seats);
+    const guestList = guests.map(function (g) { return { name: g.name, seat: g.seat || 1 }; });
+    const game = ENGINE.createGame(config, {
+      online: { role: 'host', guests: guestList, viewerId: 'p0' }
+    });
+    S.game = game;
+    S.viewGame = null;
+    S.online.connected = true;
+    S.online.guests = guestList;
+    S.online.seats = seats;
+    S.online.sizes = sizes;
+    S.online.started = true;
+    if (NET.markStarted) NET.markStarted();
+    S.viewerId = 'p0';
+    S.lastEventSeq = game.eventSeq;
+    S.overShown = false;
+    S.aiBusy = false;
+    S.selectedCardIndex = null;
+    S.overlayKey = '';
+    S.allyFocus = null;
+    const hostAlly = game.players.find(function (p) { return p.team === 'A' && p.id !== 'p0' && p.isAI; });
+    if (hostAlly) S.allyFocus = hostAlly.id;
+    S.battleTheme = game.theme;
+    S.currentConfig = config;
+    NET.send({ type: 'start', meta: { modeId: modeId, modeName: game.modeName, hostName: config.playerName, seats: seats, sizes: sizes } });
+    showScreen('battle');
+    Audio.startBgm(game.theme);
+    FX.setTheme(game.theme);
+    renderBattle();
+    broadcastState();
     maybeRunAI();
   }
 
   function broadcastState() {
     if (S.online.role !== 'host' || !S.game) return;
-    const guestId = S.online.guestPlayerId || (S.online.connected ? 'p1' : null);
-    if (!guestId) return;
-    const view = ENGINE.serializeFor(S.game, guestId);
-    NET.sendState(view, 1);
+    const guests = S.online.guests || [];
+    guests.forEach(function (g) {
+      const pid = 'p' + g.seat;
+      const view = ENGINE.serializeFor(S.game, pid);
+      NET.sendState(view, g.seat);
+    });
   }
 
-  function handleNetMessage(msg) {
+  function guestPlayerId() {
+    return 'p' + (S.online.guestSeat || 1);
+  }
+
+  function handleNetMessage(msg, meta) {
     if (!msg) return;
     if (S.online.role === 'guest') {
       if (msg.type === 'state') {
         const wasBattle = S.screen === 'battle';
         S.viewGame = msg.state;
-        S.viewerId = 'p1';
-        S.online.role = 'guest';
+        S.viewerId = guestPlayerId();
         S.online.connected = true;
         S.battleTheme = msg.state.theme;
         if (!S.allyFocus) {
-          const guestAlly = msg.state.players.find(function (p) { return p.team === 'B' && p.id !== 'p1' && p.isAI; });
+          const me = ENGINE.playerById(msg.state, S.viewerId);
+          const guestAlly = me ? msg.state.players.find(function (p) { return p.team === me.team && p.id !== me.id && p.isAI; }) : null;
           if (guestAlly) S.allyFocus = guestAlly.id;
         }
         if (!wasBattle) {
@@ -2873,23 +3477,25 @@
     }
 
     if (S.online.role === 'host' && S.game) {
+      const seat = meta && meta.fromSeat != null ? meta.fromSeat : 1;
+      const pid = 'p' + seat;
       if (msg.type === 'action') {
-        applyGuestAction(msg.action);
+        applyGuestAction(msg.action, seat);
       } else if (msg.type === 'flip') {
-        const guest = S.game.players.find(function (p) { return p.id === 'p1'; });
+        const guest = S.game.players.find(function (p) { return p.id === pid; });
         if (!guest || !guest.isHuman) return;
-        const result = ENGINE.resolveFlip(S.game, 'p1', msg.choice);
+        const result = ENGINE.resolveFlip(S.game, pid, msg.choice);
         if (!result.ok) {
-          NET.send({ type: 'notice', message: result.reason });
+          NET.sendTo(seat, { type: 'notice', message: result.reason });
           return;
         }
         afterHostMutation();
       } else if (msg.type === 'chat') {
-        handleIncomingChat('p1', msg.text || '', msg.targetId || null);
+        handleIncomingChat(pid, msg.text || '', msg.targetId || null);
       } else if (msg.type === 'target') {
-        const guest = S.game.players.find(function (p) { return p.id === 'p1'; });
+        const guest = S.game.players.find(function (p) { return p.id === pid; });
         if (guest && guest.isHuman) {
-          ENGINE.setTarget(S.game, 'p1', msg.targetId);
+          ENGINE.setTarget(S.game, pid, msg.targetId);
           afterHostMutation(false);
         }
       } else if (msg.type === 'leave') {
@@ -2898,31 +3504,31 @@
     }
   }
 
-  function applyGuestAction(action) {
+  function applyGuestAction(action, seat) {
     if (!action || !S.game) return;
-    const guest = S.game.players.find(function (p) { return p.id === 'p1'; });
+    const pid = 'p' + (seat || 1);
+    const guest = S.game.players.find(function (p) { return p.id === pid; });
     if (!guest || !guest.isHuman) return;
     const game = S.game;
     let result = { ok: false, reason: '未知操作' };
     if (action.kind === 'playCard') {
-      result = ENGINE.playCard(game, 'p1', action.handIndex, action.targetId);
+      result = ENGINE.playCard(game, pid, action.handIndex, action.targetId);
     } else if (action.kind === 'active') {
-      result = ENGINE.useActive(game, 'p1', action.targetId);
+      result = ENGINE.useActive(game, pid, action.targetId);
     } else if (action.kind === 'switch') {
-      result = ENGINE.switchCharacter(game, 'p1', action.index);
+      result = ENGINE.switchCharacter(game, pid, action.index);
     } else if (action.kind === 'endTurn') {
-      result = ENGINE.endTurn(game, 'p1');
+      result = ENGINE.endTurn(game, pid);
     } else if (action.kind === 'target') {
-      result = { ok: ENGINE.setTarget(game, 'p1', action.targetId) };
+      result = { ok: ENGINE.setTarget(game, pid, action.targetId) };
     }
     if (!result.ok) {
-      NET.send({ type: 'notice', message: result.reason || '操作无效' });
+      NET.sendTo(seat, { type: 'notice', message: result.reason || '操作无效' });
       return;
     }
     afterHostMutation();
   }
-
-  /* =========================================================
+/* =========================================================
      战斗：状态读取与渲染
      ========================================================= */
   function getGame() {
@@ -2931,7 +3537,7 @@
 
   function viewerFor(game) {
     if (!game) return null;
-    if (S.online.role === 'guest') return ENGINE.playerById(game, 'p1');
+    if (S.online.role === 'guest') return ENGINE.playerById(game, guestPlayerId());
     if (S.online.role === 'host') return ENGINE.playerById(game, 'p0');
     const current = ENGINE.currentPlayer(game);
     if (current && current.isHuman && !current.isAI && game.players.some(function (p) { return p.id === 'p1' && p.isHuman; })) {
@@ -2993,12 +3599,21 @@
     if (player.team === viewer.team) labels.push('友方'); else labels.push('敌方');
     const hpPips = [];
     for (let i = 0; i < unit.maxHp; i++) hpPips.push('<i class="' + (i < unit.hp ? 'is-on' : '') + '"></i>');
+    const badgeImg = function (key, label) {
+      return '<img class="status-badge-img" src="assets/art/ui/badges/' + key + '.png" alt="' + esc(label) + '" title="' + esc(label) + '" loading="lazy" onerror="this.style.display=\'none\'">';
+    };
     const status = [];
-    if (unit.shield) status.push('<span class="status-chip status-chip--shield">盾 ' + unit.shield + '</span>');
-    if (player.sealedThisTurn || player.sealNext) status.push('<span class="status-chip status-chip--seal">封印</span>');
-    if (player.chokeNext) status.push('<span class="status-chip">干扰 ' + player.chokeNext + '</span>');
-    if (player.blessNext) status.push('<span class="status-chip status-chip--bless">必成</span>');
-    if (player.rerollBoost) status.push('<span class="status-chip status-chip--bless">+1 伤害</span>');
+    if (unit.shield) status.push('<span class="status-chip">' + badgeImg('shield', '护盾') + ' ' + unit.shield + '</span>');
+    if (player.burnNext) status.push('<span class="status-chip">' + badgeImg('burn', '灼烧') + ' ' + player.burnNext + '</span>');
+    if (player.weakThisTurn) status.push('<span class="status-chip">' + badgeImg('weak', '虚弱') + ' ' + player.weakThisTurn + '</span>');
+    if (player.sealedThisTurn || player.sealNext) status.push('<span class="status-chip">' + badgeImg('seal', '封印') + '</span>');
+    if (player.turnFlags && player.turnFlags.guardActive) status.push('<span class="status-chip">' + badgeImg('guard', '坚守') + '</span>');
+    if (player.turnFlags && player.turnFlags.reflectActive) status.push('<span class="status-chip">' + badgeImg('reflect', '反射') + '</span>');
+    if (player.pendingDamageBonus) status.push('<span class="status-chip">' + badgeImg('power', '蓄力') + ' +' + player.pendingDamageBonus + '</span>');
+    if (player.nextTurnEnergize) status.push('<span class="status-chip">' + badgeImg('energize', '振奋') + '</span>');
+    if (player.chokeNext) status.push('<span class="status-chip">' + badgeImg('stun', '干扰') + ' ' + player.chokeNext + '</span>');
+    if (player.blessNext) status.push('<span class="status-chip">' + badgeImg('zhao', '必成') + '</span>');
+    if (player.rerollBoost) status.push('<span class="status-chip">' + badgeImg('power', '+1 伤害') + '</span>');
     if (player.orders && player.orders.length) status.push('<span class="status-chip status-chip--order">指令 ' + esc(orderName(player.orders[0])) + '</span>');
     const reserves = player.chars.map(function (u, i) {
       if (i === player.active) return '';
@@ -3417,27 +4032,35 @@
       Audio.sfx('active');
       const player = ENGINE.playerById(game, event.playerId);
       const char = player ? charFor(player) : null;
-      if (char && char.active) Audio.speak(char.active.quote || char.quote, char);
+      if (char && char.id) Audio.voice(char.id, 'attack');
+      var sayKey = ACTIVE_SAY_KEYS[char && char.active && char.active.id ? char.active.id : null];
+      if (sayKey) Audio.say(sayKey);
     } else if (event.type === 'flipResult') {
       const success = !!event.result;
       playBurst(success);
       Audio.sfx(success ? 'success' : 'fail');
+      Audio.say(success ? 'zhao' : 'mei');
       if (!success) shakeScreen(true);
       document.body.classList.add(success ? 'flash-success' : 'flash-fail');
       setTimeout(function () { document.body.classList.remove('flash-success', 'flash-fail'); }, 500);
     } else if (event.type === 'card') {
       Audio.sfx('card');
-      // 出牌呼喝：攻击/高风险牌由出牌者喊出攻击台词
+      // 出牌呼喝：按卡类别播 say 词；攻击/高风险牌由出牌者喊出攻击台词
       try {
         const pl = ENGINE.playerById(game, event.playerId);
         const ch = pl ? charFor(pl) : null;
         const cd = event.cardId ? D.byId.card(event.cardId) : null;
+        if (cd) {
+          var catSay = { attack: 'attack', defense: 'defend', control: 'control', risk: 'risk', style: 'style' }[cd.category];
+          if (catSay) Audio.say(catSay);
+        }
         if (ch && cd && (cd.category === 'attack' || cd.category === 'risk')) Audio.voice(ch.id, 'attack');
       } catch (e) {}
     } else if (event.type === 'victory') {
       const viewer = viewerFor(game);
       const win = !!(viewer && event.team === viewer.team);
       Audio.sfx(win ? 'victory' : 'defeat');
+      Audio.say(win ? 'win' : 'lose');
       // 胜/负台词
       try {
         const vch = viewer ? charFor(viewer) : null;
@@ -3657,7 +4280,16 @@
       const typingId = 'typing-' + Date.now();
       game.chat.push({ id: typingId, speaker: teammate.name, text: '……', kind: teammate.team === viewer.team ? 'ally' : 'enemy', typing: true, playerId: teammate.id, at: Date.now() });
       renderChat(game, viewer);
-      const result = await AI.handleCommand(game, teammate, viewer, text, { allowRemote: AI.apiReady() });
+      let result = null;
+      try {
+        result = await AI.handleCommand(game, teammate, viewer, text, { allowRemote: AI.apiReady() });
+      } catch (err) {
+        game.chat = game.chat.filter(function (m) { return m.id !== typingId; });
+        ENGINE.addChat(game, '系统', '（同注者 AI 暂时没有回应：' + ((AI.lastError && AI.lastError()) || (err && err.message) || '未知错误') + '）', 'system', null);
+        renderBattle();
+        if (S.online.role === 'host') broadcastState();
+        return;
+      }
       game.chat = game.chat.filter(function (m) { return m.id !== typingId; });
       if (result) {
         ENGINE.addChat(game, teammate.name, result.reply, 'ally', teammate.id);
@@ -3671,8 +4303,11 @@
     const opponentAI = game.players.find(function (p) { return p.team !== viewer.team && p.isAI; });
     if (opponentAI) {
       let reply = '';
-      if (AI.apiReady()) {
-        reply = await AI.chat(game, opponentAI, text);
+      try {
+        if (AI.apiReady()) reply = await AI.chat(game, opponentAI, text);
+      } catch (err) {
+        reply = '';
+        if (typeof console !== 'undefined' && console.warn) console.warn('[Coinfall AI] chat failed:', (err && err.message) || err);
       }
       if (!reply) {
         const parsed = AI.parseCommand(text);
@@ -3702,7 +4337,15 @@
       game.chat.push({ id: typingId, speaker: teammate.name, text: '……', kind: 'ally', typing: true, playerId: teammate.id, at: Date.now() });
       renderBattle();
       broadcastState();
-      const result = await AI.handleCommand(game, teammate, player, text, { allowRemote: AI.apiReady() });
+      let result = null;
+      try {
+        result = await AI.handleCommand(game, teammate, player, text, { allowRemote: AI.apiReady() });
+      } catch (err) {
+        game.chat = game.chat.filter(function (m) { return m.id !== typingId; });
+        ENGINE.addChat(game, '系统', '（同注者 AI 暂时没有回应：' + ((AI.lastError && AI.lastError()) || (err && err.message) || '未知错误') + '）', 'system', null);
+        afterHostMutation();
+        return;
+      }
       game.chat = game.chat.filter(function (m) { return m.id !== typingId; });
       if (result) {
         ENGINE.addChat(game, teammate.name, result.reply, 'ally', teammate.id);
@@ -3840,6 +4483,196 @@
   }
 
   /* =========================================================
+     场景与音景面板（主界面 / 战斗背景、BGM、氛围音）
+     ========================================================= */
+  var SCENE_REALMS = ['abyss', 'steam', 'cultivation', 'fantasy', 'neon', 'wa', 'west', 'anime'];
+  var sceneBgmPlaying = true;
+
+  function realmLabel(id) {
+    var s = D.STYLES[id];
+    return s ? (s.realm || s.name || id) : id;
+  }
+
+  function realmSub(id) {
+    var s = D.STYLES[id];
+    return s ? (s.name || '') : '';
+  }
+
+  function sceneOptionHTML(kind, value, label, sub, active) {
+    return '<button type="button" class="scene-option' + (active ? ' is-active' : '') + '" data-scene-' + kind + '="' + esc(value) + '" aria-pressed="' + (active ? 'true' : 'false') + '">' +
+      '<strong>' + esc(label) + '</strong>' + (sub ? '<small>' + esc(sub) + '</small>' : '') +
+    '</button>';
+  }
+
+  function sceneRealmOptionsHTML(kind, current, extras) {
+    var html = (extras || []).map(function (item) {
+      return sceneOptionHTML(kind, item.value, item.label, item.sub || '', current === item.value);
+    }).join('');
+    html += SCENE_REALMS.map(function (id) {
+      return sceneOptionHTML(kind, id, realmLabel(id), realmSub(id), current === id);
+    }).join('');
+    return html;
+  }
+
+  function sceneVolumeHTML(id, value, label) {
+    var num = Number(value);
+    if (isNaN(num)) num = 0;
+    var pct = Math.round(num * 100);
+    return '<label class="scene-vol" for="' + id + '"><span>' + esc(label) + '</span>' +
+      '<input type="range" id="' + id + '" min="0" max="1" step="0.05" value="' + num.toFixed(2) + '">' +
+      '<b id="' + id + '-label">' + pct + '%</b></label>';
+  }
+
+  function openScenePanel() {
+    var home = SETTINGS.homeBg || 'menu';
+    var battle = SETTINGS.battleBg || 'theme';
+    var bgm = SETTINGS.bgmTrack || 'theme';
+    var ambientTheme = SETTINGS.ambientTheme || 'theme';
+    sceneBgmPlaying = !!SETTINGS.music;
+    openModal('<div class="scene-sheet">' +
+      '<div class="modal-head"><div><div class="eyebrow">SCENE &amp; SOUNDSCAPE</div><h2>场景与音景</h2><p>主界面、战斗背景与配乐氛围。改动立即生效，并写入本机设置。</p></div></div>' +
+      '<div class="scene-panel">' +
+
+        '<section class="scene-group" data-scene-group="home">' +
+          '<div class="scene-group__head"><h3>主界面背景</h3><small>首页、图鉴与档案页共用；选「主菜单」回到默认封面。</small></div>' +
+          '<div class="scene-grid">' + sceneRealmOptionsHTML('home', home, [{ value: 'menu', label: '主菜单', sub: '默认封面' }]) + '</div>' +
+        '</section>' +
+
+        '<section class="scene-group" data-scene-group="battle">' +
+          '<div class="scene-group__head"><h3>战斗背景</h3><small>「跟随主题」会随所选角色风格自动切换。</small></div>' +
+          '<div class="scene-grid">' + sceneRealmOptionsHTML('battle', battle, [
+            { value: 'theme', label: '跟随主题', sub: '默认' },
+            { value: 'battle-bg', label: '默认战斗图', sub: '固定' }
+          ]) + '</div>' +
+        '</section>' +
+
+        '<section class="scene-group" data-scene-group="bgm">' +
+          '<div class="scene-group__head"><h3>背景音乐（BGM）</h3><small>八域各有专属曲目，主菜单曲目独立。</small></div>' +
+          '<div class="scene-grid">' + sceneRealmOptionsHTML('bgm', bgm, [
+            { value: 'theme', label: '跟随主题', sub: '默认' },
+            { value: 'menu', label: '主菜单', sub: '菜单曲' }
+          ]) + '</div>' +
+          '<div class="scene-toolbar">' +
+            '<button type="button" class="btn btn--secondary btn--sm" id="scene-bgm-toggle">' + (sceneBgmPlaying ? '停止播放' : '播放') + '</button>' +
+            sceneVolumeHTML('scene-bgm-volume', SETTINGS.bgmVolume, '音量') +
+            '<span class="scene-note" id="scene-bgm-note"></span>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="scene-group" data-scene-group="ambient" id="scene-ambient-group">' +
+          '<div class="scene-group__head"><h3>氛围音</h3><small>低频底噪与零星音，叠加在 BGM 之上。</small></div>' +
+          '<label class="toggle-row"><span><strong>启用氛围音</strong><small>关闭后主题与音量不可调</small></span><input type="checkbox" id="scene-ambient-enabled" ' + (SETTINGS.ambient ? 'checked' : '') + '></label>' +
+          '<div class="scene-grid">' + sceneRealmOptionsHTML('ambient', ambientTheme, [{ value: 'theme', label: '跟随主题', sub: '默认' }]) + '</div>' +
+          '<div class="scene-toolbar">' + sceneVolumeHTML('scene-ambient-volume', SETTINGS.ambientVolume, '音量') + '</div>' +
+        '</section>' +
+
+      '</div>' +
+      '<div class="modal-actions"><button class="btn btn--primary" data-close-modal>完成</button></div>' +
+    '</div>', { dialogClass: 'modal-dialog--wide' });
+
+    function markSceneActive(kind, btn) {
+      $$('[data-scene-' + kind + ']').forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+
+    function syncBgmToggle() {
+      var toggle = $('#scene-bgm-toggle');
+      if (toggle) toggle.textContent = sceneBgmPlaying ? '停止播放' : '播放';
+      var note = $('#scene-bgm-note');
+      if (note) note.textContent = SETTINGS.music ? '' : '背景音乐已在设置中关闭，播放也不会有声音。';
+    }
+
+    function syncAmbientControls() {
+      var group = $('#scene-ambient-group');
+      if (group) group.classList.toggle('is-disabled', !SETTINGS.ambient);
+      var vol = $('#scene-ambient-volume');
+      if (vol) vol.disabled = !SETTINGS.ambient;
+    }
+
+    /* 主界面背景：立即应用并持久化 */
+    $$('[data-scene-home]').forEach(function (btn) {
+      btn.onclick = function () {
+        SETTINGS.homeBg = btn.dataset.sceneHome;
+        saveSettings();
+        markSceneActive('home', btn);
+        FX.applyBackground();
+        Audio.sfx('click');
+      };
+    });
+
+    /* 战斗背景：立即应用并持久化 */
+    $$('[data-scene-battle]').forEach(function (btn) {
+      btn.onclick = function () {
+        SETTINGS.battleBg = btn.dataset.sceneBattle;
+        saveSettings();
+        markSceneActive('battle', btn);
+        FX.applyBackground();
+        Audio.sfx('click');
+      };
+    });
+
+    /* BGM：切曲、播放/停止、音量 */
+    $$('[data-scene-bgm]').forEach(function (btn) {
+      btn.onclick = function () {
+        SETTINGS.bgmTrack = btn.dataset.sceneBgm;
+        saveSettings();
+        markSceneActive('bgm', btn);
+        sceneBgmPlaying = true;
+        Audio.refreshBgm();
+        syncBgmToggle();
+        Audio.sfx('click');
+      };
+    });
+    var bgmToggle = $('#scene-bgm-toggle');
+    if (bgmToggle) bgmToggle.onclick = function () {
+      if (sceneBgmPlaying) { Audio.stopBgm(); sceneBgmPlaying = false; }
+      else { Audio.refreshBgm(); sceneBgmPlaying = true; }
+      syncBgmToggle();
+      Audio.sfx('click');
+    };
+    var bgmVol = $('#scene-bgm-volume');
+    if (bgmVol) bgmVol.oninput = function () {
+      Audio.setBgmVolume(bgmVol.value);
+      saveSettings();
+      var label = $('#scene-bgm-volume-label');
+      if (label) label.textContent = Math.round(SETTINGS.bgmVolume * 100) + '%';
+    };
+
+    /* 氛围音：开关、主题、音量 */
+    var ambientToggle = $('#scene-ambient-enabled');
+    if (ambientToggle) ambientToggle.onchange = function () {
+      SETTINGS.ambient = !!ambientToggle.checked;
+      saveSettings();
+      Audio.setAmbientEnabled(SETTINGS.ambient);
+      syncAmbientControls();
+      Audio.sfx('click');
+    };
+    $$('[data-scene-ambient]').forEach(function (btn) {
+      btn.onclick = function () {
+        SETTINGS.ambientTheme = btn.dataset.sceneAmbient;
+        saveSettings();
+        markSceneActive('ambient', btn);
+        Audio.setAmbientEnabled(SETTINGS.ambient);
+        try { Audio.refreshAmbient(); } catch (e) {}
+        Audio.sfx('click');
+      };
+    });
+    var ambientVol = $('#scene-ambient-volume');
+    if (ambientVol) ambientVol.oninput = function () {
+      Audio.setAmbientVolume(ambientVol.value);
+      saveSettings();
+      var label = $('#scene-ambient-volume-label');
+      if (label) label.textContent = Math.round(SETTINGS.ambientVolume * 100) + '%';
+    };
+
+    syncBgmToggle();
+    syncAmbientControls();
+  }
+
+  /* =========================================================
      设置 / 规则
      ========================================================= */
   function openSettings(tab) {
@@ -3853,25 +4686,18 @@
         '<div class="settings-pane" data-settings-pane="game" ' + (tab === 'game' ? '' : 'hidden') + '>' +
           '<label class="toggle-row"><span><strong>背景音乐</strong><small>八域真人级氛围配乐 + 全套音效反馈</small></span><input type="checkbox" id="set-music" ' + (SETTINGS.music ? 'checked' : '') + '></label>' +
           '<label class="toggle-row"><span><strong>音效</strong><small>抛币、命中、治疗与技能反馈</small></span><input type="checkbox" id="set-sfx" ' + (SETTINGS.sfx ? 'checked' : '') + '></label>' +
-          '<label class="toggle-row"><span><strong>角色语音</strong><small>角色真人配音与 5 套可选旁白音色包，缺失时回退语音合成</small></span><input type="checkbox" id="set-voice" ' + (SETTINGS.voice ? 'checked' : '') + '></label>' +
-          '<div class="settings-row"><label>硬币皮肤</label>' + skinCardGridHTML() + '<input type="hidden" id="set-coin-skin" value="' + esc(SETTINGS.coinSkin || 'bronze') + '"></div>' +
-          '<div class="settings-row"><label>旁白音色</label><select id="set-voice-pack">' +
+          '<label class="toggle-row"><span><strong>角色语音</strong><small>角色真人配音与 5 套旁白音色包，缺失即静默</small></span><input type="checkbox" id="set-voice" ' + (SETTINGS.voice ? 'checked' : '') + '></label>' +
+          '<div class="settings-subhead">旁白与语音</div>' +
+          '<div class="settings-row"><label>旁白音色包</label><div class="settings-inline"><select id="set-voice-pack">' +
             '<option value="house"' + (SETTINGS.voicePack === 'house' ? ' selected' : '') + '>庄家·男中音</option>' +
             '<option value="mistress"' + (SETTINGS.voicePack === 'mistress' ? ' selected' : '') + '>御姐·魅影</option>' +
             '<option value="youth"' + (SETTINGS.voicePack === 'youth' ? ' selected' : '') + '>少年·热血</option>' +
             '<option value="elder"' + (SETTINGS.voicePack === 'elder' ? ' selected' : '') + '>老者·守夜人</option>' +
             '<option value="mystic"' + (SETTINGS.voicePack === 'mystic' ? ' selected' : '') + '>神秘女声·回声</option>' +
-            '<option value="system"' + (SETTINGS.voicePack === 'system' ? ' selected' : '') + '>系统 TTS（无配音包）</option>' +
-          '</select></div>' +
-          '<div class="settings-row"><label>人声音色</label><select id="set-voice-tone">' +
-            '<option value="default"' + (SETTINGS.voiceTone === 'default' ? ' selected' : '') + '>默认（系统女声）</option>' +
-            '<option value="deep"' + (SETTINGS.voiceTone === 'deep' ? ' selected' : '') + '>低沉男声</option>' +
-            '<option value="bright"' + (SETTINGS.voiceTone === 'bright' ? ' selected' : '') + '>清亮少女</option>' +
-            '<option value="old"' + (SETTINGS.voiceTone === 'old' ? ' selected' : '') + '>苍老长者</option>' +
-            '<option value="heroic"' + (SETTINGS.voiceTone === 'heroic' ? ' selected' : '') + '>热血少年</option>' +
-          '</select></div>' +
+          '</select><button type="button" class="btn btn--secondary btn--sm" id="preview-pack">试听</button></div></div>' +
+          '<div class="settings-row"><label>硬币皮肤</label>' + skinCardGridHTML() + '<input type="hidden" id="set-coin-skin" value="' + esc(SETTINGS.coinSkin || 'bronze') + '"></div>' +
           '<label class="toggle-row"><span><strong>减少动态效果</strong><small>降低粒子与过场动画</small></span><input type="checkbox" id="set-motion" ' + (SETTINGS.reducedMotion ? 'checked' : '') + '></label>' +
-          '<div class="settings-note">所有音效与音乐由 Web Audio 实时合成，无版权素材依赖。语音使用系统 TTS，无语音包时自动静默。</div>' +
+          '<div class="settings-note">若无声音请先在页面点一下以解锁音频（浏览器要求至少一次用户交互）。语音全部为真人配音文件，缺失时自动静默。</div>' +
         '</div>' +
         '<div class="settings-pane" data-settings-pane="ai" ' + (tab === 'ai' ? '' : 'hidden') + '>' +
           '<div class="settings-note settings-note--warning">公网页面上，此密钥对访问者可见。建议在网关控制台为 Key 设置用量限额；出现异常调用时请及时轮换密钥。</div>' +
@@ -3917,14 +4743,17 @@
       if (!key) { out.textContent = '请先填写 API Key。'; return; }
       testBtn.disabled = true;
       out.textContent = '正在连接…';
+      const prevTimeout = AI.config.timeoutMs;
       AI.configure({ enabled: true, apiKey: key, baseUrl: base, model: model, timeoutMs: 8000 });
       try {
         const reply = await AI.remoteChat([{ role: 'user', content: '只回复两个字：在。' }], { maxTokens: 10 });
         out.textContent = '连接成功：' + reply.slice(0, 20);
       } catch (err) {
         out.textContent = '失败：' + (err.message || err);
+      } finally {
+        AI.configure({ timeoutMs: prevTimeout });
+        testBtn.disabled = false;
       }
-      testBtn.disabled = false;
     };
     $$('.skin-card').forEach(function (card) {
       card.onclick = function () {
@@ -3934,13 +4763,19 @@
         if (hidden) hidden.value = card.dataset.skin;
       };
     });
+    const previewPackBtn = $('#preview-pack');
+    if (previewPackBtn) previewPackBtn.onclick = function () {
+      const packSelect = $('#set-voice-pack');
+      SETTINGS.voicePack = packSelect ? packSelect.value : (SETTINGS.voicePack || 'house');
+      Audio.unlock();
+      Audio.previewNarrator(SETTINGS.voicePack);
+    };
     $('#save-settings').onclick = function () {
       SETTINGS.music = $('#set-music').checked;
       SETTINGS.sfx = $('#set-sfx').checked;
       SETTINGS.voice = $('#set-voice').checked;
       SETTINGS.reducedMotion = $('#set-motion').checked;
       SETTINGS.coinSkin = $('#set-coin-skin').value;
-      SETTINGS.voiceTone = $('#set-voice-tone').value;
       SETTINGS.voicePack = ($('#set-voice-pack') || {}).value || 'house';
       saveSettings();
       applyCoinSkin();
@@ -3952,7 +4787,7 @@
         apiKey: $('#set-ai-key').value.trim(),
         model: $('#set-ai-model').value.trim() || 'deepseek-v4.1-flash-1017',
         remoteBattle: $('#set-ai-battle').checked,
-        timeoutMs: Number($('#set-ai-timeout').value) || 12000
+        timeoutMs: Math.max(2000, Math.min(120000, Number($('#set-ai-timeout').value) || 30000))
       });
       NET.configure({
         peer: {
@@ -4139,11 +4974,16 @@
       if (S.online.role) NET.leave();
     });
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) Audio.stopBgm();
-      else if (S.screen === 'battle' || S.screen === 'home') Audio.startBgm(S.battleTheme || 'abyss');
+      if (document.hidden) { Audio.stopBgm(); Audio.stopAmbient(); }
+      else {
+        if (S.screen === 'battle' || S.screen === 'home') Audio.startBgm(S.battleTheme || 'abyss');
+        Audio.refreshAmbient();
+      }
     });
     $('#create-room').addEventListener('click', createRoom);
     $('#join-room').addEventListener('click', joinRoom);
+    $('#quick-match').addEventListener('click', quickMatch);
+    $('#one-click-room').addEventListener('click', oneClickRoom);
     $('#start-online').addEventListener('click', startOnlineHost);
     $('#leave-room').addEventListener('click', leaveRoom);
     $('#host-fill-ai').addEventListener('change', renderLobby);
@@ -4181,6 +5021,7 @@
       case 'enter-table': enterTable(); break;
       case 'toggle-audio': Audio.unlock(); Audio.toggle(); updateAudioButton(); break;
       case 'settings': openSettings(); break;
+      case 'scene': openScenePanel(); break;
       case 'rules': openRules(); break;
       case 'open-deck-builder': openDeckBuilder(); break;
       case 'random-deck': randomDeckSelection(); break;
@@ -4229,14 +5070,31 @@
     FX.init();
     updateAudioButton();
     showScreen('home');
-    // 预载语音列表
-    if (root.speechSynthesis) {
-      root.speechSynthesis.getVoices();
-      root.speechSynthesis.onvoiceschanged = function () { root.speechSynthesis.getVoices(); };
-    }
+    // 邀请链接：?room=CF-XXXX 直接进入联机大厅并自动入席（一键联机）
+    try {
+      const params = new URLSearchParams(location.search);
+      const room = params.get('room');
+      if (room) {
+        const code = NET.normalizeCode(room);
+        showScreen('lobby');
+        const input = $('#join-code');
+        if (input) input.value = code;
+        setTimeout(function () {
+          if (S.online && S.online.role) return;
+          if ($('#join-name') && !$('#join-name').value) $('#join-name').value = '受邀执币者';
+          joinRoom().catch(function () {});
+        }, 900);
+        setTimeout(function () {
+          const joinPanel = $('#join-room');
+          if (joinPanel) joinPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (!S.online.role) toast('房间号已填入：' + code + '。点击「加入同一张赌桌」即可入席。', 'info');
+        }, 1500);
+      }
+    } catch (e) {}
     document.addEventListener('pointerdown', function once() {
       Audio.unlock();
       if (SETTINGS.music) Audio.startBgm('abyss');
+      if (SETTINGS.ambient) Audio.startAmbient('abyss', true);
       document.removeEventListener('pointerdown', once);
     }, { once: true });
   }
@@ -4244,5 +5102,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 
-  root.CF_UI = { S, SETTINGS, openSettings, openRules, showScreen, toast };
+  root.CF_UI = { S, SETTINGS, openSettings, openScenePanel, openRules, showScreen, toast };
 }) (typeof window !== 'undefined' ? window : globalThis);

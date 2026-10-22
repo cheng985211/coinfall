@@ -1450,7 +1450,32 @@ img, canvas { display: block; max-width: 100%; }
 .coin__face small { font-size: 6px; }
 .coin__edge { border-width: 4px; }
 @keyframes idleCoin { 0%, 100% { transform: translateY(0) rotateY(-6deg); } 50% { transform: translateY(-7px) rotateY(8deg); } }
-@keyframes coinSpin { from { transform: rotateY(0) rotateX(4deg); } to { transform: rotateY(360deg) rotateX(4deg); } }
+@keyframes coinSpin {
+  0%   { transform: rotateY(0)    rotateX(0)    translateY(0); }
+  25%  { transform: rotateY(180deg) rotateX(14deg) translateY(-46px); }
+  50%  { transform: rotateY(360deg) rotateX(0)   translateY(-60px); }
+  75%  { transform: rotateY(540deg) rotateX(-14deg) translateY(-46px); }
+  100% { transform: rotateY(720deg) rotateX(0)  translateY(0); }
+}
+/* v2.1 硬币落地弹跳 + 皮肤色光晕（按 html[data-coin-skin]） */
+.coin--spinning { filter: drop-shadow(0 0 14px var(--coin-glow, rgba(231,184,106,.5))); will-change: transform; }
+.coin--success { animation: coinLand .5s cubic-bezier(.2,1.4,.4,1); }
+.coin--fail { animation: coinLand .5s cubic-bezier(.2,1.4,.4,1); }
+@keyframes coinLand { 0% { transform: scale(1.25); } 60% { transform: scale(.94); } 100% { transform: scale(1); } }
+html[data-coin-skin="gold"]    { --coin-glow: rgba(255,211,92,.75); }
+html[data-coin-skin="silver"]   { --coin-glow: rgba(238,242,248,.65); }
+html[data-coin-skin="bronze"]   { --coin-glow: rgba(216,184,120,.6); }
+html[data-coin-skin="amethyst"] { --coin-glow: rgba(224,184,255,.7); }
+html[data-coin-skin="jade"]     { --coin-glow: rgba(168,240,208,.65); }
+html[data-coin-skin="bloodmoon"]{ --coin-glow: rgba(255,138,122,.7); }
+html[data-coin-skin="obsidian"] { --coin-glow: rgba(184,154,255,.65); }
+html[data-coin-skin="frost"]    { --coin-glow: rgba(216,244,255,.65); }
+html[data-coin-skin="molten"]   { --coin-glow: rgba(255,176,106,.75); }
+html[data-coin-skin="bone"]     { --coin-glow: rgba(240,236,228,.6); }
+@media (prefers-reduced-motion: reduce) {
+  .coin--spinning, .coin--idle { animation: none !important; }
+  .coin--success, .coin--fail { animation: none !important; }
+}
 .arena-actions { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
 .action-hint { display: flex; align-items: flex-start; gap: 7px; padding: 9px 10px; border: 1px dashed rgba(255, 255, 255, .1); border-radius: 7px; color: var(--dim); font-size: 9px; line-height: 1.55; }
 .action-hint > span { color: var(--gold); }
@@ -2873,3 +2898,60 @@ html[data-coin-skin="bloodmoon"] .hero-coin__face--back {
 .field-row { flex-wrap: wrap; }
 .field-row .field { flex: 1 1 140px; min-width: 0; }
 .segmented { flex-wrap: wrap; }
+
+/* =========================================================
+   场景与音景面板（主界面/战斗背景、BGM、氛围音）
+   ========================================================= */
+.scene-sheet .modal-head { margin-bottom: 14px; }
+.scene-panel { display: flex; flex-direction: column; gap: 18px; padding-bottom: 14px; }
+.scene-group { padding-top: 15px; border-top: 1px solid var(--line-soft); }
+.scene-panel .scene-group:first-child { padding-top: 0; border-top: 0; }
+.scene-group__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 10px; }
+.scene-group__head h3 { font-family: var(--font-serif); font-size: 16px; font-weight: 500; color: var(--gold); }
+.scene-group__head small { color: var(--dim); font-size: 9.5px; }
+.scene-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.scene-option { display: flex; flex-direction: column; gap: 2px; padding: 9px 10px; border: 1px solid var(--line-soft); border-radius: 7px; background: rgba(255, 255, 255, .018); text-align: left; transition: border-color .2s, background .2s, box-shadow .2s; }
+.scene-option:hover { border-color: var(--line-strong); background: rgba(255, 255, 255, .04); }
+.scene-option strong { font-family: var(--font-serif); font-size: 11.5px; font-weight: 500; }
+.scene-option small { color: var(--dim); font-size: 8.5px; line-height: 1.35; }
+.scene-option.is-active { border-color: var(--gold); background: rgba(231, 184, 106, .1); box-shadow: inset 0 0 0 1px rgba(231, 184, 106, .22); }
+.scene-option.is-active strong { color: var(--gold); }
+.scene-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin-top: 12px; }
+.scene-vol { display: flex; align-items: center; gap: 8px; color: var(--dim); font-size: 9.5px; }
+.scene-vol input[type="range"] { width: 150px; height: 4px; accent-color: var(--gold); }
+.scene-vol b { min-width: 36px; color: var(--gold); font-size: 10px; font-weight: 500; }
+.scene-note { color: var(--faint); font-size: 9px; }
+.scene-group.is-disabled .scene-grid,
+.scene-group.is-disabled .scene-toolbar { opacity: .45; pointer-events: none; }
+.settings-subhead { margin: 4px 0 0; color: var(--gold); font-size: 8.5px; letter-spacing: .2em; }
+.settings-inline { flex-wrap: wrap; }
+#voice-uri-hint { font-size: 9px; }
+@media (max-width: 720px) {
+  .scene-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .scene-group__head { flex-direction: column; align-items: flex-start; }
+  .scene-vol { flex: 1 1 100%; }
+  .scene-vol input[type="range"] { flex: 1 1 auto; width: auto; min-width: 0; }
+  .scene-vol b { min-width: 30px; }
+  .scene-sheet .modal-head h2 { font-size: clamp(22px, 7vw, 30px); }
+}
+
+/* ============ v2.1 UI 贴图接入（真实素材，CSS 只做布局） ============ */
+.brand__coin { background: url('assets/art/ui/logo.png') center/contain no-repeat !important; }
+.brand__coin span { display: none; }
+.btn--primary { background-image: linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.35)), url('assets/art/ui/buttons/btn-primary.png'); background-size: 100% 100%; }
+.btn--secondary { background-image: linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.45)), url('assets/art/ui/buttons/btn-secondary.png'); background-size: 100% 100%; }
+.modal, .settings-sheet { background-image: url('assets/art/ui/frames/modal.png'); background-size: 100% 100%; }
+.fate-card .card-back, .deck-pick.is-back { background: url('assets/art/ui/card-back.png') center/cover no-repeat; }
+.codex-content, .codex-section { background-image: url('assets/art/ui/frames/codex.png'); background-size: 100% 100%; }
+
+/* v2.1 状态徽章贴图 */
+.status-badge-img { width: 16px; height: 16px; vertical-align: -3px; object-fit: contain; margin-right: 2px; }
+.status-chip { display: inline-flex; align-items: center; gap: 2px; }
+
+/* v2.1 draft 轮抽卡组预览 */
+.draft-preview { margin: 8px 0; padding: 8px; border: 1px solid rgba(231,184,106,.3); border-radius: 8px; background: rgba(0,0,0,.25); }
+.draft-preview h4 { margin: 0 0 6px; font-size: 11px; color: var(--gold); letter-spacing: .1em; }
+.draft-preview__grid { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+.draft-preview__cat { display: flex; gap: 8px; font-size: 11px; line-height: 1.5; }
+.draft-preview__cat b { min-width: 56px; color: var(--dim); }
+.draft-preview__cat span { color: #e8e0cc; }

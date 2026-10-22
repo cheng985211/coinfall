@@ -88,7 +88,7 @@ assets/
 | 本局败北 | 审判结束 | `defeat` | 我方角色 `lose` 台词 |
 | 剧情节点 | 章节开场 / Boss / 结局 | — | 朗读 STORY 对应文案（可放录音） |
 
-**语音兜底**：若 `voice/char/{id}-{场景}.wav` 不存在，自动改用浏览器 **SpeechSynthesis** 朗读 `assets/voice-lines.js` 里的台词（中文语音包缺失时静默）。因此**所有 32×4=128 条台词开箱即发声**，录音是可选增强。
+**语音规则（v2.1 起）**：优先播放真人录音 `voice/char/{id}-{场景}.wav`；文件缺失即静默，**不使用任何浏览器语音合成兜底**。`assets/voice-lines.js` 仅作台词存档文本。
 
 **BGM 切换**：进入主界面播放 `menu` 配乐（或程序化深渊主题）；进入对战按 `setup.theme` 播放对应主题配乐；关闭音乐开关时停止。
 
@@ -118,7 +118,7 @@ assets/
 | 32 张角色立绘 | `art/portraits/*.webp` | 本项目按 `assets/art/prompts.json` 的提示词由图像模型生成（原创构图，不含现有 IP） |
 | 主/对战背景 `menu.jpg` `abyss.jpg` | `art/bg/` | 本次由图像模型生成（原创） |
 | 主配乐 `bgm/menu.wav`、出牌音 `sfx/card.wav` | `audio/` | 本次由音频模型生成（原创） |
-| 程序化 BGM/音效/语音 | `game.js` 内 Web Audio / SpeechSynthesis | 代码自带，无第三方素材依赖 |
+| 程序化音效 | `game.js` 内 Web Audio | 代码自带，无第三方素材依赖；语音全部为真人 wav |
 
 ### 推荐的开源素材源（补充其余 BGM / 音效 / 卡面）
 

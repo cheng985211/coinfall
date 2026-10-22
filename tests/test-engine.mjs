@@ -13,7 +13,7 @@ function mulberry32(seed) {
   };
 }
 
-const modes = ['standard', 'brawl', 'endless', 'ai', 'random', 'custom', 'quick', 'mirror', 'frenzy', 'sudden', 'chain', 'chaos'];
+const modes = ['standard', 'brawl', 'endless', 'ai', 'random', 'custom', 'quick', 'mirror', 'frenzy', 'sudden', 'chain', 'chaos', 'random-rules', 'draft', 'double-stakes'];
 let games = 0, turns = 0, wins = { A: 0, B: 0, none: 0 };
 for (const mode of modes) {
   for (let n = 0; n < 18; n++) {
@@ -79,6 +79,16 @@ for (let i = 0; i < 10; i++) {
   const g = E.createGame({ modeId: 'mirror', charId: 'cth-01', rng: mulberry32(i) });
   if (g.players[0].chars[0].charId !== g.players[1].chars[0].charId) throw new Error('mirror char');
   if (g.players[0].deck.map(c => c.name).join('|') !== g.players[1].deck.map(c => c.name).join('|')) throw new Error('mirror deck');
+}
+
+// v2.1 draft 轮抽赌局：buildDraftDeck 产出双方各 12 张、类别近似均衡
+{
+  const d = E.buildDraftDeck(mulberry32(42));
+  if (!d || !Array.isArray(d.a) || !Array.isArray(d.b)) throw new Error('draft build');
+  if (d.a.length !== 12 || d.b.length !== 12) throw new Error('draft size ' + d.a.length + '/' + d.b.length);
+  const catCount = (arr) => arr.reduce((m, c) => (m[c.category] = (m[c.category] || 0) + 1, m), {});
+  const ca = catCount(d.a);
+  if ((ca.attack || 0) < 5) throw new Error('draft a attack ' + JSON.stringify(ca));
 }
 
 console.log('OK', { games, turns, wins });

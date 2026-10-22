@@ -1,8 +1,8 @@
 {
   "name": "coinfall",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
-  "description": "命途回廊 · COINFALL v2.0 — 纯 HTML/CSS/JS 的抛币命运卡牌对战游戏，40 名英雄 / 174 张技能卡 / 10 套硬币皮肤 / 5 套旁白人声，支持 1v1 到 4v4、AI 同注者、零配置公网 WebRTC 联机。",
+  "description": "命途回廊 · COINFALL v2.1 — 纯 HTML/CSS/JS 的抛币命运卡牌对战游戏，44 名英雄 / 190 张技能卡 / 10 套硬币皮肤 / 5 套旁白人声 / 19 种模式，支持 1v1 到 4v4、AI 同注者、零配置公网 WebRTC 联机。",
   "scripts": {
     "start": "node server.mjs",
     "dev": "node server.mjs",

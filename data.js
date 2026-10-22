@@ -169,7 +169,11 @@
     bloodPrice: { name: '血价', desc: '自身每受到 1 点伤害，本回合下一次造成的伤害 +1（可叠加）。' },
     grimHarvest: { name: '收割', desc: '每当任意角色（含敌方）阵亡时，回复 2 点生命。' },
     luckySeven: { name: '幸运转', desc: '回合结束时，若本回合未打出技能卡，抽 1 张牌。' },
-    highRoller: { name: '狂注', desc: '每回合第一次抛币成功后，本回合下一次造成的伤害 +1。' }
+    highRoller: { name: '狂注', desc: '每回合第一次抛币成功后，本回合下一次造成的伤害 +1。' },
+    lootOnDiscard: { name: '打劫', desc: '每当你弃牌时抽 1 张牌（每回合限 1 次）。' },
+    onStyleDraw: { name: '代笔', desc: '每回合第一次打出风格牌时抽 1 张牌。' },
+    hitToShield: { name: '吸热', desc: '每回合第一次受到伤害时获得 1 护盾。' },
+    underdogDraw: { name: '死线', desc: '回合结束时若自身生命低于对手，抽 1 张牌。' }
   };
 
   /* ---------------------------------------------------------
@@ -495,6 +499,38 @@
       bio: '罗珊的左轮只有一发子弹，其余五格装的全是赌注。她相信命运就该一次性清算：赢家拿走一切，输家连遗言都省了。她在无名边境开了间赌命酒馆，门口写着"生死自负，概不赊账"。',
       temper: '潇洒、冷幽默、极度尊重"认赌服输"的人。',
       quote: '子弹和硬币，我分不清哪个更快。'
+    },
+    {
+      id: 'new-09', name: '棋鬼·白弈', title: '九霄棋摊的死局', style: 'cultivation', role: '赌徒',
+      passiveKey: 'lootOnDiscard',
+      active: { name: '屠龙', uses: 2, effects: { selfDiscard: 2, nextDmg: 3 }, quote: '死局不可怕，可怕的是死局里长出了劫材。' },
+      bio: '白弈在九霄云海摆了三千年的棋摊，从不让子。有人说他早就死了，现在摆棋的是他留下的残局在替身。死局不可怕，可怕的是死局里长出了劫材。',
+      temper: '沉默、算尽、把"让子"当侮辱。',
+      quote: '棋盘上没有废子，只有还没落的地方。'
+    },
+    {
+      id: 'new-10', name: '代笔·墨', title: '烂尾故事的枪手', style: 'anime', role: '功能',
+      passiveKey: 'onStyleDraw',
+      active: { name: '抢跑', uses: 2, effects: { energize: 1 }, quote: '稿费照付，署名免谈。' },
+      bio: '墨是三叶连载社的资深代笔。三千年里他替三百个烂尾故事签过名，唯独把自己的名字弄丢了。现在他只认稿费，不认读者。',
+      temper: '市侩、毒舌、对"完结"有生理性恐惧。',
+      quote: '稿费照付，署名免谈。'
+    },
+    {
+      id: 'new-11', name: '炉匠·凯德', title: '背上熔炉的人', style: 'steam', role: '防御',
+      passiveKey: 'hitToShield',
+      active: { name: '熔壳', uses: 2, effects: { selfDiscard: 1, shield: 2 }, quote: '炉火旺着呢，还轮不到你冷。' },
+      bio: '凯德把整座熔炉焊在了背上，烫痕就是他的军功章。黄铜穹顶的人怕冷，他只怕一件事——炉子熄火。',
+      temper: '豪迈、护短、把"冷"当骂人的话。',
+      quote: '炉火旺着呢，还轮不到你冷。'
+    },
+    {
+      id: 'new-12', name: '低语者·弥拉', title: '沉钟海的遗言', style: 'abyss', role: '输出',
+      passiveKey: 'underdogDraw',
+      active: { name: '过载回响', uses: 2, effects: { nextDmg: 1 }, quote: '我在唱你的遗言，你听不见吗？' },
+      bio: '弥拉在沉钟海里捡到过所有人的遗言。她把这些话复述出来，每复述一句，就有一个人倒下。没人敢听她唱歌，但所有人都听见了。',
+      temper: '平静、残忍、把"听"当成索取。',
+      quote: '我在唱你的遗言，你听不见吗？'
     }
   ];
 
@@ -755,6 +791,21 @@
       badges: ['每轮换手', '全随机', '混乱'], scene: 'setup', local: true
     },
     {
+      id: 'random-rules', name: '乱序法则', en: 'RANDOM RULES', icon: '⚖', accent: '#e0c05c', fun: true,
+      tagline: '每回合，庄家临时改一次规矩。', desc: '每回合开始时从法则池随机抽一条当回合生效：昭面加伤、昧面转正、本回合可打两张牌、首牌加伤、治疗护盾+1、开局双方各抽一张。下回合重抽。',
+      badges: ['每回合 roll 法则', '6 条法则池', '当回合生效'], scene: 'setup', local: true
+    },
+    {
+      id: 'draft', name: '轮抽赌局', en: 'DRAFT TABLE', icon: '⇄', accent: '#7fd0e0', fun: true,
+      tagline: 'A-B-A-B 各抽六张，组一副 12 张的命。', desc: '开赛前自动模拟轮抽：双方从全卡池 A-B-A-B 交替各拿 6 张，组成 12 张卡组。战前可看自己卡组并重抽一次。类别近似均衡（6 攻击/3 防御/3 控制）。',
+      badges: ['12 张卡组', '战前重抽一次', '轮抽'], scene: 'setup', local: true
+    },
+    {
+      id: 'double-stakes', name: '双倍筹码', en: 'DOUBLE STAKES', icon: '✖2', accent: '#ff9a6a', fun: true,
+      tagline: '所有数值翻倍，翻倍再翻倍。', desc: '本局所有伤害、治疗、护盾、抽牌、弃牌数值全部 ×2（pierce/bless 等非数值效果不变），逆写仍为 1 次。更短、更猛。',
+      badges: ['数值 ×2', '短局', '高爆发'], scene: 'setup', local: true
+    },
+    {
       id: 'lan', name: '局域网联机', en: 'LAN P2P', icon: '⌁', accent: '#6dd6b7',
       tagline: '同一个房间号，面对面开桌。', desc: '使用 PeerJS WebRTC 建立点对点数据通道，房间号即暗号。支持房主设密码、选模式、加 AI 同注者。',
       badges: ['1v1', 'P2P', '房间密码'], scene: 'lobby', transport: 'peer'
@@ -917,7 +968,24 @@
     { id: 'style-035', name: '义体暴走', style: 'neon', cat: 'style', pos: { dmg: 3, power: 1 }, neg: { selfDmg: 2 } },
     { id: 'style-036', name: '灰誓', style: 'fantasy', cat: 'style', pos: { shield: 2, guard: 1, heal: 1 }, neg: { selfDiscard: 1, oppDraw: 1 } },
     { id: 'style-037', name: '终章草稿', style: 'anime', cat: 'style', pos: { draw: 3 }, neg: { selfDiscard: 2 } },
-    { id: 'style-038', name: '亡命轮盘', style: 'west', cat: 'style', pos: { dmg: 2, draw: 1, bless: 1 }, neg: { selfDmg: 2, selfDiscard: 1 } }
+    { id: 'style-038', name: '亡命轮盘', style: 'west', cat: 'style', pos: { dmg: 2, draw: 1, bless: 1 }, neg: { selfDmg: 2, selfDiscard: 1 } },
+    // ---- v2.1 新增 16 张（new-09..new-12 配套）----
+    { id: 'attack-035', name: '弃车保帅', style: 'cultivation', cat: 'attack', pos: { dmg: 3, selfDiscard: 1 }, neg: { selfDmg: 2 }, combo: 'attack' },
+    { id: 'attack-036', name: '抢跑章节', style: 'anime', cat: 'attack', pos: { dmg: 1, energize: 1 }, neg: { oppDraw: 1 }, combo: 'attack' },
+    { id: 'attack-037', name: '熔芯一击', style: 'steam', cat: 'attack', pos: { dmg: 2, shield: 1 }, neg: { selfDmg: 2 }, combo: 'attack' },
+    { id: 'defense-035', name: '金角', style: 'cultivation', cat: 'defense', pos: { shield: 1, draw: 1 }, neg: { oppHeal: 1 }, combo: 'defense' },
+    { id: 'defense-036', name: '角色设定', style: 'anime', cat: 'defense', pos: { heal: 1, reflect: 1 }, neg: { oppDraw: 1 }, combo: 'defense' },
+    { id: 'defense-037', name: '熔壳', style: 'steam', cat: 'defense', pos: { shield: 2, energize: 1 }, neg: { selfDmg: 1 }, combo: 'defense' },
+    { id: 'control-035', name: '一子双征', style: 'cultivation', cat: 'control', pos: { choke: 1, discard: 1 }, neg: { selfDiscard: 1 }, combo: 'control' },
+    { id: 'control-036', name: '审核驳回', style: 'anime', cat: 'control', pos: { seal: 1, choke: 1 }, neg: { oppDraw: 1 }, combo: 'control' },
+    { id: 'control-037', name: '断供', style: 'steam', cat: 'control', pos: { strip: 1, weak: 1 }, neg: { selfDmg: 1 }, combo: 'control' },
+    { id: 'risk-035', name: '天元赌局', style: 'cultivation', cat: 'risk', pos: { dmg: 2, draw: 2 }, neg: { selfDmg: 2, selfDiscard: 1 }, combo: 'risk' },
+    { id: 'risk-036', name: '烂尾风波', style: 'anime', cat: 'risk', pos: { dmg: 1, draw: 3 }, neg: { selfDiscard: 2 }, combo: 'risk' },
+    { id: 'risk-037', name: '过载注汽', style: 'steam', cat: 'risk', pos: { dmg: 3, shield: 1 }, neg: { selfDmg: 3 }, combo: 'risk' },
+    { id: 'style-039', name: '打劫', style: 'cultivation', cat: 'style', pos: { dmg: 1, draw: 1 }, neg: { selfDiscard: 1 } },
+    { id: 'style-040', name: '终章代笔', style: 'anime', cat: 'style', pos: { draw: 2, energize: 1 }, neg: { selfDiscard: 2 } },
+    { id: 'style-041', name: '余温', style: 'steam', cat: 'style', pos: { shield: 2, heal: 1 }, neg: { selfDiscard: 1 } },
+    { id: 'style-042', name: '余响', style: 'abyss', cat: 'style', pos: { dmg: 2, lifesteal: 1 }, neg: { selfDmg: 2, oppHeal: 1 } }
   ];
 
   NEW_CARD_DEFS.forEach(function (def, i) {
@@ -975,7 +1043,7 @@
   });
 
   const DATA = {
-    version: '2.0.0',
+    version: '2.1.0',
     title: '命途回廊',
     subtitle: 'COINFALL',
     STYLES, STYLE_ORDER, WORLD, PASSIVES, CHARACTERS, ROLE_META,

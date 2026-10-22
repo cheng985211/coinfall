@@ -7,7 +7,7 @@
   <meta name="description" content="命途回廊 COINFALL：一款可联机的回合制抛币卡牌对战游戏。32 名角色、150 张技能卡、16 种模式（1v1–4v4 自由组队），以及会听懂你指挥的 AI 同注者。">
   <title>命途回廊 · COINFALL</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0b0f'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23e8b86d' stroke-width='3'/%3E%3Cpath d='M32 17v30M22 26c0-4 4-6 10-6s10 3 10 7-5 5-10 5-10 2-10 6 4 6 10 6 10-3 10-6' fill='none' stroke='%23e8b86d' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="assets/art/ui/favicon.png">
 </head>
 <body>
   <canvas id="fx-canvas" aria-hidden="true"></canvas>
@@ -31,6 +31,7 @@
         <button data-action="rules" class="nav-link">规则</button>
       </nav>
       <div class="header-actions">
+        <button class="icon-btn" data-action="scene" aria-label="场景与音景" title="场景与音景">◭</button>
         <button class="icon-btn" id="audio-toggle" data-action="toggle-audio" aria-label="开关声音" title="声音">
           <span class="audio-icon" aria-hidden="true">◖</span>
         </button>
@@ -385,6 +386,11 @@
         </div>
         <div class="lobby-layout">
           <div class="lobby-main">
+            <div class="lobby-quick">
+              <button class="btn btn--primary btn--lg" id="quick-match">一键快速匹配</button>
+              <button class="btn btn--secondary btn--lg" id="one-click-room">一键开房 · 复制邀请链接</button>
+              <p class="microcopy">快速匹配会按「同桌真人」人数自动撮合同桌玩家（2–8 人）；一键开房会生成房间号并把邀请链接复制到剪贴板，2–8 名真人可同桌。</p>
+            </div>
             <div class="segmented lobby-tabs" id="lobby-tabs">
               <button data-transport="peer" class="is-active">公网联机（零配置）</button>
               <button data-transport="supabase">高级自定义 · Supabase</button>
@@ -418,6 +424,17 @@
                     <select id="host-team-b"><option value="1">1 人</option><option value="2" selected>2 人</option><option value="3">3 人</option><option value="4">4 人</option></select>
                   </label>
                 </div>
+                <label class="field"><span>同桌真人（含房主，2–8）</span>
+                  <select id="host-seats">
+                    <option value="2">2 人 · 1v1</option>
+                    <option value="3">3 人 · 2v1</option>
+                    <option value="4" selected>4 人 · 2v2</option>
+                    <option value="5">5 人 · 3v2</option>
+                    <option value="6">6 人 · 3v3</option>
+                    <option value="7">7 人 · 4v3</option>
+                    <option value="8">8 人 · 4v4</option>
+                  </select>
+                </label>
                 <label class="check-row"><input type="checkbox" id="host-fill-ai"> <span>用 AI 补齐空位（自由组队时自动补齐）</span></label>
                 <button class="btn btn--primary btn--block" id="create-room">生成房间号并开桌</button>
               </section>
@@ -438,6 +455,7 @@
               <div class="eyebrow">ROOM CODE</div>
               <div class="room-code" id="room-code">CF-0000</div>
               <button class="text-btn" data-action="copy-room">复制房间号</button>
+              <p class="room-link" id="room-link" hidden></p>
               <div class="room-status" id="room-status">等待另一位执币者…</div>
               <div class="room-slots" id="room-slots"></div>
               <button class="btn btn--primary btn--block" id="start-online" disabled>等待玩家</button>
@@ -463,6 +481,7 @@
           <div class="turn-chip" id="turn-chip"><span class="live-dot"></span> 你的回合</div>
           <div class="battle-top-actions">
             <span class="net-pill" id="net-pill" hidden>联机</span>
+            <button class="icon-btn" data-action="scene" aria-label="场景与音景" title="场景与音景">◭</button>
             <button class="icon-btn" data-action="toggle-audio" aria-label="开关声音">◖</button>
             <button class="icon-btn" data-action="settings" aria-label="设置">☰</button>
           </div>

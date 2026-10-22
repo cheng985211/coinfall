@@ -1,35 +1,35 @@
-﻿/* =========================================================
-   鍛介€斿洖寤?路 COINFALL
-   assets/assets.js 鈥?璧勬簮娓呭崟 + 鏂囦欢闊抽鎾斁灞?
+/* =========================================================
+   命途回�?· COINFALL
+   assets/assets.js �?资源清单 + 文件音频播放�?
    ---------------------------------------------------------
-   璁捐鍘熷垯锛氥€屾枃浠朵紭鍏堬紝鍚堟垚鍏滃簳銆嶁€斺€?
-   - 鑻?assets/ 涓嬪瓨鍦ㄥ搴旂礌鏉愭枃浠讹紝鍒欎娇鐢ㄧ湡瀹炲浘鐗?褰曢煶锛?
-   - 鑻ヤ笉瀛樺湪锛?04锛夛紝鑷姩闈欓粯鍥為€€鍒版父鎴忓師鏈夌殑 CSS 绋嬪簭鍖栫編鏈?
-     涓?Web Audio 绋嬪簭鍖栭煶鏁堬紝缁濅笉鎶ラ敊銆佺粷涓嶆墦鏂灞€銆?
+   设计原则：「文件优先，合成兜底」—�?
+   - �?assets/ 下存在对应素材文件，则使用真实图�?录音�?
+   - 若不存在�?04），自动静默回退到游戏原有的 CSS 程序化美�?
+     �?Web Audio 程序化音效，绝不报错、绝不打断对局�?
 
-   鐩綍涓庡懡鍚嶈鑼冿紙璇﹁ docs/ASSETS.md锛夛細
-     绔嬬粯    assets/art/portraits/{瑙掕壊id}.webp   渚?portraits/cth-01.webp
-     鍗￠潰    assets/art/cards/{鍗＄墝id}.webp       渚?cards/attack-001.webp锛堝彲閫夛級
-     鑳屾櫙    assets/art/bg/{涓婚id}.jpg          鍙?bg/menu.jpg 涓荤晫闈?
-     閰嶄箰    assets/audio/bgm/{涓婚id}.wav       鍙?bgm/menu.jpg鈫?mp3 涓荤晫闈?
-     闊虫晥    assets/audio/sfx/{闊虫晥鍚峿.wav       瑙?SFX_NAMES
-     瑙掕壊璇煶 assets/audio/voice/char/{瑙掕壊id}-{鍦烘櫙}.wav
-             鍦烘櫙 鈭?enter/attack/win/lose
-     鍓ф儏璇煶 assets/audio/voice/story/{鑺傜偣key}.wav
+   目录与命名规范（详见 docs/ASSETS.md）：
+     立绘    assets/art/portraits/{角色id}.webp   �?portraits/cth-01.webp
+     卡面    assets/art/cards/{卡牌id}.webp       �?cards/attack-001.webp（可选）
+     背景    assets/art/bg/{主题id}.jpg          �?bg/menu.jpg 主界�?
+     配乐    assets/audio/bgm/{主题id}.wav       �?bgm/menu.jpg�?mp3 主界�?
+     音效    assets/audio/sfx/{音效名}.wav       �?SFX_NAMES
+     角色语音 assets/audio/voice/char/{角色id}-{场景}.wav
+             场景 �?enter/attack/win/lose
+     剧情语音 assets/audio/voice/story/{节点key}.wav
    ========================================================= */
 (function (root) {
   'use strict';
 
-  // 闊虫晥鍚?鈫?鏂囦欢璺緞锛堜笌 game.js 涓?Audio.sfx(name) 鐨?name 涓€涓€瀵瑰簲锛?
+  // 音效�?�?文件路径（与 game.js �?Audio.sfx(name) �?name 一一对应�?
   var SFX_NAMES = [
     'click', 'card', 'coin', 'success', 'fail', 'damage',
     'heal', 'shield', 'active', 'victory', 'defeat', 'chat',
-    'draw', 'play' // 鏂板锛氭娊鍗°€佸嚭鐗?
+    'draw', 'play' // 新增：抽卡、出�?
   ];
 
   var CHAR_SCENES = ['enter', 'attack', 'win', 'lose'];
 
-  // 鎺㈡祴缂撳瓨锛氳褰曞摢浜?URL 涓嶅瓨鍦紝閬垮厤姣忔鎾斁閮藉彂 404 璇锋眰
+  // 探测缓存：记录哪�?URL 不存在，避免每次播放都发 404 请求
   var missing = Object.create(null);
 
   function portraitUrl(charId) { return 'assets/art/portraits/' + charId + '.webp'; }
@@ -46,15 +46,18 @@
     return 'assets/audio/voice/story/' + key + '.wav';
   }
 
-  // ---- 鏂囦欢闊抽鎾斁鍣紙鎳掑姞杞姐€侀敊璇嵆璁颁负缂哄け锛?---
-  var voicePool = [];     // 鐭煶鏁?璇煶澶嶇敤鐨?Audio 姹?
-  var bgmEl = null;       // 寰幆 BGM 鍗曚緥
+  // ---- 文件音频播放器（懒加载、错误即记为缺失�?---
+  var voicePool = [];     // 短音�?语音复用�?Audio �?
+  var bgmEl = null;       // 循环 BGM 单例
   var bgmMissing = false;
 
   function markMissing(url) { if (url) missing[url] = true; }
   function isMissing(url) { return !!url && !!missing[url]; }
+  function isAutoplayBlock(err) {
+    return !!(err && (err.name === 'NotAllowedError' || err.name === 'AbortError' || /user gesture|notallowed/i.test(err.message || '')));
+  }
 
-  // 鎾斁涓€娆℃€х煭闊虫晥/璇煶銆傛垚鍔熻繑鍥?true锛涙棤鏂囦欢/澶辫触杩斿洖 false锛堣皟鐢ㄦ柟鍥為€€鍚堟垚锛夈€?
+  // 播放一次性短音效/语音。成功返�?true；无文件/失败返回 false（调用方回退合成）�?
   function playOne(url, volume) {
     if (!url || isMissing(url)) return false;
     try {
@@ -64,11 +67,11 @@
       var played = false;
       var p = el.play();
       if (p && p.catch) {
-        p.catch(function () { markMissing(url); });
+        p.catch(function (err) { if (!isAutoplayBlock(err)) markMissing(url); });
       } else {
         played = true;
       }
-      // 鎾斁缁撴潫鍚庡洖鏀?
+      // 播放结束后回�?
       el.addEventListener('ended', function () { try { el = null; } catch (e) {} });
       el.addEventListener('error', function () { markMissing(url); });
       return true;
@@ -78,7 +81,7 @@
     }
   }
 
-  // 寰幆 BGM銆傝繑鍥?true 琛ㄧず宸叉帴绠?BGM锛堣皟鐢ㄦ柟搴斿仠姝㈢▼搴忓寲 BGM锛夈€?
+  // 循环 BGM。返�?true 表示已接�?BGM（调用方应停止程序化 BGM）�?
   function playBgm(url, volume) {
     if (!url || bgmMissing || isMissing(url)) return false;
     try {
@@ -88,7 +91,7 @@
       bgmEl.volume = (typeof volume === 'number') ? volume : 0.5;
       var p = bgmEl.play();
       if (p && p.catch) {
-        p.catch(function () { bgmMissing = true; bgmEl = null; });
+        p.catch(function (err) { if (isAutoplayBlock(err)) { bgmEl = null; return; } bgmMissing = true; bgmEl = null; markMissing(url); });
       }
       return true;
     } catch (e) {
