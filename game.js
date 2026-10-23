@@ -343,6 +343,11 @@
         p.chars.forEach(function (u) {
           if (u.passiveKey === 'startShield') u.shield = Math.max(u.shield, 1);
         });
+        // v3.1 被动：fastHands 快手——开局多抽 1 张
+        const fhUnit = activeUnit(p);
+        if (fhUnit && fhUnit.passiveKey === 'fastHands') {
+          drawCards(game, p, 1, { initial: true, silent: true });
+        }
         if (coinSkin === 'jade') {
           const au = activeUnit(p);
           if (au) au.shield = Math.min(5, au.shield + 1);
@@ -472,6 +477,20 @@
       if (lost.length) {
         addEvent(game, { type: 'discard', playerId: player.id, count: lost.length, names: lost.map(function (c) { return c.name; }) });
         addLog(game, player.name + ' 弃掉了 ' + lost.length + ' 张牌。', 'control');
+        // v3.1 被动：deckThief 顺手牵羊——对手弃牌时，本阵营对应玩家抽 1（每回合限 2 次）
+        game.players.forEach(function (e) {
+          if (!playerAlive(e)) return;
+          if (e.team === player.team) return;
+          const eu = activeUnit(e);
+          if (!eu || eu.passiveKey !== 'deckThief') return;
+          e.turnFlags = e.turnFlags || {};
+          e.turnFlags.deckThiefCount = e.turnFlags.deckThiefCount || 0;
+          for (let k = 0; k < lost.length && e.turnFlags.deckThiefCount < 2; k++) {
+            drawCards(game, e, 1);
+            e.turnFlags.deckThiefCount += 1;
+            addEvent(game, { type: 'passive', playerId: e.id, name: '顺手牵羊', text: '对手弃牌，抽 1 张牌' });
+          }
+        });
       }
       return lost;
     }
@@ -591,6 +610,17 @@
         const drawn = drawCards(game, p, count);
         if (choke) addLog(game, p.name + ' 受到干扰，本回合只能补至 ' + drawTo + ' 张。', 'control');
         if (drawn.length) addLog(game, p.name + ' 补牌至 ' + p.hand.length + ' 张。', 'draw');
+      }
+
+      // v3.1 被动：fastHands 快手——每回合开始时若手牌少于 2 张，补到 2 张
+      const fhUnit2 = activeUnit(p);
+      if (!first && fhUnit2 && fhUnit2.passiveKey === 'fastHands' && p.hand.length < 2) {
+        const need = 2 - p.hand.length;
+        const fhDrawn = drawCards(game, p, need);
+        if (fhDrawn.length) {
+          addEvent(game, { type: 'passive', playerId: p.id, name: '快手', text: '手牌不足 2 张，补到 2 张' });
+          addLog(game, p.name + ' 的快手补牌到手，现在有 ' + p.hand.length + ' 张。', 'draw');
+        }
       }
 
       const unit = activeUnit(p);
@@ -721,6 +751,17 @@
       if (!target || target.hp <= 0) return 0;
       let amount = Math.max(0, Math.round(raw));
       if (!amount) return 0;
+
+      // v3.1 被动：counterPierce 反刺——每回合第一次受到无视护盾的攻击时，免疫该伤害并反弹 2
+      if (opts.pierce && target.passiveKey === 'counterPierce' && !targetPlayer.turnFlags.counterPierceUsed) {
+        targetPlayer.turnFlags.counterPierceUsed = true;
+        addEvent(game, { type: 'passive', playerId: targetPlayer.id, name: '反刺', text: '免疫穿透伤害并反弹 2 点' });
+        addLog(game, target.name + ' 的反刺格住了这记穿透，弹回 2 点伤害。', 'damage');
+        if (source && source.id !== targetPlayer.id) {
+          dealDamage(game, targetPlayer, source, 2, { isThorns: true });
+        }
+        return 0;
+      }
 
       if (!opts.direct) {
         if (target.passiveKey === 'voidArmor') {
@@ -1221,6 +1262,13 @@
       addEvent(game, { type: 'active', playerId: actor.id, name: unit.activeName, targetId: target ? target.id : null });
       addLog(game, actor.name + ' 发动角色主动技「' + unit.activeName + '」。', 'active');
       applyEffects(game, actor, target, unit.activeEffects, unit.activeName);
+      // v3.1 被动：momentum 乘胜追击——每回合第一次用主动技后，本回合下一次伤害 +1
+      if (unit.passiveKey === 'momentum' && !actor.turnFlags.momentumUsed) {
+        actor.turnFlags.momentumUsed = true;
+        actor.pendingDamageBonus = (actor.pendingDamageBonus || 0) + 1;
+        addEvent(game, { type: 'passive', playerId: actor.id, name: '乘胜追击', text: '主动技后下次伤害 +1' });
+        addLog(game, actor.name + ' 的乘胜追击溃荡，本回合下一次伤害 +1。', 'action');
+      }
       if (!game.over) game.phase = 'action';
       return { ok: true, over: game.over };
     }
@@ -2035,11 +2083,14 @@
     let canvas, ctx, raf, particles = [], w = 0, h = 0, dpr = 1;
     let theme = D.STYLES.abyss;
     let running = true;
+    // [perf] 预解析主题色 rgb，避免每帧每粒子做字符串拼接
+    let themeRGB = { r: 232, g: 184, b: 109 };
 
     function init() {
       canvas = $('#fx-canvas');
       if (!canvas) return;
       ctx = canvas.getContext('2d');
+      cacheThemeRGB();
       resize();
       window.addEventListener('resize', resize);
       spawn();
@@ -2048,7 +2099,8 @@
 
     function resize() {
       if (!canvas) return;
-      dpr = Math.min(2, root.devicePixelRatio || 1);
+      // [perf] 粒子只是 0.4–2px 的小点，1.5x 采样足够，避免全屏 2x 像素填充
+      dpr = Math.min(1.5, root.devicePixelRatio || 1);
       w = root.innerWidth; h = root.innerHeight;
       canvas.width = w * dpr; canvas.height = h * dpr;
       canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
@@ -2057,10 +2109,20 @@
 
     function setTheme(themeId) {
       theme = D.STYLES[themeId] || D.STYLES.abyss;
+      cacheThemeRGB();
       document.documentElement.dataset.theme = theme.id;
       applyBackground();
       try { Audio.refreshAmbient(); } catch (e) {}
       spawn();
+    }
+
+    function cacheThemeRGB() {
+      var hx = String(theme && theme.color || '#e8b86d').replace('#', '');
+      themeRGB = {
+        r: parseInt(hx.slice(0, 2), 16),
+        g: parseInt(hx.slice(2, 4), 16),
+        b: parseInt(hx.slice(4, 6), 16)
+      };
     }
 
     function resolveBgUrl(isBattle) {
@@ -2089,7 +2151,8 @@
     }
 
     function spawn() {
-      const count = Math.min(58, Math.max(22, Math.floor(w / 26)));
+      // [perf] 粒子数下调，视觉密度几乎不变但每帧绘制量减少约一半
+      const count = Math.min(32, Math.max(14, Math.floor(w / 46)));
       particles = [];
       for (let i = 0; i < count; i++) {
         particles.push({
@@ -2108,8 +2171,10 @@
       if (!ctx) return;
       const reduce = SETTINGS.reducedMotion || (root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches);
       ctx.clearRect(0, 0, w, h);
-      const color = theme.color;
       const t = Date.now() / 1000;
+      // [perf] 整帧只设一次 fillStyle，透明度交给 globalAlpha，
+      // 避免每帧为每个粒子拼接一次 rgba() 字符串。
+      ctx.fillStyle = 'rgb(' + themeRGB.r + ',' + themeRGB.g + ',' + themeRGB.b + ')';
       particles.forEach(function (p) {
         if (!reduce) {
           p.x += p.vx; p.y += p.vy;
@@ -2117,20 +2182,22 @@
           if (p.x < -10) p.x = w + 10;
           if (p.x > w + 10) p.x = -10;
         }
-        const a = p.alpha * (0.55 + 0.45 * Math.sin(t * 0.8 + p.phase));
+        ctx.globalAlpha = p.alpha * (0.55 + 0.45 * Math.sin(t * 0.8 + p.phase));
         ctx.beginPath();
-        ctx.fillStyle = hexToRgba(color, a);
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
       });
+      ctx.globalAlpha = 1;
       // 缓慢的星线
       if (!reduce) {
-        ctx.strokeStyle = hexToRgba(color, 0.035);
+        ctx.globalAlpha = 0.05;
+        ctx.strokeStyle = 'rgb(' + themeRGB.r + ',' + themeRGB.g + ',' + themeRGB.b + ')';
         ctx.lineWidth = 1;
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
           const y = ((t * (6 + i * 3)) % (h + 200)) - 100;
           ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y - 120); ctx.stroke();
         }
+        ctx.globalAlpha = 1;
       }
       raf = requestAnimationFrame(loop);
     }
@@ -2910,7 +2977,7 @@
     const CX = (root.CF_CODEX) || null;
     const A = root.CF_ASSETS || null;
     const port = function (id) { return A ? A.portraitUrl(id) : 'assets/art/portraits/' + id + '.webp'; };
-    const cardImg = function (id) { return A ? A.cardUrl(id) : 'assets/art/cards/' + id + '.png'; };
+    const cardImg = function (id) { return A ? A.cardUrl(id) : 'assets/art/cards/' + id + '.jpg'; };
     const bgImg = function (id) { return A ? A.bgUrl(id) : 'assets/art/bg/' + id + '.jpg'; };
 
     if (tab === 'world') {

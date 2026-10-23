@@ -165,7 +165,11 @@
     lootOnDiscard: { name: '打劫', desc: '每当你弃牌时抽 1 张牌（每回合限 1 次）。' },
     onStyleDraw: { name: '代笔', desc: '每回合第一次打出风格牌时抽 1 张牌。' },
     hitToShield: { name: '吸热', desc: '每回合第一次受到伤害时获得 1 护盾。' },
-    underdogDraw: { name: '死线', desc: '回合结束时若自身生命低于对手，抽 1 张牌。' }
+    underdogDraw: { name: '死线', desc: '回合结束时若自身生命低于对手，抽 1 张牌。' },
+    deckThief: { name: '顺手牵羊', desc: '每当对手弃牌时，你抽 1 张牌（每回合限 2 次）。' },
+    momentum: { name: '乘胜追击', desc: '每回合第一次使用主动技后，本回合下次造成的伤害 +1。' },
+    counterPierce: { name: '反刺', desc: '每回合第一次受到无视护盾的攻击时，免疫该伤害并反弹 2 点。' },
+    fastHands: { name: '快手', desc: '开局多抽 1 张牌；每回合开始时若手牌少于 2 张，补到 2 张。' }
   };
 
   /* ---------------------------------------------------------
@@ -525,24 +529,24 @@
       quote: '我在喊你的名字，你听不见吗？'
     },    {
       id: 'new-13', name: '星尘车手·岚', title: '星海赛车手', style: 'abyss', role: '输出',
-      passiveKey: 'bloodlust',
-      active: { name: '氮气加速', uses: 2, effects: { dmg: 2, power: 1 }, quote: '安全带？那是给亚军戴的。' },
+      passiveKey: 'momentum',
+      active: { name: '尾流冲刺', uses: 2, effects: { dmg: 2, power: 1, selfDiscard: 1 }, quote: '弯一踩就过，代价是丢一张牌。' },
       bio: '岚是星海站零重力赛车队的王牌，转弯比抛币还准。她说赛道和牌桌一样，晚半步就出局。',
       temper: '风风火火、自信过头，讨厌慢节奏。',
       quote: '跟上我的尾流，你才算入了门。'
     },
     {
       id: 'new-14', name: '重甲班长·铁拳', title: '钢都重甲选手', style: 'steam', role: '防御',
-      passiveKey: 'ironhide',
-      active: { name: '装甲展开', uses: 2, effects: { shield: 2, guard: 1 }, quote: '打我啊，打到你手疼。' },
+      passiveKey: 'counterPierce',
+      active: { name: '重甲反震', uses: 2, effects: { shield: 2, reflect: 1 }, quote: '打穿我？先问问这身焊死的甲。' },
       bio: '铁拳是钢都工厂的班组长老，穿着焊死的蒸汽重甲参赛。他说重甲不是为了赢，是为了让对面打累。',
       temper: '憨厚、稳当、说话像敲铁锤。',
       quote: '我站在这里，你们就别想过去。'
     },
     {
       id: 'new-15', name: '太极闲人·云游', title: '青云懒散大师', style: 'cultivation', role: '功能',
-      passiveKey: 'onPlayDraw',
-      active: { name: '推手卸力', uses: 2, effects: { draw: 1, shield: 1 }, quote: '别急，先喝口茶。' },
+      passiveKey: 'fastHands',
+      active: { name: '云手推手', uses: 2, effects: { draw: 1, heal: 1, oppDraw: 1 }, quote: '急什么，先把这杯茶喝完，牌自然就来了。' },
       bio: '云游是青云山最懒的大师，太极练了一辈子还是慢悠悠的。他说出牌和打太极一样，越急越容易被对面带走。',
       temper: '懒散、随和、天塌下来先打坐。',
       quote: '急什么，这局又跑不了。'
@@ -550,15 +554,15 @@
     {
       id: 'new-16', name: '圆桌赌徒·奥托', title: '圣辉骑士赌师', style: 'fantasy', role: '赌徒',
       passiveKey: 'highRoller',
-      active: { name: '圣杯加注', uses: 1, effects: { bless: 1, power: 1 }, quote: '骑士的荣誉，全押这一把。' },
+      active: { name: '圣杯押注', uses: 1, effects: { bless: 1, power: 1, selfDmg: 1 }, quote: '必中这一把——但骑士的肋骨也要替我还债。' },
       bio: '奥托是圣辉学院圆桌骑士团里最爱赌的那个，下午茶和牌桌从不分家。他说骑士精神就是敢把最后一块饼干押上去。',
       temper: '潇洒、好胜、输了也要保持微笑。',
       quote: '输赢事小，下午茶不能凉。'
     },
     {
       id: 'new-17', name: '弹幕主播·小光', title: '霓虹区人气主播', style: 'neon', role: '功能',
-      passiveKey: 'onFlipWinDraw',
-      active: { name: '礼物刷屏', uses: 2, effects: { draw: 2 }, quote: '家人们，这波必赢！' },
+      passiveKey: 'deckThief',
+      active: { name: '礼物轰炸', uses: 2, effects: { discard: 2, choke: 1 }, quote: '家人们把不要的牌打在公屏上——哦不对，是对手打。' },
       bio: '小光是霓虹区人气最高的牌局主播，全息弹幕飘满了直播间。她说观众的应援就是她的手牌，刷得越多牌越好。',
       temper: '活泼、话痨、直播时和平时判若两人。',
       quote: '弹幕扣个一，这把稳了。'
@@ -566,7 +570,7 @@
     {
       id: 'new-18', name: '太鼓达人·咚子', title: '樱炎祭典太鼓手', style: 'wa', role: '输出',
       passiveKey: 'firstStrike',
-      active: { name: '轰隆一击', uses: 2, effects: { dmg: 2, weak: 1 }, quote: '咚咚咚，接鼓点！' },
+      active: { name: '连击鼓点', uses: 2, effects: { dmg: 2, energize: 1 }, quote: '咚咚锵——打完这拍，还能再出一张！' },
       bio: '咚子是樱炎小町祭典上最年轻的太鼓手，鼓点比硬币转得还快。她说打鼓和打牌一样，先起势的人占主动。',
       temper: '热情、元气、鼓点不停嘴不停。',
       quote: '跟着我的鼓点出牌！'
@@ -574,7 +578,7 @@
     {
       id: 'new-19', name: '烤肉师傅·孜然', title: '荒漠镇烧烤摊主', style: 'west', role: '防御',
       passiveKey: 'regen',
-      active: { name: '撒一把料', uses: 2, effects: { heal: 2 }, quote: '趁热吃，别凉着。' },
+      active: { name: '共享烤串', uses: 2, effects: { heal: 2, draw: 1, oppHeal: 1 }, quote: '来，这串你也吃——对手那串我也烤好了，别客气。' },
       bio: '孜然在荒漠镇路口摆摊烤羊肉串，休息时就摆开牌桌。他说烤肉和防守一样，火候到了自然稳。',
       temper: '豪爽、唠叨、见谁都劝人家多吃点。',
       quote: '坐下吃两串，这局我替你挡着。'
@@ -582,7 +586,7 @@
     {
       id: 'new-20', name: '漫画编辑·铅笔', title: '幻书周刊责任编辑', style: 'anime', role: '赌徒',
       passiveKey: 'onFlipLoseShield',
-      active: { name: '改稿重画', uses: 1, effects: { bless: 1, shield: 1 }, quote: '这页不行，重画。' },
+      active: { name: '终审退稿', uses: 1, effects: { draw: 2, seal: 1 }, quote: '这页主动技不合格，退回重画，不许用。' },
       bio: '铅笔是幻书周刊最严格的责任编辑，看稿比打牌还较真。她说故事和牌局一样，翻车了就重画一页。',
       temper: '挑剔、认真、嘴上不饶人但心地善良。',
       quote: '这分镜不对，重画一张。'
@@ -590,7 +594,7 @@
     {
       id: 'new-21', name: '外星扑克客·泽塔', title: '星海站星际赌客', style: 'abyss', role: '赌徒',
       passiveKey: 'luckySeven',
-      active: { name: '七重星运', uses: 1, effects: { draw: 2, bless: 1 }, quote: '七是我的幸运数字。' },
+      active: { name: '七维透视', uses: 1, effects: { bless2: 1, oppDraw: 1 }, quote: '在我的维度里，硬币正面会翻两次——你也多摸一张，算送你的。' },
       bio: '泽塔是来自第七星云的外星人，打牌习惯用六根手指。他说在他的母星，七是幸运数字，到了地球也一样。',
       temper: '神秘、慢悠悠、笑起来有好几只眼睛。',
       quote: '你的牌在我眼里，全是明牌。'
@@ -598,7 +602,7 @@
     {
       id: 'new-22', name: '咖啡师·浓缩', title: '钢都咖啡馆店主', style: 'steam', role: '功能',
       passiveKey: 'onStyleDraw',
-      active: { name: '续杯提神', uses: 2, effects: { energize: 1, draw: 1 }, quote: '这杯浓缩，包你多打一张。' },
+      active: { name: '深夜特调', uses: 2, effects: { heal: 1, energize: 1, weak: 1 }, quote: '这杯提神醒脑，下一杯——给对面困到打不动。' },
       bio: '浓缩在钢都齿轮巷开了家小咖啡馆，打牌的人都爱来他这儿点一杯。他说咖啡因和能量牌是一个道理。',
       temper: '温和、麻利、记得每个熟客的口味。',
       quote: '一杯浓缩，精神一回合。'
@@ -1057,27 +1061,27 @@
     { id: 'style-040', name: '大结局代笔', style: 'anime', cat: 'style', pos: { draw: 2, energize: 1 }, neg: { selfDiscard: 2 } },
     { id: 'style-041', name: '余温', style: 'steam', cat: 'style', pos: { shield: 2, heal: 1 }, neg: { selfDiscard: 1 } },
     { id: 'style-042', name: '余响', style: 'abyss', cat: 'style', pos: { dmg: 2, lifesteal: 1 }, neg: { selfDmg: 2, oppHeal: 1 } },
-    // ---- v3.1 新增 20 张（轻松竞技风）----
-    { id: 'attack-041', name: '新星爆发', style: 'abyss', cat: 'attack', pos: { dmg: 2, power: 1 }, neg: { selfDmg: 1 }, combo: 'attack' },
-    { id: 'attack-042', name: '三连暴击', style: 'anime', cat: 'attack', pos: { dmg: 3 }, neg: { selfDmg: 1 }, combo: 'attack' },
-    { id: 'attack-043', name: '弹幕覆盖', style: 'neon', cat: 'attack', pos: { dmg: 1, discard: 1 }, neg: { oppDraw: 1 }, combo: 'attack' },
-    { id: 'attack-044', name: '尾钩抢攻', style: 'west', cat: 'attack', pos: { dmg: 2, pierce: 1 }, neg: { selfDmg: 1 }, combo: 'attack' },
-    { id: 'defense-041', name: '暂停一下', style: 'neon', cat: 'defense', pos: { shield: 2 }, neg: { selfDiscard: 1 }, combo: 'defense' },
-    { id: 'defense-042', name: '喝口水', style: 'cultivation', cat: 'defense', pos: { heal: 2 }, neg: { oppHeal: 1 }, combo: 'defense' },
-    { id: 'defense-043', name: '盾牌格挡', style: 'fantasy', cat: 'defense', pos: { shield: 1, reflect: 1 }, neg: { selfDmg: 1 }, combo: 'defense' },
-    { id: 'defense-044', name: '休息时间', style: 'wa', cat: 'defense', pos: { heal: 1, shield: 1 }, neg: { oppDraw: 1 }, combo: 'defense' },
-    { id: 'control-041', name: '弹幕刷屏', style: 'neon', cat: 'control', pos: { discard: 2 }, neg: { selfDiscard: 1 }, combo: 'control' },
-    { id: 'control-042', name: '网络卡顿', style: 'abyss', cat: 'control', pos: { seal: 1, weak: 1 }, neg: { selfDmg: 1 }, combo: 'control' },
-    { id: 'control-043', name: '暂停键', style: 'anime', cat: 'control', pos: { choke: 1, discard: 1 }, neg: { oppDraw: 1 }, combo: 'control' },
-    { id: 'control-044', name: '静音', style: 'steam', cat: 'control', pos: { strip: 1, choke: 1 }, neg: { selfDmg: 1 }, combo: 'control' },
-    { id: 'risk-041', name: '全力一击', style: 'cultivation', cat: 'risk', pos: { dmg: 3, power: 1 }, neg: { selfDmg: 2 }, combo: 'risk' },
-    { id: 'risk-042', name: '赌一把', style: 'west', cat: 'risk', pos: { dmg: 2, bless: 1 }, neg: { selfDmg: 2 }, combo: 'risk' },
-    { id: 'risk-043', name: '绝地反击', style: 'anime', cat: 'risk', pos: { dmg: 2, heal: 2 }, neg: { selfDiscard: 2 }, combo: 'risk' },
-    { id: 'risk-044', name: 'All in', style: 'fantasy', cat: 'risk', pos: { draw: 3 }, neg: { selfDiscard: 2 }, combo: 'risk' },
-    { id: 'style-043', name: '星海巡航', style: 'abyss', cat: 'style', pos: { dmg: 2, draw: 1 }, neg: { selfDmg: 1 } },
-    { id: 'style-044', name: '蒸汽拉花', style: 'steam', cat: 'style', pos: { heal: 1, energize: 1 }, neg: { oppDraw: 1 } },
-    { id: 'style-045', name: '樱吹雪', style: 'wa', cat: 'style', pos: { dmg: 2, weak: 1 }, neg: { selfDmg: 2 } },
-    { id: 'style-046', name: '荒漠落日', style: 'west', cat: 'style', pos: { shield: 3 }, neg: { oppHeal: 2 } }
+    // ---- v3.1 新增 20 张（轻松竞技风，重设计版）----
+    { id: 'attack-041', name: '闪现突袭', style: 'neon', cat: 'attack', pos: { dmg: 2, energize: 1 }, neg: { selfDiscard: 1 }, combo: 'attack' },
+    { id: 'attack-042', name: '新星爆发', style: 'abyss', cat: 'attack', pos: { dmg: 3, power: 1 }, neg: { selfDmg: 2 }, combo: 'attack' },
+    { id: 'attack-043', name: '三连暴击', style: 'fantasy', cat: 'attack', pos: { dmg: 1, draw: 2 }, neg: { oppDraw: 1 }, combo: 'attack' },
+    { id: 'attack-044', name: '鼓鸣冲击', style: 'wa', cat: 'attack', pos: { dmg: 2, weak: 1 }, neg: { selfDmg: 1 }, combo: 'attack' },
+    { id: 'defense-041', name: '暂停一下', style: 'neon', cat: 'defense', pos: { shield: 2, energize: 1 }, neg: { selfDiscard: 1 }, combo: 'defense' },
+    { id: 'defense-042', name: '喝口热水', style: 'west', cat: 'defense', pos: { heal: 2, guard: 1 }, neg: { oppDraw: 1 }, combo: 'defense' },
+    { id: 'defense-043', name: '铁壁阵', style: 'steam', cat: 'defense', pos: { shield: 2, reflect: 1 }, neg: { selfDmg: 1 }, combo: 'defense' },
+    { id: 'defense-044', name: '主角休息', style: 'anime', cat: 'defense', pos: { heal: 1, shield: 1, draw: 1 }, neg: { oppHeal: 1 }, combo: 'defense' },
+    { id: 'control-041', name: '弹幕刷屏', style: 'neon', cat: 'control', pos: { discard: 2, choke: 1 }, neg: { oppDraw: 1 }, combo: 'control' },
+    { id: 'control-042', name: '网络卡顿', style: 'neon', cat: 'control', pos: { seal: 1, strip: 1 }, neg: { selfDmg: 1 }, combo: 'control' },
+    { id: 'control-043', name: '改刀', style: 'cultivation', cat: 'control', pos: { choke: 1, weak: 1 }, neg: { selfDiscard: 1 }, combo: 'control' },
+    { id: 'control-044', name: '裁判暂停', style: 'anime', cat: 'control', pos: { seal: 1, draw: 1 }, neg: { oppHeal: 1 }, combo: 'control' },
+    { id: 'risk-041', name: 'All In', style: 'west', cat: 'risk', pos: { dmg: 3, power: 1, bless: 1 }, neg: { selfDmg: 2, oppShield: 1 }, combo: 'risk' },
+    { id: 'risk-042', name: '绝地反击', style: 'abyss', cat: 'risk', pos: { heal: 3, dmg: 1 }, neg: { selfDiscard: 2 }, combo: 'risk' },
+    { id: 'risk-043', name: '爆种', style: 'anime', cat: 'risk', pos: { dmg: 2, energize: 1, draw: 1 }, neg: { selfDmg: 2 }, combo: 'risk' },
+    { id: 'risk-044', name: '双倍赌注', style: 'fantasy', cat: 'risk', pos: { bless2: 1, dmg: 1 }, neg: { selfDmg: 3 }, combo: 'risk' },
+    { id: 'style-043', name: '星海冲刺', style: 'abyss', cat: 'style', pos: { dmg: 2, pierce: 1 }, neg: { selfDmg: 1 } },
+    { id: 'style-044', name: '蒸汽Buff', style: 'steam', cat: 'style', pos: { shield: 1, heal: 1, draw: 1 }, neg: { selfDiscard: 1 } },
+    { id: 'style-045', name: '樱色应援', style: 'wa', cat: 'style', pos: { bless: 1, heal: 1 }, neg: { oppDraw: 1 } },
+    { id: 'style-046', name: '荒漠烧烤', style: 'west', cat: 'style', pos: { lifesteal: 2, weak: 1 }, neg: { selfDmg: 1 } }
   ];
 
   NEW_CARD_DEFS.forEach(function (def, i) {
