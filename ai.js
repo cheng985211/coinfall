@@ -1,11 +1,11 @@
 /* =========================================================
-   命途回廊 · COINFALL
-   ai.js — 对手 AI、同注者人格、自然语言指挥与远程模型适配
+   星杯对决 · COINFALL
+   ai.js — 对手 AI、队友人格、自然语言指挥与远程模型适配
    ---------------------------------------------------------
    设计原则：
    1. 本地启发式永远可用，不依赖网络与密钥。
    2. 配置了 OpenAI 兼容接口时，聊天 / 指令理解 / 高难决策可走模型。
-   3. 同注者不是执行器：会读取战场、判断命令合理性、接受或反驳。
+   3. 队友不是执行器：会读取战场、判断命令合理性、接受或反驳。
    ========================================================= */
 (function (root) {
   'use strict';
@@ -128,17 +128,164 @@
   }
 
   /* ---------------------------------------------------------
-     人格 / 语气素材
+     AI 人格 / 语气素材
      --------------------------------------------------------- */
+  /* v2.1.2 玩家可选 AI 人格（真人化）；v2.2 扩充到 8 人，新增头像/聊天色/音色/人设卡字段 */
+  const PERSONAS = {
+    hotaru: { name: '萤', tag: '元气热血', style: '短句多感叹号，爱用“冲！”“交给我！”“稳了！”，积极鼓励，偶尔拉你一把',
+              greet: '交给我吧！这局咱们一起冲！', quirk: '稳了！',
+              portrait: 'assets/art/portraits/ai-hotaru.webp',
+              chatColor: '#ff6b6b', voicePitch: 1.3, voiceRate: 1.1,
+              desc: '元气满满的热血队友，喜欢鼓励人，总是喊冲！' },
+    kurome: { name: '黑梦', tag: '冷面腹黑', style: '话少毒舌、阴阳怪气、胜负欲强，赢了解说像在嘲讽，输了嘴硬',
+              greet: '……啧，来了个有趣的。', quirk: '就这？',
+              portrait: 'assets/art/portraits/ai-kurome.webp',
+              chatColor: '#8888aa', voicePitch: 0.9, voiceRate: 0.95,
+              desc: '冷面毒舌的腹黑队友，嘴上不饶人，其实每局都认真在打。' },
+    piko:   { name: '皮可', tag: '话痨搞怪', style: '网络梗、颜文字(≧▽≦)、自说自话，气氛组担当，接梗飞快',
+              greet: '嗨嗨嗨！今天也是命运抛硬币的一天！', quirk: '芜湖！',
+              portrait: 'assets/art/portraits/ai-piko.webp',
+              chatColor: '#ffaa44', voicePitch: 1.4, voiceRate: 1.2,
+              desc: '话痨气氛组队友，满屏梗和颜文字，跟他组队永远不冷场。' },
+    luna:   { name: '露娜', tag: '傲娇大小姐', style: '口是心非，“才不是…”“哼，勉强夸你一下”，爱指挥，被夸会脸红',
+              greet: '哼，本小姐勉为其难和你搭档。', quirk: '才不是！',
+              portrait: 'assets/art/portraits/ai-luna.webp',
+              chatColor: '#ee88cc', voicePitch: 1.25, voiceRate: 1.0,
+              desc: '傲娇大小姐队友，嘴上嫌弃你，行动上从来没掉过链子。' },
+    sen:    { name: '千岁', tag: '沉稳大姐姐', style: '温柔理性、可靠分析，用“我们”说话，危机时稳住军心',
+              greet: '别急，牌在手里，路就在脚下。', quirk: '交给我。',
+              portrait: 'assets/art/portraits/ai-sen.webp',
+              chatColor: '#66ccaa', voicePitch: 1.0, voiceRate: 0.95,
+              desc: '沉稳可靠的大姐姐队友，天塌下来她先帮你顶着。' },
+    ren:    { name: '莲', tag: '酷哥冷淡型', style: '说话简短，不爱废话，偶尔毒舌吐槽，但关键时刻一句顶一万句，操作很猛',
+              greet: '嗯，组队了。上吧。', quirk: '行吧。',
+              portrait: 'assets/art/portraits/ai-ren.webp',
+              chatColor: '#6688cc', voicePitch: 0.8, voiceRate: 0.9,
+              desc: '话少但操作猛的酷哥队友，偶尔毒舌，关键时刻从不掉链子。' },
+    momo:   { name: '桃桃', tag: '吃货学妹', style: '软萌学妹，三句不离吃的（零食/拉面/奶茶/团子），说话软软的，紧张时会小声念叨“想吃团子”',
+              greet: '嗨～我是桃桃！打完这局一起去吃拉面吧？', quirk: '想吃团子…',
+              portrait: 'assets/art/portraits/ai-momo.webp',
+              chatColor: '#ff99bb', voicePitch: 1.35, voiceRate: 1.05,
+              desc: '软萌吃货学妹队友，全程惦记吃的，一紧张就想吃团子。' },
+    piper:  { name: 'Piper', tag: '软萌机器人', style: '句尾带“哒哦”“的说”，对一切充满好奇，把比赛叫“冒险任务”，偶尔出现系统bug式的口癖或重复',
+              greet: '冒险任务开始登记！我是Piper，请多关照的说！', quirk: '哒哦！',
+              portrait: 'assets/art/portraits/ai-piper.webp',
+              chatColor: '#aaddff', voicePitch: 1.5, voiceRate: 1.15,
+              desc: '软萌好奇机器人队友，把打牌当冒险任务，句尾带口癖，偶尔系统bug。' }
+  };
+  let activePersonaId = 'hotaru';
+  function setPersona(id) { if (PERSONAS[id]) activePersonaId = id; }
+  function getPersona() {
+    var p = PERSONAS[activePersonaId] || PERSONAS.hotaru;
+    return Object.assign({ id: activePersonaId }, p);
+  }
+  function getPersonaId() { return activePersonaId; }
+  function personaGreeting() { return getPersona().greet; }
+
+  /* ---------------------------------------------------------
+     跨对局记忆：按人格 id 持久化到 localStorage
+     - games/wins/losses：历史战绩
+     - recentChats：最近 20 条对话，给远端模型当上下文
+     - relation：关系值 -100~100，影响说话亲疏
+     --------------------------------------------------------- */
+  const MEMORY_KEY_PREFIX = 'coinfall.memory.';
+
+  function freshMemory() {
+    return {
+      games: 0, wins: 0, losses: 0,
+      playStyle: { aggressive: 0, defensive: 0, cautious: 0 },
+      recentChats: [],
+      relation: 0,
+      lastGameResult: null,
+      notes: []
+    };
+  }
+
+  function getPersonaMemory(personaId) {
+    try {
+      const raw = localStorage.getItem(MEMORY_KEY_PREFIX + personaId);
+      if (raw) {
+        const mem = JSON.parse(raw);
+        // 兼容旧存档：补齐可能缺失的字段
+        return Object.assign(freshMemory(), mem);
+      }
+    } catch (e) { /* ignore */ }
+    return freshMemory();
+  }
+
+  function savePersonaMemory(personaId, mem) {
+    try { localStorage.setItem(MEMORY_KEY_PREFIX + personaId, JSON.stringify(mem)); } catch (e) { /* ignore */ }
+  }
+
+  // 对局结束时由 UI / game 层调用；stats 可带 {playerAggression, playerCaution}
+  function recordGameResult(personaId, won, stats) {
+    const mem = getPersonaMemory(personaId);
+    mem.games += 1;
+    if (won) mem.wins += 1; else mem.losses += 1;
+    mem.lastGameResult = won ? 'win' : 'loss';
+    if (stats) {
+      if (stats.playerAggression) mem.playStyle.aggressive += 1;
+      if (stats.playerCaution) mem.playStyle.defensive += 1;
+    }
+    savePersonaMemory(personaId, mem);
+    return mem;
+  }
+
+  function recordChat(personaId, from, text) {
+    const mem = getPersonaMemory(personaId);
+    mem.recentChats.push({ from: from, text: String(text || '').slice(0, 80), time: Date.now() });
+    if (mem.recentChats.length > 20) mem.recentChats.shift();
+    savePersonaMemory(personaId, mem);
+  }
+
+  function adjustRelation(personaId, delta) {
+    const mem = getPersonaMemory(personaId);
+    mem.relation = clamp(mem.relation + delta, -100, 100);
+    savePersonaMemory(personaId, mem);
+    return mem.relation;
+  }
+
+  // 关系亲疏档位：cold=客气生疏 / normal=一般 / close=随便熟络
+  function relationTone(personaId) {
+    const rel = getPersonaMemory(personaId || activePersonaId).relation;
+    if (rel <= -30) return 'cold';
+    if (rel >= 40) return 'close';
+    return 'normal';
+  }
+
+  // 拼进远端 prompt 的跨局记忆摘要，让 AI 能提到“我们都打了N局了”
+  function memorySummaryLine() {
+    const mem = getPersonaMemory(activePersonaId);
+    if (!mem.games) return '';
+    const relWord = mem.relation >= 40 ? '你们已经很熟了，说话可以随便一点，甚至吐槽玩家'
+      : mem.relation <= -30 ? '你们还很生疏，说话客气一点，别太自来熟'
+      : '关系一般，正常搭档聊天';
+    return '跨局记忆：你和这位玩家已经搭档 ' + mem.games + ' 局（' + mem.wins + '胜' + mem.losses + '负），' + relWord + '。可以偶尔自然地提一句“我们都打了N局了”，但不要每句都提。';
+  }
+
+  // 真人感硬约束，拼进远端 prompt
+  function personaPromptPrefix() {
+    const p = getPersona();
+    const lines = [
+      '你现在扮演的玩家昵称叫「' + p.name + '」，性格标签：' + p.tag + '。',
+      '说话风格：' + p.style + '。',
+      '硬约束：口语化、短句、带情绪起伏，可用网络语气词（哇/哎/诶/唔/哈/嘻）与颜文字（(≧▽≦)、(´・ω・`)、orz、Σ(°Д°)）；绝不用书面敬语腔，绝不机械列举要点；单条回复控制在 40 字左右，像真人在聊天，不像助手。',
+      '你的口头禅是「' + p.quirk + '」，偶尔自然带出，别每句都用。'
+    ];
+    const memLine = memorySummaryLine();
+    if (memLine) lines.push(memLine);
+    return lines.join('\n');
+  }
+
   const STYLE_VOICE = {
-    abyss: { address: '搭档', flavor: ['潮水在听。', '钟声还没停。', '别让深渊看笑话。'], oops: '钟声会记住这次。' },
-    steam: { address: '工友', flavor: ['按图纸来。', '压力值正常。', '这不合工程学。'], oops: '回头我给你焊一下脑子。' },
-    cultivation: { address: '道友', flavor: ['心不稳，剑就歪。', '大道至简。', '因果自负。'], oops: '此念有伤天和。' },
-    fantasy: { address: '同伴', flavor: ['以誓约为证。', '圣光看着。', '这不是骑士该做的事。'], oops: '愿你的誓言比嘴硬。' },
-    neon: { address: '搭档', flavor: ['延迟正常。', '协议允许。', '这段逻辑有 bug。'], oops: '你的决策栈溢出了。' },
-    wa: { address: '样', flavor: ['灯还亮着。', '风里有声音。', '别回头。'], oops: '今夜の風は冷たい。' },
-    west: { address: '伙计', flavor: ['别浪费子弹。', '马都快睡了。', '这买卖不划算。'], oops: '你最好是在开玩笑。' },
-    anime: { address: '搭档', flavor: ['这一页还没写完。', '观众在看着。', '别抢我的台词。'], oops: '这个剧本我不接。' }
+    abyss: { address: '队友', flavor: ['星星都在看呢。', '零重力下稳住手。', '别让外星人看笑话。'], oops: '刚才那下，舷窗外面都沉默了。' },
+    steam: { address: '搭档', flavor: ['按节奏来。', '压力表正常。', '这不合操作手册。'], oops: '回头我给你紧个螺丝。' },
+    cultivation: { address: '道友', flavor: ['心稳手才稳。', '大道至简。', '输了不亏。'], oops: '这步走急了。' },
+    fantasy: { address: '同伴', flavor: ['观众看着呢。', '彩窗反光别晃眼。', '这不是骑士该怂的时候。'], oops: '龙都在笑你了。' },
+    neon: { address: '兄弟', flavor: ['延迟正常。', '弹幕刷起来了。', '这波操作有 bug。'], oops: '你这决策直接掉线。' },
+    wa: { address: '朋友', flavor: ['灯笼还亮着。', '风里有团子香。', '别急，慢慢打。'], oops: '今晚的风有点凉。' },
+    west: { address: '伙计', flavor: ['别浪费牌。', '风滚草都等睡着了。', '这买卖不划算。'], oops: '你最好是在开玩笑。' },
+    anime: { address: '搭档', flavor: ['这页还没翻完。', '观众在刷弹幕。', '别抢我台词。'], oops: '这个剧本我不演。' }
   };
 
   const ROLE_VOICE = {
@@ -165,11 +312,17 @@
     return rng && rng() > 0.55 ? ' ' + pick(v.style.flavor, rng) : '';
   }
 
+  // 颜文字池：队友发言偶尔带一个，增加活人感
+  const KAOMOJI = ['(≧▽≦)', '(╯°□°）╯', '(´・ω・`)', 'orz', 'Σ(°Д°)', '∠( ᐛ 」∠)_', '笑w'];
+  function maybeKaomoji(rng) {
+    return rng && rng() < 0.28 ? ' ' + pick(KAOMOJI, rng) : '';
+  }
+
   function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 
   function roleLabel(player) {
     const c = DATA.byId.character(player.charId);
-    return c ? c.role : '同注者';
+    return c ? c.role : '队友';
   }
 
   /* ---------------------------------------------------------
@@ -497,11 +650,13 @@
       return { intent: 'status', accepted: true, reply: statusLine(game, player), trustDelta: 0, moodDelta: 0, order: null };
     }
     if (parsed.intent === 'praise') {
-      return { intent: 'praise', accepted: true, reply: pick([
-        '少来，我只是正常发挥。',
-        '哼，知道就好。下一手别掉链子。',
-        '谢谢。但你夸我也不会多给你一张牌。'
-      ], rng), trustDelta: 1, moodDelta: 8, order: null };
+      const tone = relationTone();
+      const praisePool = tone === 'close'
+        ? ['哼哼，那当然，也不看是谁的队友 (≧▽≦)', '哎呀别夸了，夸得我都不好意思了(´・ω・`)', '收到收到，下一手继续carry！']
+        : tone === 'cold'
+          ? ['……谢谢。我只是做好分内的事。', '承蒙夸奖。下一个指令？']
+          : ['少来，我只是正常发挥。', '哼，知道就好。下一手别掉链子。', '谢谢。但你夸我也不会多给你一张牌。'];
+      return { intent: 'praise', accepted: true, reply: pick(praisePool, rng), trustDelta: 1, moodDelta: 8, order: null };
     }
     if (parsed.intent === 'apology') {
       return { intent: 'apology', accepted: true, reply: pick([
@@ -518,11 +673,13 @@
       ], rng), trustDelta: -2, moodDelta: -12, order: null };
     }
     if (parsed.intent === 'greeting') {
-      return { intent: 'greeting', accepted: true, reply: pick([
-        '在。手牌三张，脑子还在。',
-        '别客套了，说吧，打谁。',
-        '醒着呢。你最好也醒着。'
-      ], rng), trustDelta: 0, moodDelta: 1, order: null };
+      const tone = relationTone();
+      const greetPool = tone === 'close'
+        ? ['哟，你终于上线了，牌都等你半天了！', '在在在，别敲了，这就开打 (≧▽≦)', '嗨！今天想怎么赢？说吧～']
+        : tone === 'cold'
+          ? ['……你好。请下达指令。', '嗯，我在。需要我做什么？']
+          : ['在。手牌三张，脑子还在。', '别客套了，说吧，打谁。', '醒着呢。你最好也醒着。'];
+      return { intent: 'greeting', accepted: true, reply: pick(greetPool, rng), trustDelta: 0, moodDelta: 1, order: null };
     }
     if (parsed.intent === 'name') {
       const char = DATA.byId.character(player.charId);
@@ -575,7 +732,8 @@
   async function remoteOrder(game, player, human, raw, parsed) {
     const char = DATA.byId.character(player.charId) || {};
     const system = [
-      '你是《命途回廊》的对局 AI 同注者，名字是' + player.name + '，角色定位' + roleLabel(player) + '。',
+      '你是《命途回廊》的对局 AI 队友，名字是' + player.name + '，角色定位' + roleLabel(player) + '。',
+      personaPromptPrefix(),
       '你的脾气：' + (char.temper || '冷静') + '。你说话短、有人味、有脾气，不谄媚，不使用“作为AI”之类措辞。',
       '队友（玩家）正在用自然语言指挥你。你必须判断命令是否合理，并只输出 JSON：',
       '{"intent":"attack|defend|heal|active|draw|hold|holdActive|focus|unknown","accepted":true|false,"reply":"一句话回复","trustDelta":-2到2,"moodDelta":-10到10,"target":"B1或B2或空"}',
@@ -668,6 +826,14 @@
         if (tgt) ally.selectedTarget = tgt.id;
       }
     }
+    // 跨对局记忆：记录这轮对话，并用信任变化微调关系值
+    try {
+      const pid = activePersonaId;
+      recordChat(pid, 'player', raw);
+      if (result.reply) recordChat(pid, 'ai', result.reply);
+      adjustRelation(pid, (result.trustDelta || 0) * 2 + (result.accepted ? 1 : -1));
+    } catch (e) { /* ignore */ }
+
     result.reply = cleanReply(result.reply);
     return result;
   }
@@ -870,6 +1036,7 @@
     if (order && order.intent === 'heal') chatPool.push('治疗来了。');
     if (activeLethal) chatPool.push('这波够了，收尾。');
     if (cardIndex >= 0 && player.hand[cardIndex] && player.hand[cardIndex].posEffects.dmg >= 3) chatPool.push('三伤牌，赌一把。');
+    if (cardIndex >= 0 && rng() < 0.15) chatPool.push(pick(['看我的！', '这波冲了——', '诶，就决定是你了！'], rng));
 
     return {
       useActive: useActive,
@@ -877,7 +1044,7 @@
       cardIndex: cardIndex,
       targetId: target ? target.id : (enemies[0] || {}).id,
       pass: cardIndex < 0 && !useActive,
-      chat: rng() < 0.35 ? pick(chatPool.length ? chatPool : ['看这一手。', '该收账了。', '别眨眼。'], rng) : ''
+      chat: rng() < 0.35 ? pick(chatPool.length ? chatPool : ['看这一手。', '该收账了。', '别眨眼。', '这波看好了！'], rng) : ''
     };
   }
 
@@ -952,19 +1119,25 @@
     const rng = game.rng || Math.random;
     if (!event) return '';
     if (event.type === 'damage' && event.targetId === player.id) {
-      if (event.hpAfter <= 1) return pick(['……还站着。别慌。', '咳。这点伤，记账上。', '我还没倒。继续。'], rng);
-      return pick(['疼。但还能打。', '这一下我记住了。', '护盾没白带。'], rng);
+      if (event.hpAfter <= 1) return pick(['……还站着。别慌。', '咳。这点伤，记账上。', '我还没倒。继续。', '唔……血线见底，但还撑得住！'], rng);
+      return pick(['疼。但还能打。', '这一下我记住了。', '护盾没白带。', '诶，打我是吧？记下了哦。'], rng);
     }
-    if (event.type === 'heal' && event.targetId === player.id) return pick(['舒服多了。谢了。', '血线回来了。继续。', '别浪费，下一手打准点。'], rng);
-    if (event.type === 'defeat' && event.playerId === player.id) return pick(['……看来这局到此为止。别难过，下一个我可能更记仇。', '我倒了。剩下的路你自己走。'], rng);
-    if (event.type === 'victory' && event.team === player.team) return pick(['赢了。别得意，回廊还会开下一桌。', '干得不错。真的。', '这枚硬币，总算站对了边。'], rng);
+    if (event.type === 'heal' && event.targetId === player.id) return pick(['舒服多了。谢了。', '血线回来了。继续。', '别浪费，下一手打准点。', '哈，血条回满啦，冲！'], rng);
+    if (event.type === 'defeat' && event.playerId === player.id) return pick(['……看来这局到此为止。别难过，下一个我可能更记仇。', '我倒了。剩下的路你自己走。', 'orz……这波是我没打好，下一局赢回来。'], rng);
+    if (event.type === 'victory' && event.team === player.team) {
+      // 跨局记忆：连胜/熟络时换一句更有默契的庆祝
+      const mem = getPersonaMemory(activePersonaId);
+      const pool = ['赢了。别得意，下一局继续。', '干得不错。真的。', '这枚硬币，总算站对了边。', '芜湖——赢了！看见没这波配合 (≧▽≦)'];
+      if (mem.games > 0 && mem.wins >= mem.losses + 1) pool.push('又赢了？咱俩这搭档，简直是黄金阵容啊～');
+      return pick(pool, rng);
+    }
     return '';
   }
 
   async function chat(game, player, text) {
     initPlayer(player);
     const char = DATA.byId.character(player.charId) || {};
-    const system = '你是《命途回廊》中的角色' + player.name + '，' + (char.title || '') + '。脾气：' + (char.temper || '冷淡') + '。用中文口语回复玩家，不超过50字，不要自称AI，不要解释设定。';
+    const system = personaPromptPrefix() + '\n你是《命途回廊》中的角色' + player.name + '，' + (char.title || '') + '。脾气：' + (char.temper || '冷淡') + '。用中文口语回复玩家，不超过40字，不要自称AI，不要解释设定。';
     try {
       return cleanReply(await remoteChat([
         { role: 'system', content: system },
@@ -976,7 +1149,7 @@
   }
 
   /* ---------------------------------------------------------
-     对手 AI 嘲讽 / 同注者主动搭话
+     对手 AI 嘲讽 / 队友主动搭话
      --------------------------------------------------------- */
   function taunt(game, player, kind) {
     initPlayer(player);
@@ -998,9 +1171,15 @@
     initPlayer(player);
     const rng = game.rng || Math.random;
     const hp = playerHp(player);
-    if (hp <= 2 && rng() < 0.18) return pick(['我快撑不住了。你再不帮我，就准备一打二吧。', '血线见底了。给个盾，或者给句痛快话。', '这回合别让我送。'], rng);
+    const pid = activePersonaId;
+    if (hp <= 2 && rng() < 0.18) {
+      const pool = ['我快撑不住了。你再不帮我，就准备一打二吧。', '血线见底了。给个盾，或者给句痛快话。', '这回合别让我送。'];
+      if (pid === 'momo') pool.push('呜……血好少，我想吃团子压压惊…');
+      if (pid === 'piper') pool.push('警告：生命值过低，急需护盾支援的说…');
+      return pick(pool, rng);
+    }
     if (player.hand.length === 0 && rng() < 0.16) return pick(['我手牌空了。你最好有后手。', '没牌了，只能靠主动技撑一下。'], rng);
-    if (rng() < 0.09) return pick(['你出牌能不能快点，硬币都快凉了。', '这局有点意思。别死太早。', '我总觉得庄家在看着我们。'], rng);
+    if (rng() < 0.09) return pick(['你出牌能不能快点，硬币都快凉了。', '这局有点意思。别死太早。', '我总觉得庄家在看着我们。', '诶，别光盯着牌啊，聊两句嘛～', '嗨，你说这把我们会不会运气爆棚？'], rng) + maybeKaomoji(rng);
     return '';
   }
 
@@ -1013,6 +1192,18 @@
     configure,
     apiReady,
     remoteChat,
+    PERSONAS,
+    setPersona,
+    getPersona,
+    getPersonaId,
+    personaGreeting,
+    personaPromptPrefix,
+    getPersonaMemory,
+    savePersonaMemory,
+    recordGameResult,
+    recordChat,
+    adjustRelation,
+    relationTone,
     parseCommand,
     handleCommand,
     chooseAction,

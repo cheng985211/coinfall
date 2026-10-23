@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#090a0e">
-  <meta name="description" content="命途回廊 COINFALL：一款可联机的回合制抛币卡牌对战游戏。44 名角色、190 张技能卡、19 种模式（1v1–4v4 自由组队），以及会听懂你指挥的 AI 同注者。">
-  <title>命途回廊 · COINFALL</title>
+  <meta name="description" content="星杯对决 COINFALL：一款可联机的回合制抛币卡牌对战游戏。54 名角色、210 张技能卡、19 种模式（1v1–4v4 自由组队），以及会听懂你指挥的 AI 队友。">
+  <title>星杯对决 · COINFALL</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="assets/art/ui/favicon.png">
 </head>
@@ -19,13 +19,13 @@
 
   <div id="app">
     <header class="site-header" id="site-header">
-      <button class="brand" data-nav="home" aria-label="回到命途回廊首页">
-        <span class="brand__coin" aria-hidden="true"><span>昭</span><span>昧</span></span>
-        <span class="brand__text">命途回廊<small>COINFALL</small></span>
+      <button class="brand" data-nav="home" aria-label="回到星杯对决首页">
+        <span class="brand__coin" aria-hidden="true"><span>正</span><span>反</span></span>
+        <span class="brand__text">星杯对决<small>COINFALL</small></span>
       </button>
       <nav class="main-nav" aria-label="主导航">
-        <button data-nav="collection" class="nav-link">命途图鉴</button>
-        <button data-nav="world" class="nav-link">八域档案</button>
+        <button data-nav="collection" class="nav-link">星杯图鉴</button>
+        <button data-nav="world" class="nav-link">八大赛区档案</button>
         <button data-nav="codex" class="nav-link">知识库</button>
         <button data-nav="lobby" class="nav-link">联机大厅</button>
         <button data-action="rules" class="nav-link">规则</button>
@@ -44,18 +44,18 @@
       <section id="screen-home" class="screen is-active" aria-label="首页">
         <div class="home-hero">
           <div class="hero-copy">
-            <div class="eyebrow"><span class="live-dot"></span> 第 ∞ 届命途夜 · 正在开桌</div>
-            <h1 class="display-title">命途<br><em>回廊</em></h1>
-            <p class="hero-subtitle">八域尽头，一枚硬币正在决定所有结局。<br>你带三张手牌入席，庄家准备了唯一的终章。</p>
+            <div class="eyebrow"><span class="live-dot"></span> 第 ∞ 届星杯之夜 · 正在开赛</div>
+            <h1 class="display-title">星杯<br><em>对决</em></h1>
+            <p class="hero-subtitle">八大赛区之巅，一枚硬币正在决定所有胜负。<br>你带三张手牌入场，冠军之争只剩唯一的决赛。</p>
             <div class="hero-actions">
               <button class="btn btn--primary btn--lg" data-action="enter-table">
-                <span>入席</span><span class="btn-glyph">◉</span>
+                <span>入场</span><span class="btn-glyph">◉</span>
               </button>
               <button class="btn btn--ghost btn--lg" data-nav="world">阅读世界观</button>
             </div>
             <div class="hero-stats">
-              <div><strong id="stat-chars">44</strong><span>执币角色</span></div>
-              <div><strong id="stat-cards">190</strong><span>命途卡牌</span></div>
+              <div><strong id="stat-chars">54</strong><span>执币角色</span></div>
+              <div><strong id="stat-cards">210</strong><span>星杯卡牌</span></div>
               <div><strong id="stat-modes">19</strong><span>游戏模式</span></div>
               <div><strong>∞</strong><span>未完成结局</span></div>
             </div>
@@ -63,10 +63,10 @@
           <div class="hero-stage" aria-hidden="true">
             <div class="hero-orbit hero-orbit--one"></div>
             <div class="hero-orbit hero-orbit--two"></div>
-            <div class="hero-sigil">命</div>
+            <div class="hero-sigil">星</div>
             <div class="hero-coin" id="hero-coin">
-              <div class="hero-coin__face hero-coin__face--front"><span>昭</span><small>CAUSALITY</small></div>
-              <div class="hero-coin__face hero-coin__face--back"><span>昧</span><small>REVERSAL</small></div>
+              <div class="hero-coin__face hero-coin__face--front"><span>正</span><small>CAUSALITY</small></div>
+              <div class="hero-coin__face hero-coin__face--back"><span>反</span><small>REVERSAL</small></div>
               <div class="hero-coin__rim"></div>
             </div>
             <div class="hero-caption"><span>THE COIN IS STILL SPINNING</span><i></i></div>
@@ -86,7 +86,7 @@
               <div class="eyebrow">CHOOSE YOUR TABLE</div>
               <h2>选择你的命局</h2>
             </div>
-            <p>从五点生命的经典审判，到会顶嘴的 AI 队友。每一种模式，都是回廊的一扇门。</p>
+            <p>从五点生命的经典审判，到会顶嘴的 AI 队友。每一种模式，都是赛场的一扇门。</p>
           </div>
           <div class="mode-grid" id="mode-grid"></div>
         </section>
@@ -97,7 +97,7 @@
               <div class="eyebrow">FIVE BAD IDEAS</div>
               <h2>五个不太正经的命局</h2>
             </div>
-            <p>回廊偶尔也需要一点混乱。五个娱乐模式，五条被庄家划掉的规则。</p>
+            <p>赛场偶尔也需要一点混乱。五个娱乐模式，五条被冠军划掉的规则。</p>
           </div>
           <div class="mode-grid mode-grid--fun" id="fun-mode-grid"></div>
         </section>
@@ -106,7 +106,7 @@
           <div class="section-head">
             <div>
               <div class="eyebrow">THE EIGHT REALMS</div>
-              <h2>八域正在失去结局</h2>
+              <h2>八大赛区正在集结</h2>
             </div>
             <button class="text-btn" data-nav="world">展开完整档案 →</button>
           </div>
@@ -122,11 +122,11 @@
           <div class="companion-feature__copy">
             <div class="eyebrow">THE CO-SIGNERS</div>
             <h2>你的队友，不是你的工具。</h2>
-            <p>同注者保留着生前的脾气。你可以用自然语言命令他们进攻、保命、治疗或开大招——合理的指挥会被执行，满血求奶会被嘲笑，送死命令会被当面拒绝。</p>
+            <p>队友保留着各自鲜明的脾气。你可以用自然语言命令他们进攻、保命、治疗或开大招——合理的指挥会被执行，满血求奶会被嘲笑，送死命令会被当面拒绝。</p>
             <blockquote id="companion-quote">“你满血还让我奶？我的牌不是矿泉水。”<cite>—— 齿轮医师·薇拉</cite></blockquote>
             <div class="hero-actions">
               <button class="btn btn--secondary" data-mode="team">体验自由组队指挥</button>
-              <button class="btn btn--quiet" data-nav="world">阅读同注者协议</button>
+              <button class="btn btn--quiet" data-nav="world">阅读队友协议</button>
             </div>
           </div>
         </section>
@@ -135,13 +135,13 @@
           <div class="closing-cta__sigil" aria-hidden="true">◉</div>
           <div>
             <div class="eyebrow">THE HOUSE IS WAITING</div>
-            <h2>庄家已经落座。<br>你还要让硬币再转一会儿吗？</h2>
+            <h2>冠军已经落座。<br>你还要让硬币再转一会儿吗？</h2>
           </div>
-          <button class="btn btn--primary btn--lg" data-action="enter-table">现在开桌</button>
+          <button class="btn btn--primary btn--lg" data-action="enter-table">现在开赛</button>
         </section>
 
         <footer class="site-footer">
-          <span>命途回廊 · COINFALL</span>
+          <span>星杯对决 · COINFALL</span>
           <span>纯前端 · 可局域网 / 公网联机 · 无需安装</span>
           <button class="text-btn" data-action="rules">规则手册</button>
         </footer>
@@ -150,7 +150,7 @@
       <!-- ================= SETUP ================= -->
       <section id="screen-setup" class="screen" aria-label="战前配置">
         <div class="subpage-head">
-          <button class="back-btn" data-nav="home">← 返回回廊</button>
+          <button class="back-btn" data-nav="home">← 返回赛场</button>
           <div class="eyebrow" id="setup-eyebrow">MATCH CONFIGURATION</div>
           <h1 id="setup-title">标准对战</h1>
           <p id="setup-desc"></p>
@@ -162,7 +162,7 @@
             <section class="panel setup-panel">
               <div class="panel-head">
                 <span class="panel-index">01</span>
-                <div><h3>执币者</h3><p>名字会被记入回廊账本。</p></div>
+                <div><h3>执币者</h3><p>名字会被记入赛场榜单。</p></div>
               </div>
               <div class="field-row">
                 <label class="field">
@@ -185,7 +185,7 @@
             <section class="panel setup-panel" id="team-size-panel" hidden>
               <div class="panel-head">
                 <span class="panel-index">02</span>
-                <div><h3>自由组队 · 几对几</h3><p>双方各 1–4 人。你是 A1，其余席位由 AI 同注者补齐；人数可以不对等。</p></div>
+                <div><h3>自由组队 · 几对几</h3><p>双方各 1–4 人。你是 A1，其余席位由 AI 队友补齐；人数可以不对等。</p></div>
                 <span class="team-size-badge" id="team-size-badge">2v2</span>
               </div>
               <div class="team-size-grid">
@@ -197,7 +197,7 @@
                     <button data-team-size="A" data-size="3">3</button>
                     <button data-team-size="A" data-size="4">4</button>
                   </div>
-                  <small>你 + AI 同注者</small>
+                  <small>你 + AI 队友</small>
                 </div>
                 <div class="size-vs">VS</div>
                 <div class="size-field">
@@ -225,7 +225,7 @@
             <section class="panel setup-panel" id="team-mate-panel" hidden>
               <div class="panel-head">
                 <span class="panel-index">02B</span>
-                <div><h3>你的同注者</h3><p>会理解自然语言指挥，也会反驳你。</p></div>
+                <div><h3>你的队友</h3><p>会理解自然语言指挥，也会反驳你。</p></div>
                 <button class="btn btn--quiet btn--sm" data-action="random-ally">换一位搭档</button>
               </div>
               <div id="ally-preview" class="ally-preview"></div>
@@ -265,14 +265,14 @@
                 </div>
               </div>
               <div class="field">
-                <span>回廊场景</span>
+                <span>赛场场景</span>
                 <div class="theme-grid" id="theme-grid"></div>
               </div>
               <div class="field-row" id="opponent-fields">
                 <label class="field">
                   <span>对手</span>
                   <select id="opponent-select">
-                    <option value="ai">回廊 AI</option>
+                    <option value="ai">赛场 AI</option>
                     <option value="local">本地双人（轮流操作）</option>
                   </select>
                 </label>
@@ -300,8 +300,8 @@
               </div>
               <div class="summary-portrait" id="summary-portrait"></div>
               <div class="summary-rows" id="summary-rows"></div>
-              <div class="summary-tip" id="summary-tip">合理使用整局一次的逆写，别在第一枚硬币上就把命运花光。</div>
-              <button class="btn btn--primary btn--block btn--lg" id="start-match">开桌</button>
+              <div class="summary-tip" id="summary-tip">合理使用整局一次的重抛，别在第一枚硬币上就把运气花光。</div>
+              <button class="btn btn--primary btn--block btn--lg" id="start-match">开赛</button>
               <button class="btn btn--quiet btn--block" data-nav="home">再想想</button>
             </div>
           </aside>
@@ -309,24 +309,24 @@
       </section>
 
       <!-- ================= COLLECTION ================= -->
-      <section id="screen-collection" class="screen" aria-label="命途图鉴">
+      <section id="screen-collection" class="screen" aria-label="星杯图鉴">
         <div class="subpage-head">
-          <button class="back-btn" data-nav="home">← 返回回廊</button>
+          <button class="back-btn" data-nav="home">← 返回赛场</button>
           <div class="eyebrow">THE ARCHIVE</div>
-          <h1>命途图鉴</h1>
-          <p>44 名执币角色，190 张技能卡。每一张牌，都是某个世界拒绝遗忘的一段记忆。</p>
+          <h1>星杯图鉴</h1>
+          <p>54 名执币角色，210 张技能卡。每一张牌，都是某个世界的一段精彩故事。</p>
         </div>
         <div class="archive-toolbar">
           <div class="segmented" id="archive-tabs">
-            <button data-archive-tab="characters" class="is-active">角色 <span>44</span></button>
-            <button data-archive-tab="cards">技能卡 <span>190</span></button>
+            <button data-archive-tab="characters" class="is-active">角色 <span>54</span></button>
+            <button data-archive-tab="cards">技能卡 <span>210</span></button>
           </div>
           <label class="search-field">
             <span class="sr-only">搜索</span>
             <input id="archive-search" placeholder="搜索名称、关键词、风格…" autocomplete="off">
             <span aria-hidden="true">⌕</span>
           </label>
-          <select id="archive-style-filter" aria-label="按风格筛选"><option value="all">全部八域</option></select>
+          <select id="archive-style-filter" aria-label="按风格筛选"><option value="all">全部八大赛区</option></select>
         </div>
         <div class="archive-filters" id="archive-filters"></div>
         <div class="archive-count" id="archive-count"></div>
@@ -334,10 +334,10 @@
       </section>
 
       <!-- ================= WORLD ================= -->
-      <section id="screen-world" class="screen" aria-label="八域档案">
+      <section id="screen-world" class="screen" aria-label="八大赛区档案">
         <div class="world-hero">
           <div class="eyebrow">THE WORLD BIBLE</div>
-          <h1>八域档案</h1>
+          <h1>八大赛区档案</h1>
           <p id="world-lead"></p>
           <div class="world-quote" id="world-quote"></div>
         </div>
@@ -351,12 +351,12 @@
       <section id="screen-codex" class="screen" aria-label="知识库">
         <div class="codex-screen">
           <div class="codex-header">
-            <h1>命途知识库</h1>
-            <p>八域世界观 · 英雄传记 · 卡牌来历 · 玩法规则</p>
+            <h1>星杯知识库</h1>
+            <p>八大赛区世界观 · 英雄传记 · 卡牌来历 · 玩法规则</p>
           </div>
           <nav class="codex-nav" id="codex-nav">
             <button data-codex-tab="world" class="active">世界观总纲</button>
-            <button data-codex-tab="realms">八域设定</button>
+            <button data-codex-tab="realms">八大赛区设定</button>
             <button data-codex-tab="heroes">英雄背景</button>
             <button data-codex-tab="cards">卡牌来历</button>
             <button data-codex-tab="rules">玩法规则</button>
@@ -364,11 +364,11 @@
           <div class="codex-content" id="codex-content">
             <div class="codex-section" data-codex-section="world">
               <h2>世界观总纲</h2>
-              <p>在时间之外，有一座不存在的赌场。八个世界的故事被抵押在这里，每一次抛币，都是一段命运被重新裁定。</p>
+              <p>在星空之下，有一座热闹的竞技场。八个世界的高手汇聚在这里，每一次抛币，都是一次胜负的重新裁定。</p>
               <h3>核心法则</h3>
               <ul>
-                <li><strong>双面律</strong>：任何选择都必须同时拥有正面与反面。只想要好结局的人，不配坐在这张桌前。</li>
-                <li><strong>逆写权</strong>：每名执币者整局只有一次"逆写"：重抛刚刚落下的硬币。回廊只保存一个未发生的可能。</li>
+                <li><strong>双面律</strong>：任何抛币都同时拥有正面与反面。只想要全胜的人，不配上这张牌桌。</li>
+                <li><strong>重抛权</strong>：每名执币者整局只有一次"重抛"：重抛刚刚落下的硬币。赛场只保存一个未发生的可能。</li>
                 <li><strong>一牌律</strong>：每回合只能打出一张技能卡。角色主动技不占出牌次数，但有使用上限。</li>
               </ul>
             </div>
@@ -379,7 +379,7 @@
       <!-- ================= LOBBY ================= -->
       <section id="screen-lobby" class="screen" aria-label="联机大厅">
         <div class="subpage-head">
-          <button class="back-btn" data-nav="home">← 返回回廊</button>
+          <button class="back-btn" data-nav="home">← 返回赛场</button>
           <div class="eyebrow">THE NETWORKED TABLE</div>
           <h1>联机大厅</h1>
           <p>公网联机（零配置）：无需任何配置，公网直连，WebRTC 点对点。房间号就是暗号，密码只做门槛。Supabase 已降级为高级自定义项。</p>
@@ -439,7 +439,7 @@
                   </select>
                 </label>
                 <label class="check-row"><input type="checkbox" id="host-fill-ai"> <span>用 AI 补齐空位（自由组队时自动补齐）</span></label>
-                <button class="btn btn--primary btn--block" id="create-room">生成房间号并开桌</button>
+                <button class="btn btn--primary btn--block" id="create-room">生成房间号并开赛</button>
               </section>
               <section class="panel lobby-panel">
                 <div class="panel-head"><span class="panel-index">B</span><div><h3>加入房间</h3><p>输入房主给你的六位暗号。</p></div></div>
@@ -448,7 +448,7 @@
                   <label class="field"><span>房间号</span><input id="join-code" maxlength="8" placeholder="例如 CF-7K2Q" autocomplete="off"></label>
                   <label class="field"><span>密码</span><input id="join-password" type="password" maxlength="20" placeholder="无密码留空" autocomplete="new-password"></label>
                 </div>
-                <button class="btn btn--secondary btn--block" id="join-room">加入同一张赌桌</button>
+                <button class="btn btn--secondary btn--block" id="join-room">加入同一张牌桌</button>
                 <p class="microcopy" id="transport-hint"></p>
               </section>
             </div>
@@ -501,12 +501,12 @@
                 <div class="turn-banner" id="turn-banner">
                   <span class="eyebrow">THE COIN DECIDES</span>
                   <strong>等待抛币</strong>
-                  <small>打出技能卡后，昭面成功 / 昧面反噬</small>
+                  <small>打出技能卡后，正面成功 / 反面反噬</small>
                 </div>
                 <div class="coin-stage" id="coin-stage" aria-hidden="true">
                   <div class="coin coin--idle" id="battle-coin">
-                    <div class="coin__face coin__face--front"><span>昭</span><small>SUCCESS</small></div>
-                    <div class="coin__face coin__face--back"><span>昧</span><small>REVERSAL</small></div>
+                    <div class="coin__face coin__face--front"><span>正</span><small>SUCCESS</small></div>
+                    <div class="coin__face coin__face--back"><span>反</span><small>REVERSAL</small></div>
                     <div class="coin__edge"></div>
                   </div>
                   <div class="coin-shadow"></div>
@@ -524,7 +524,7 @@
             <div class="hand-zone">
               <div class="hand-head">
                 <div><span class="eyebrow">YOUR HAND</span><strong id="hand-title">手牌</strong></div>
-                <div class="hand-meta"><span id="reroll-status">逆写 ×1</span><span id="hand-count">3 张</span></div>
+                <div class="hand-meta"><span id="reroll-status">重抛 ×1</span><span id="hand-count">3 张</span></div>
               </div>
               <div class="hand-scroller" id="hand-scroller">
                 <div class="hand" id="hand"></div>
@@ -563,11 +563,11 @@
         <div class="flip-overlay" id="flip-overlay" hidden>
           <div class="flip-dialog" role="dialog" aria-modal="true" aria-labelledby="flip-title">
             <div class="eyebrow">CAUSALITY CHECK</div>
-            <h2 id="flip-title">命运正在落定</h2>
+            <h2 id="flip-title">硬币正在落定</h2>
             <div class="flip-coin-wrap">
               <div class="coin coin--flipping" id="flip-coin">
-                <div class="coin__face coin__face--front"><span>昭</span><small>SUCCESS</small></div>
-                <div class="coin__face coin__face--back"><span>昧</span><small>REVERSAL</small></div>
+                <div class="coin__face coin__face--front"><span>正</span><small>SUCCESS</small></div>
+                <div class="coin__face coin__face--back"><span>反</span><small>REVERSAL</small></div>
                 <div class="coin__edge"></div>
               </div>
             </div>
@@ -587,7 +587,7 @@
   <div id="modal-root" class="modal-root" hidden></div>
   <div id="toast-root" class="toast-root" aria-live="polite"></div>
 
-  <noscript><div class="noscript">命途回廊需要启用 JavaScript 才能抛币。</div></noscript>
+  <noscript><div class="noscript">星杯对决需要启用 JavaScript 才能抛币。</div></noscript>
 
   <script src="data.js"></script>
   <script src="assets/codex-data.js"></script>
@@ -596,5 +596,143 @@
   <script src="ai.js"></script>
   <script src="net.js"></script>
   <script src="game.js"></script>
+
+  <script>
+  /* v3.1 设置面板增强：人格 desc 描述 / TTS 试听 / 氛围音快捷选择
+     设置面板本体由 game.js 动态渲染，本块通过 MutationObserver 在其打开后注入增强 UI，
+     不改 game.js 逻辑；状态读写均走 CF_UI.SETTINGS 与 localStorage。 */
+  (function () {
+    var modalRoot = document.getElementById('modal-root');
+    if (!modalRoot) return;
+
+    var AMBIENT_OPTS = [
+      { v: 'off', label: '关' },
+      { v: 'wind', label: '风声' },
+      { v: 'rain', label: '雨声' },
+      { v: 'star', label: '星空' },
+      { v: 'clock', label: '机械' }
+    ];
+
+    function personaDesc(pid) {
+      try {
+        var p = window.CF_AI && window.CF_AI.PERSONAS && window.CF_AI.PERSONAS[pid];
+        return p ? (p.desc || '') : '';
+      } catch (e) { return ''; }
+    }
+
+    function currentAmbient() {
+      var S = window.CF_UI && window.CF_UI.SETTINGS;
+      if (!S || !S.ambient) return 'off';
+      return S.ambientTheme || 'theme';
+    }
+
+    function markAmbient() {
+      var cur = currentAmbient();
+      var btns = modalRoot.querySelectorAll('.cf-ambient-btn');
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle('is-active', btns[i].getAttribute('data-ambient') === cur);
+      }
+    }
+
+    function labelFor(v) {
+      var m = { wind: '风声', rain: '雨声', star: '星空', clock: '机械' };
+      return m[v] || v;
+    }
+
+    function applyAmbient(v) {
+      var UI = window.CF_UI;
+      if (!UI) return;
+      var S = UI.SETTINGS;
+      if (v === 'off') { S.ambient = false; }
+      else { S.ambient = true; S.ambientTheme = v; }
+      try { localStorage.setItem('coinfall.settings.v1', JSON.stringify(S)); } catch (e) {}
+      markAmbient();
+      if (UI.toast) UI.toast('氛围音已更新：' + (v === 'off' ? '关闭' : labelFor(v)), 'success');
+    }
+
+    function buildAmbientRow() {
+      var row = document.createElement('div');
+      row.className = 'cf-ambient-row';
+      row.id = 'cf-ambient-row';
+      AMBIENT_OPTS.forEach(function (o) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'cf-ambient-btn';
+        b.setAttribute('data-ambient', o.v);
+        b.textContent = o.label;
+        b.onclick = function () { applyAmbient(o.v); };
+        row.appendChild(b);
+      });
+      return row;
+    }
+
+    function buildTtsRow() {
+      var row = document.createElement('div');
+      row.className = 'settings-row';
+      row.innerHTML = '<label>试听当前人格声音</label><div class="settings-inline"><button type="button" class="btn btn--secondary btn--sm" id="cf-tts-preview">试听</button><small class="microcopy">按当前人格的音高与语速朗读（浏览器合成语音）</small></div>';
+      var pv = row.querySelector('#cf-tts-preview');
+      if (pv) pv.onclick = function () {
+        try {
+          if (!window.speechSynthesis || !window.CF_AI) return;
+          var p = window.CF_AI.getPersona();
+          if (!p) return;
+          window.speechSynthesis.cancel();
+          var u = new SpeechSynthesisUtterance('你好！我是' + p.name + '，这是我的声音~');
+          u.pitch = p.voicePitch || 1;
+          u.rate = p.voiceRate || 1;
+          window.speechSynthesis.speak(u);
+        } catch (e) {}
+      };
+      return row;
+    }
+
+    function enhanceSettings() {
+      var sheet = modalRoot.querySelector('.settings-sheet');
+      if (!sheet || sheet.dataset.v31Enhanced) return;
+      sheet.dataset.v31Enhanced = '1';
+
+      /* 1) 人格卡片补 desc 描述（头像/名字/tag 由 game.js 渲染） */
+      var cards = sheet.querySelectorAll('#set-ai-persona .persona-card[data-persona]');
+      for (var i = 0; i < cards.length; i++) {
+        var card = cards[i];
+        if (card.querySelector('.persona-desc')) continue;
+        var desc = personaDesc(card.getAttribute('data-persona'));
+        if (!desc) continue;
+        var s = document.createElement('small');
+        s.className = 'persona-desc';
+        s.textContent = desc;
+        card.appendChild(s);
+      }
+
+      /* 2) 在「AI 语音」开关行之后注入：TTS 试听行 + 氛围音快捷行 */
+      var aiVoiceInput = sheet.querySelector('#set-ai-voice');
+      var toggleRow = aiVoiceInput ? aiVoiceInput.closest('.toggle-row') : null;
+      if (!toggleRow) return;
+      var refNode = toggleRow.nextSibling;
+
+      var ttsRow = buildTtsRow();
+      toggleRow.parentNode.insertBefore(ttsRow, refNode);
+
+      if (!sheet.querySelector('#cf-ambient-row')) {
+        var ambHead = document.createElement('div');
+        ambHead.className = 'settings-subhead';
+        ambHead.textContent = '氛围音';
+        var note = document.createElement('small');
+        note.className = 'microcopy';
+        note.style.cssText = 'display:block;margin:2px 0 4px;';
+        note.textContent = '选择立即保存并生效。';
+        /* 目标顺序：toggleRow → 氛围音 subhead → 氛围音按钮行 → 提示小字 → TTS 行。
+           insertBefore 总是插在参照节点之前，故从 ttsRow 往前依次倒序插入。 */
+        toggleRow.parentNode.insertBefore(note, ttsRow);
+        toggleRow.parentNode.insertBefore(buildAmbientRow(), note);
+        toggleRow.parentNode.insertBefore(ambHead, toggleRow.nextSibling);
+        markAmbient();
+      }
+    }
+
+    new MutationObserver(function () { enhanceSettings(); }).observe(modalRoot, { childList: true, subtree: true });
+    enhanceSettings();
+  })();
+  </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /* =========================================================
-   命途回廊 · COINFALL
+   星杯赛场 · COINFALL
    game.js — 规则引擎 + 界面控制器 + 音频 + 视觉特效
    ---------------------------------------------------------
    引擎绝对权威（联机时仅房主运行），状态为纯 JSON，可序列化广播。
@@ -36,8 +36,8 @@
 
     // v2.1 random-rules 法则池（1..6）
     const RANDOM_RULES = {
-      1: '昭面成功时额外造成 1 点伤害',
-      2: '昧面也触发正面效果',
+      1: '正面成功时额外造成 1 点伤害',
+      2: '反面也触发正面效果',
       3: '本回合每名角色可打出 2 张技能卡',
       4: '本回合第一张技能卡伤害 +1',
       5: '本回合治疗与护盾数值 +1',
@@ -294,7 +294,7 @@
         if (spec.seat === 0) name = config.playerName || '无名执币者';
         else if (guestName) name = guestName;
         else if (localP1) name = '玩家二';
-        else name = (chars[0] && chars[0].name) || (spec.team === 'A' ? '同注者' : '敌方');
+        else name = (chars[0] && chars[0].name) || (spec.team === 'A' ? '队友' : '敌方');
         let deck;
         if (spec.seat === 0) deck = p0Deck;
         else if (isMirrorSeat && rules.mirror) deck = p0Deck.map(function (c) { return cloneCard(c); });
@@ -352,8 +352,8 @@
       // 先手默认 p0；若 p0 是访客视角则仍由房主先手
       game.currentIndex = 0;
       game.phase = 'action';
-      addLog(game, '回廊开桌。八域的目光落在这一局上。', 'system');
-      addChat(game, 'system', '命途回廊已开桌。每回合一张技能卡，硬币决定昭或昧。', 'system');
+      addLog(game, '赛场开桌。八大赛区的目光落在这一局上。', 'system');
+      addChat(game, 'system', '星杯赛场已开桌。每回合一张技能卡，硬币决定正或反。', 'system');
       beginTurn(game, true);
       return game;
     }
@@ -481,11 +481,25 @@
       if (game.log.length > 90) game.log.shift();
     }
 
-    function addChat(game, speaker, text, kind, playerId) {
-      if (!text) return;
+    // v2.1.2 AI 人设音色：assets/audio/voice/ai/{personaId}-{key}.wav，缺失静默，同 key ≥3s 限流
+    var aiVoiceLast = {};
+    function aiVoice(personaId, key) {
+      try {
+        if (SETTINGS.aiVoice === false) return;
+        var now = Date.now();
+        var k = personaId + ':' + key;
+        if (aiVoiceLast[k] && now - aiVoiceLast[k] < 3000) return;
+        aiVoiceLast[k] = now;
+        var url = 'assets/audio/voice/ai/' + personaId + '-' + key + '.wav';
+        if (root.CF_FILE_AUDIO && root.CF_FILE_AUDIO.playOne) root.CF_FILE_AUDIO.playOne(url, 0.7);
+      } catch (e) {}
+    }
+
+    function addChat(game, speaker, text, kind, playerId, personaId) {      if (!text) return;
       game.chat.push({
         id: uid('chat'), speaker: speaker, text: String(text).slice(0, 160),
-        kind: kind || 'system', playerId: playerId || null, at: Date.now()
+        kind: kind || 'system', playerId: playerId || null,
+        persona: personaId || (AI.getPersona ? AI.getPersona().id : null) || null, at: Date.now()
       });
       if (game.chat.length > 60) game.chat.shift();
     }
@@ -566,7 +580,7 @@
           if (discarded) addLog(game, '混沌洗牌：' + actor.name + ' 换掉了 ' + discarded + ' 张手牌。', 'control');
         });
         addEvent(game, { type: 'chaos', round: game.round });
-        addLog(game, '第 ' + game.round + ' 轮开始，所有人的手牌被回廊重新洗过。', 'system');
+        addLog(game, '第 ' + game.round + ' 轮开始，所有人的手牌被赛场重新洗过。', 'system');
       }
 
       let drawTo = Math.max(0, 3 - (p.chokeNext || 0));
@@ -680,7 +694,7 @@
       if (actor.rerollBoost) {
         actor.rerollBoost = false;
         amount += 1;
-        addEvent(game, { type: 'passive', playerId: actor.id, name: '逆写余波', text: '重抛后伤害 +1' });
+        addEvent(game, { type: 'passive', playerId: actor.id, name: '重抛余波', text: '重抛后伤害 +1' });
       }
       // v2.0：蓄力(power)/血价(bloodPrice)/狂注(highRoller) 累计的下次伤害加成，一次性消耗
       if (actor.pendingDamageBonus && actor.pendingDamageBonus > 0) {
@@ -875,7 +889,7 @@
         dealDamage(game, actor, targetResolved, amount, { pierce: !!effects.pierce });
       }
 
-      // 新增：吸血 — 造成伤害并回复等量生命（血月硬币皮肤：数值 +1）
+      // 新增：吸血 — 造成伤害并回复等量生命（赤红硬币皮肤：数值 +1）
       if (effects.lifesteal && targetResolved) {
         let amount = outgoingDamage(game, actor, n(effects.lifesteal), effects);
         if (actor.coinSkin === 'bloodmoon') amount += 1;
@@ -994,7 +1008,7 @@
         if (unit.passiveKey === 'onFlipWinShield' && !actor.turnFlags.winShieldUsed) {
           actor.turnFlags.winShieldUsed = true;
           shieldUnit(game, actor, unit, 1);
-          addEvent(game, { type: 'passive', playerId: actor.id, name: '昭面回响', text: '抛币成功获得 1 护盾' });
+          addEvent(game, { type: 'passive', playerId: actor.id, name: '正面回响', text: '抛币成功获得 1 护盾' });
         }
         if (unit.passiveKey === 'onFlipWinDraw' && !actor.turnFlags.winDrawUsed) {
           actor.turnFlags.winDrawUsed = true;
@@ -1007,23 +1021,23 @@
           actor.pendingDamageBonus = (actor.pendingDamageBonus || 0) + 1;
           addEvent(game, { type: 'passive', playerId: actor.id, name: '狂注', text: '本回合下一次伤害 +1' });
         }
-        // 硬币皮肤：amethyst 昭面抽1；jade 昭面+1盾；gold 成功后15%免费再抛(抽1)
+        // 硬币皮肤：amethyst 正面抽1；jade 正面+1盾；gold 成功后15%免费再抛(抽1)
         if (actor.coinSkin === 'amethyst' && !actor.turnFlags.amethystUsed) {
           actor.turnFlags.amethystUsed = true;
           drawCards(game, actor, 1);
-          addEvent(game, { type: 'passive', playerId: actor.id, name: '紫晶', text: '昭面抽 1 张牌' });
+          addEvent(game, { type: 'passive', playerId: actor.id, name: '紫晶', text: '正面抽 1 张牌' });
         }
         if (actor.coinSkin === 'jade' && !actor.turnFlags.jadeUsed) {
           actor.turnFlags.jadeUsed = true;
           shieldUnit(game, actor, unit, 1);
-          addEvent(game, { type: 'passive', playerId: actor.id, name: '翡翠', text: '昭面获得 1 护盾' });
+          addEvent(game, { type: 'passive', playerId: actor.id, name: '翡翠', text: '正面获得 1 护盾' });
         }
         if (actor.coinSkin === 'gold' && nextRandom(game) < 0.15) {
           drawCards(game, actor, 1);
           addLog(game, '黄金财运发动，免费再掷出一次好运：抽 1 张牌。', 'coin');
           addEvent(game, { type: 'passive', playerId: actor.id, name: '黄金', text: '免费再抛一次' });
         }
-        // v2.1 random-rules 法则①：昭面成功时额外造成 1 点伤害
+        // v2.1 random-rules 法则①：正面成功时额外造成 1 点伤害
         if (game.turnRule === 1) {
           const opp = resolveTarget(game, actor);
           if (opp) dealDamage(game, actor, opp, 1, {});
@@ -1032,19 +1046,19 @@
         if (unit.passiveKey === 'onFlipLoseShield' && !actor.turnFlags.loseShieldUsed) {
           actor.turnFlags.loseShieldUsed = true;
           shieldUnit(game, actor, unit, 1);
-          addEvent(game, { type: 'passive', playerId: actor.id, name: '昧面余温', text: '抛币失败获得 1 护盾' });
+          addEvent(game, { type: 'passive', playerId: actor.id, name: '反面余温', text: '抛币失败获得 1 护盾' });
         }
-        // v2.0 被动：onFlipLoseDraw 昧面进账——每回合第一次抛币失败抽1
+        // v2.0 被动：onFlipLoseDraw 反面进账——每回合第一次抛币失败抽1
         if (unit.passiveKey === 'onFlipLoseDraw' && !actor.turnFlags.loseDrawUsed) {
           actor.turnFlags.loseDrawUsed = true;
           drawCards(game, actor, 1);
-          addEvent(game, { type: 'passive', playerId: actor.id, name: '昧面进账', text: '抛币失败抽 1 张牌' });
+          addEvent(game, { type: 'passive', playerId: actor.id, name: '反面进账', text: '抛币失败抽 1 张牌' });
         }
-        // 硬币皮肤：silver 昧面+1盾
+        // 硬币皮肤：silver 反面+1盾
         if (actor.coinSkin === 'silver' && !actor.turnFlags.silverUsed) {
           actor.turnFlags.silverUsed = true;
           shieldUnit(game, actor, unit, 1);
-          addEvent(game, { type: 'passive', playerId: actor.id, name: '白银', text: '昧面获得 1 护盾' });
+          addEvent(game, { type: 'passive', playerId: actor.id, name: '白银', text: '反面获得 1 护盾' });
         }
       }
     }
@@ -1086,13 +1100,13 @@
       if (actor.blessNext) {
         actor.blessNext = false;
         game.pending.result = true;
-        addLog(game, actor.name + ' 的命运祝福生效，硬币停在昭面。', 'coin');
+        addLog(game, actor.name + ' 的命运祝福生效，硬币停在正面。', 'coin');
       } else {
         game.pending.result = flipCoin(game);
       }
       game.phase = 'flip';
       addEvent(game, { type: 'card', playerId: actor.id, cardId: card.id, name: card.name, result: game.pending.result, blessed: game.pending.blessed });
-      addLog(game, actor.name + ' 打出「' + card.name + '」。' + (game.pending.result ? '昭面。' : '昧面。'), 'card');
+      addLog(game, actor.name + ' 打出「' + card.name + '」。' + (game.pending.result ? '正面。' : '反面。'), 'card');
 
       if (activeUnit(actor) && activeUnit(actor).passiveKey === 'onPlayDraw' && !actor.turnFlags.playDrawUsed) {
         actor.turnFlags.playDrawUsed = true;
@@ -1122,8 +1136,8 @@
       const card = pending.card;
 
       if (choice === 'reroll') {
-        if (game.noReroll) return { ok: false, reason: '本模式没有逆写' };
-        if (!pending.canReroll || pending.rerolled) return { ok: false, reason: '逆写已用尽' };
+        if (game.noReroll) return { ok: false, reason: '本模式没有重抛' };
+        if (!pending.canReroll || pending.rerolled) return { ok: false, reason: '重抛已用尽' };
         actor.rerolls -= 1;
         actor.stats.rerolls += 1;
         pending.rerolled = true;
@@ -1132,10 +1146,10 @@
         pending.blessed = false;
         if (activeUnit(actor) && activeUnit(actor).passiveKey === 'onRerollBoost') {
           actor.rerollBoost = true;
-          addEvent(game, { type: 'passive', playerId: actor.id, name: '逆写余波', text: '本回合下一次伤害 +1' });
+          addEvent(game, { type: 'passive', playerId: actor.id, name: '重抛余波', text: '本回合下一次伤害 +1' });
         }
         addEvent(game, { type: 'reroll', playerId: actor.id, result: pending.result });
-        addLog(game, actor.name + ' 逆写命运，重新抛币：' + (pending.result ? '昭面。' : '昧面。'), 'coin');
+        addLog(game, actor.name + ' 重抛命运，重新抛币：' + (pending.result ? '正面。' : '反面。'), 'coin');
         return { ok: true, rerolled: true, result: pending.result, pending: pending };
       }
 
@@ -1144,12 +1158,12 @@
       const success = !!pending.result;
       triggerFlipPassives(game, actor, success);
       addEvent(game, { type: 'flipResult', playerId: actor.id, result: success, cardName: card.name, blessed: pending.blessed, rerolled: pending.rerolled });
-      addLog(game, '硬币落定：' + (success ? '昭面 · 技能成立。' : '昧面 · 技能反噬。'), 'coin');
-      // v2.1 random-rules 法则②：昧面也触发正面效果
+      addLog(game, '硬币落定：' + (success ? '正面 · 技能成立。' : '反面 · 技能反噬。'), 'coin');
+      // v2.1 random-rules 法则②：反面也触发正面效果
       let useSuccess = success;
       if (!success && game.turnRule === 2) {
         useSuccess = true;
-        addLog(game, '法则「昧面转正」生效，昧面亦按正面结算。', 'system');
+        addLog(game, '法则「反面转正」生效，反面亦按正面结算。', 'system');
       }
       const effects = useSuccess ? card.posEffects : card.negEffects;
       const target = playerById(game, pending.targetId) || resolveTarget(game, actor);
@@ -1238,14 +1252,14 @@
         game.over = {
           winnerTeam: winnerTeam,
           winnerId: winnerTeam ? (game.players.find(function (p) { return p.team === winnerTeam; }) || {}).id : null,
-          reason: winnerTeam ? '对方全员倒下，审判结束。' : '双方同时倒下，回廊收走了这一局。',
+          reason: winnerTeam ? '对方全员倒下，审判结束。' : '双方同时倒下，赛场收走了这一局。',
           turn: game.turn,
           at: Date.now()
         };
         game.players.forEach(function (p) {
           if (p.team === winnerTeam) p.stats.wins += 1;
         });
-        addLog(game, winnerTeam ? ('队伍 ' + winnerTeam + ' 赢下命途审判。') : '平局。回廊没有赢家。', 'system');
+        addLog(game, winnerTeam ? ('队伍 ' + winnerTeam + ' 赢下星杯审判。') : '平局。赛场没有赢家。', 'system');
         addEvent(game, { type: 'victory', team: winnerTeam, reason: game.over.reason });
         return true;
       }
@@ -1348,8 +1362,12 @@
     bgmTrack: 'theme', bgmVolume: 0.45,
     ambient: false, ambientTheme: 'theme', ambientVolume: 0.35,
     homeBg: 'menu', battleBg: 'theme',
-    aiTimeoutMs: 30000, aiThink: false
+    aiTimeoutMs: 30000, aiThink: false,
+    aiPersona: 'hotaru', aiVoice: true
   });
+  SETTINGS.aiPersona = SETTINGS.aiPersona || 'hotaru';
+  if (SETTINGS.aiVoice === undefined) SETTINGS.aiVoice = true;
+  try { if (root.CF_AI && root.CF_AI.setPersona) root.CF_AI.setPersona(SETTINGS.aiPersona); } catch (e) {}
   SETTINGS.bgmVolume = Math.max(0, Math.min(1, Number(SETTINGS.bgmVolume)));
   if (isNaN(SETTINGS.bgmVolume)) SETTINGS.bgmVolume = 0.45;
   SETTINGS.ambientVolume = Math.max(0, Math.min(1, Number(SETTINGS.ambientVolume)));
@@ -1386,12 +1404,12 @@
 
   // v2.1 技能名播报词表（key → 中文，用于 UI/图鉴）。wav 文件位于 assets/audio/voice/say/{key}.wav。
   const SAY_LABELS = {
-    play: '出牌', zhao: '昭面', mei: '昧面', damage: '伤害', heal: '治疗', shield: '护盾',
+    play: '出牌', zhao: '正面', mei: '反面', damage: '伤害', heal: '治疗', shield: '护盾',
     draw: '抽牌', discard: '弃牌', burn: '灼烧', drain: '吸血', steal: '夺盾', stun: '眩晕',
     seal: '封印', win: '胜利', lose: '失败', reroll: '重掷', power: '强化', weak: '弱化',
     guard: '警戒', reflect: '反弹', energize: '蓄能', fall: '陨落',
     attack: '攻击牌', defend: '防御牌', control: '控制牌', risk: '风险牌', style: '签名牌', settle: '结算',
-    tongsha: '断罪', rongzhu: '熔铸', xueyue: '血月', zhongxie: '中邪', yiti: '一体', shiyue: '蚀月',
+    tongsha: '断罪', rongzhu: '熔铸', xueyue: '赤红', zhongxie: '中邪', yiti: '一体', shiyue: '蚀月',
     qiangxu: '抢跑', zuolun: '作轮', tulong: '屠龙', qiangpao: '强跑', rongke: '熔壳', guozai: '过载'
   };
   // 主动技 id → say key（v2.1 §1.2 的 12 个主动技播报词）。未列出的不播。
@@ -1485,6 +1503,9 @@
     let ambientNoise = null;
     let ambientTheme = null;
     let ambientNext = 0;
+    let duckTimer = null;         // BGM 闪避恢复计时器
+    let duckRestoreTarget = null; // 闪避结束后 musicGain 要回到的目标值
+    let specialAmbient = null;    // 特殊氛围音（风/雨/星空/滴答）句柄
 
     function ensure() {
       if (!SETTINGS.music && !SETTINGS.sfx && !SETTINGS.voice) return null;
@@ -1520,40 +1541,92 @@
       else if (currentTheme) startAmbient(currentTheme, true);
     }
 
+    // 合成一个带通振荡音包络：30ms 淡入 + 50ms 淡出，避免硬切爆音
     function tone(freq, duration, type, gain, when, destination) {
       if (!ctx) return;
+      const t0 = when || ctx.currentTime;
+      const peak = gain || 0.08;
+      const attack = 0.03;   // 淡入 30ms
+      const release = 0.05;  // 淡出 50ms
+      const hold = Math.max(0.001, duration - release);
       const osc = ctx.createOscillator();
       const env = ctx.createGain();
       osc.type = type || 'sine';
-      osc.frequency.setValueAtTime(freq, when || ctx.currentTime);
-      env.gain.setValueAtTime(0.0001, when || ctx.currentTime);
-      env.gain.exponentialRampToValueAtTime(gain || 0.08, (when || ctx.currentTime) + 0.02);
-      env.gain.exponentialRampToValueAtTime(0.0001, (when || ctx.currentTime) + duration);
+      osc.frequency.setValueAtTime(freq, t0);
+      env.gain.setValueAtTime(0.0001, t0);
+      env.gain.exponentialRampToValueAtTime(peak, t0 + attack);
+      env.gain.setValueAtTime(peak, t0 + hold);
+      env.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
       osc.connect(env);
       env.connect(destination || sfxGain);
-      osc.start(when || ctx.currentTime);
-      osc.stop((when || ctx.currentTime) + duration + 0.05);
+      osc.start(t0);
+      osc.stop(t0 + duration + 0.05);
     }
 
-    function noise(duration, gain, when, filterFreq) {
+    // 合成一段带通噪声：同样套 30ms 淡入 / 50ms 淡出包络
+    function noise(duration, gain, when, filterFreq, destination) {
       if (!ctx) return;
+      const t0 = when || ctx.currentTime;
       const len = Math.floor(ctx.sampleRate * duration);
       const buffer = ctx.createBuffer(1, len, ctx.sampleRate);
       const data = buffer.getChannelData(0);
-      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
       const src = ctx.createBufferSource();
       src.buffer = buffer;
       const filter = ctx.createBiquadFilter();
       filter.type = 'bandpass';
       filter.frequency.value = filterFreq || 1200;
+      filter.Q.value = 0.9;
       const env = ctx.createGain();
-      env.gain.value = gain || 0.05;
-      src.connect(filter); filter.connect(env); env.connect(sfxGain);
-      src.start(when || ctx.currentTime);
+      const peak = gain || 0.05;
+      env.gain.setValueAtTime(0.0001, t0);
+      env.gain.exponentialRampToValueAtTime(peak, t0 + 0.03);
+      env.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+      src.connect(filter); filter.connect(env); env.connect(destination || sfxGain);
+      src.start(t0);
     }
+
+    // 当前选中硬币皮肤（带兜底），供音效按皮肤变调、粒子取色
+    function currentCoinSkin() {
+      try {
+        var id = SETTINGS.coinSkin || 'bronze';
+        var list = (typeof D !== 'undefined' && D.COIN_SKINS) || [];
+        for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+      } catch (e) {}
+      return { id: 'bronze', playbackRate: 1, glow: '#d8b878', particle: '#d8b878' };
+    }
+
+    // BGM 闪避：重要 SFX 出现时把 BGM 临时压到 40%，1 秒后平滑恢复
+    function duckMusic() {
+      if (!ctx || !SETTINGS.music) return;
+      try {
+        var target = 0.18 * ((SETTINGS.bgmVolume == null ? 1 : SETTINGS.bgmVolume / 0.45));
+        if (musicGain) {
+          duckRestoreTarget = target;
+          musicGain.gain.cancelScheduledValues(ctx.currentTime);
+          musicGain.gain.setTargetAtTime(target * 0.4, ctx.currentTime, 0.08);
+        }
+        try { if (root.CFFileAudio && root.CFFileAudio.setBgmVolume) root.CFFileAudio.setBgmVolume((SETTINGS.bgmVolume || 0.45) * 0.4); } catch (e) {}
+        if (duckTimer) clearTimeout(duckTimer);
+        duckTimer = setTimeout(function () {
+          try {
+            if (musicGain && duckRestoreTarget != null) {
+              musicGain.gain.cancelScheduledValues(ctx.currentTime);
+              musicGain.gain.setTargetAtTime(duckRestoreTarget, ctx.currentTime, 0.4);
+            }
+            try { if (root.CFFileAudio && root.CFFileAudio.setBgmVolume) root.CFFileAudio.setBgmVolume(SETTINGS.bgmVolume || 0.45); } catch (e) {}
+          } catch (e) {}
+        }, 1000);
+      } catch (e) {}
+    }
+
+    // 需要触发 BGM 闪避的重要 SFX 名单
+    var DUCK_SFX = { coin: 1, damage: 1, fail: 1, victory: 1, defeat: 1 };
 
     function sfx(name) {
       if (!SETTINGS.sfx) return;
+      // 重要 SFX 触发 BGM 闪避（无论走文件还是合成路径都生效）
+      if (DUCK_SFX[name]) { try { duckMusic(); } catch (e) {} }
       // 文件优先：存在真实音效文件则播放，跳过程序化合成（404 自动回退）
       try {
         if (root.CFFileAudio && root.CF_ASSETS && root.CFFileAudio.playOne(root.CF_ASSETS.sfxUrl(name), 0.9)) return;
@@ -1568,10 +1641,19 @@
           noise(0.16, 0.035, t, 2400);
           tone(330, 0.12, 'triangle', 0.04, t + 0.02);
           break;
-        case 'coin':
-          tone(880, 0.16, 'sine', 0.06, t);
-          tone(1320, 0.22, 'sine', 0.035, t + 0.04);
+        case 'coin': {
+          // 硬币声按皮肤变调：playbackRate > 1 更亮更脆，< 1 更低沉
+          var skin = currentCoinSkin();
+          var pr = Number(skin.playbackRate) || 1;
+          tone(880 * pr, 0.16, 'sine', 0.06, t);
+          tone(1320 * pr, 0.22, 'sine', 0.035, t + 0.04);
+          // 熔心皮肤额外加一段火苗噪声尾巴
+          if (skin.id === 'molten') {
+            noise(0.35, 0.03, t, 720);
+            tone(170, 0.28, 'triangle', 0.018, t);
+          }
           break;
+        }
         case 'success':
           [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, 0.5, 'sine', 0.07, t + i * 0.065); });
           noise(0.3, 0.025, t, 3800);
@@ -1696,6 +1778,79 @@
       return track;
     }
 
+    // 生成一段指定时长的循环噪声 buffer（white=true 白噪，否则棕噪）
+    function makeLoopNoise(c, seconds, white) {
+      var len = Math.floor(c.sampleRate * seconds);
+      var buf = c.createBuffer(1, len, c.sampleRate);
+      var d = buf.getChannelData(0);
+      var last = 0;
+      for (var i = 0; i < len; i++) {
+        var w = Math.random() * 2 - 1;
+        if (white) { d[i] = w; }
+        else { last = (last + 0.02 * w) / 1.02; d[i] = last * 3.2; }
+      }
+      return buf;
+    }
+
+    // 特殊氛围音：风 / 雨 / 星空嗡嗡 / 机械滴答（全部 Web Audio 合成，无文件依赖）
+    function startSpecialAmbient(theme, c, g) {
+      var nodes = [];
+      var loop = function (buf, type, freq, q, gainVal) {
+        var src = c.createBufferSource();
+        src.buffer = buf; src.loop = true;
+        var f = c.createBiquadFilter();
+        f.type = type; f.frequency.value = freq; f.Q.value = q || 0.7;
+        var eg = c.createGain(); eg.gain.value = gainVal;
+        src.connect(f); f.connect(eg); eg.connect(g);
+        src.start();
+        nodes.push(src);
+        return { src: src, filter: f, gain: eg };
+      };
+
+      if (theme === 'wind') {
+        // 旷野低鸣：棕噪 + 低通，截止频率缓慢起伏
+        var w = loop(makeLoopNoise(c, 3, false), 'lowpass', 420, 0.6, 0.9);
+        var lfo = c.createOscillator(); lfo.frequency.value = 0.08;
+        var lfoG = c.createGain(); lfoG.gain.value = 180;
+        lfo.connect(lfoG); lfoG.connect(w.filter.frequency); lfo.start();
+        nodes.push(lfo);
+      } else if (theme === 'rain') {
+        // 淅沥雨声：白噪 + 带通偏高频，加一点高频沙粒
+        loop(makeLoopNoise(c, 2, true), 'bandpass', 2800, 0.5, 0.55);
+        loop(makeLoopNoise(c, 2, true), 'highpass', 6200, 0.5, 0.18);
+      } else if (theme === 'star') {
+        // 星空嗡嗡：两个微微失谐的低频正弦拍频，加零星高频铃音
+        var s1 = c.createOscillator(); s1.type = 'sine'; s1.frequency.value = 110;
+        var s2 = c.createOscillator(); s2.type = 'sine'; s2.frequency.value = 110.7;
+        var sg = c.createGain(); sg.gain.value = 0.05;
+        s1.connect(sg); s2.connect(sg); sg.connect(g);
+        s1.start(); s2.start();
+        nodes.push(s1, s2);
+        ambientNext = c.currentTime + 1.5;
+        ambientTimer = setInterval(function () {
+          if (!ctx || !ambientGain) return;
+          if (ctx.currentTime < ambientNext - 0.3) return;
+          var now = ctx.currentTime;
+          ambientNext = now + 3 + Math.random() * 6;
+          var f = 880 + Math.random() * 660;
+          tone(f, 2.2, 'sine', 0.012 * SETTINGS.ambientVolume, now, ambientGain);
+        }, 1200);
+      } else if (theme === 'clock') {
+        // 机械滴答：每 0.85s 一次短促高频 "tick"，音量很低
+        ambientNext = c.currentTime + 0.2;
+        ambientTimer = setInterval(function () {
+          if (!ctx || !ambientGain) return;
+          if (ctx.currentTime < ambientNext - 0.3) return;
+          var now = ctx.currentTime;
+          ambientNext = now + 0.85;
+          // 短而硬的 tick：高通噪声 + 三角波短音
+          noise(0.04, 0.05 * SETTINGS.ambientVolume, now, 3600, ambientGain);
+          tone(1800, 0.03, 'triangle', 0.025 * SETTINGS.ambientVolume, now, ambientGain);
+        }, 400);
+      }
+      specialAmbient = { nodes: nodes };
+    }
+
     function startAmbient(themeId, force) {
       if (!SETTINGS.ambient) { stopAmbient(); return; }
       var theme = resolveAmbientTheme(themeId);
@@ -1708,6 +1863,13 @@
       var g = ensureAmbientGain();
       if (!g) return;
       g.gain.setTargetAtTime(0.22 * SETTINGS.ambientVolume, c.currentTime, 1.4);
+
+      // 特殊氛围音模式（风/雨/星空/滴答）走独立合成路径
+      if (theme === 'wind' || theme === 'rain' || theme === 'star' || theme === 'clock') {
+        try { startSpecialAmbient(theme, c, g); } catch (e) {}
+        return;
+      }
+
       var profile = (D.STYLES[theme] || D.STYLES.abyss).bgm || {};
       // 低频风声 / 空间底噪
       var noiseBuf = c.createBuffer(1, Math.floor(c.sampleRate * 2), c.sampleRate);
@@ -1763,6 +1925,10 @@
         try { ambientNoise.src.stop(); } catch (e) {}
         try { ambientNoise.drone.stop(); } catch (e) {}
         ambientNoise = null;
+      }
+      if (specialAmbient) {
+        (specialAmbient.nodes || []).forEach(function (n) { try { n.stop(); } catch (e) {} });
+        specialAmbient = null;
       }
       if (ambientGain && ctx) ambientGain.gain.setTargetAtTime(0, ctx.currentTime, 0.4);
       ambientTheme = null;
@@ -1849,7 +2015,7 @@
     return {
       unlock, sfx, startBgm, stopBgm, say, voice, narrator, storyVoice, toggle, setMuted, ensure,
       refreshBgm, refreshAmbient, setBgmVolume, setAmbientVolume, setAmbientEnabled,
-      startAmbient, stopAmbient, previewNarrator
+      startAmbient, stopAmbient, previewNarrator, currentCoinSkin, duckMusic
     };
   })();
 
@@ -2088,8 +2254,8 @@
       '<span class="fate-card__body">' +
         '<span class="fate-card__meta"><span>' + esc(card.categoryName) + '</span><span>' + esc(card.styleName) + '</span></span>' +
         '<strong class="fate-card__name">' + esc(card.name) + '</strong>' +
-        '<span class="fate-card__effect fate-card__effect--pos"><i>昭</i>' + esc(card.posText) + '</span>' +
-        '<span class="fate-card__effect fate-card__effect--neg"><i>昧</i>' + esc(card.negText) + '</span>' +
+        '<span class="fate-card__effect fate-card__effect--pos"><i>正</i>' + esc(card.posText) + '</span>' +
+        '<span class="fate-card__effect fate-card__effect--neg"><i>反</i>' + esc(card.negText) + '</span>' +
       '</span>' +
       '<span class="fate-card__shine"></span>' +
       '</button>';
@@ -2297,7 +2463,7 @@
       btn.setAttribute('aria-pressed', String(Number(btn.dataset.size) === b));
     });
     $('#team-size-badge').textContent = a + 'v' + b;
-    const allyText = a > 1 ? ('你 + ' + (a - 1) + ' 名 AI 同注者') : '你独自上桌';
+    const allyText = a > 1 ? ('你 + ' + (a - 1) + ' 名 AI 队友') : '你独自上桌';
     $('#team-size-note').innerHTML = '<span class="note-icon">⚖</span> ' + allyText + '，对抗 ' + b + ' 名 AI 对手。' +
       (a === b ? '人头对等，胜负只看硬币。' : '人数不对等：多的一方会多一个行动席，谨慎选择。');
   }
@@ -2375,8 +2541,8 @@
     if (S.setup.modeId === 'team') {
       rows.push(['队伍规模', S.setup.teamA + 'v' + S.setup.teamB]);
       if (S.setup.teamA > 1) {
-        rows.push(['同注者', (D.byId.character(S.setup.allyCharId) || {}).name || '随机']);
-        if (S.setup.teamA > 2) rows.push(['其余同注者', (S.setup.teamA - 2) + ' 名 AI 自动补位']);
+        rows.push(['队友', (D.byId.character(S.setup.allyCharId) || {}).name || '随机']);
+        if (S.setup.teamA > 2) rows.push(['其余队友', (S.setup.teamA - 2) + ' 名 AI 自动补位']);
       }
     }
     const deckSize = (ENGINE.RULES[S.setup.modeId] || {}).deck || 15;
@@ -2388,9 +2554,9 @@
     }
     $('#summary-rows').innerHTML = rows.map(function (r) { return '<div><span>' + esc(r[0]) + '</span><strong>' + esc(r[1]) + '</strong></div>'; }).join('');
     const tips = [
-      '合理使用整局一次的逆写，别在第一枚硬币上就把命运花光。',
+      '合理使用整局一次的重抛，别在第一枚硬币上就把命运花光。',
       '护盾可以挡住伤害，但不能挡住直接伤害与自伤。',
-      '2v2 中，点击敌方角色可切换目标；也可以直接命令同注者集火。',
+      '2v2 中，点击敌方角色可切换目标；也可以直接命令队友集火。',
       '每回合最多打出一张技能卡。主动技不占出牌次数，但有使用上限。',
       '低血量时，治疗与护盾的期望收益高于硬拼。'
     ];
@@ -2581,6 +2747,14 @@
       localHumanP1: S.setup.opponent === 'local' && S.setup.modeId !== 'story' && S.setup.modeId !== 'team'
     });
     S.game = game;
+    // v2.1.2 AI 人格开场问候（队友）
+    try {
+      var mate = game.players.find(function (p) { return p.id !== 'p0' && p.team === game.players[0].team && p.isAI; });
+      if (mate) {
+        ENGINE.addChat(game, mate.name, AI.personaGreeting(), 'ally', mate.id, AI.getPersonaId());
+        aiVoice(AI.getPersonaId(), 'greet');
+      }
+    } catch (e) {}
     S.viewGame = null;
     S.online = { role: null, code: null, transport: null, guests: [], connected: false, status: '', seat: 1, matchmaking: false };
     S.viewerId = 'p0';
@@ -2621,7 +2795,7 @@
     $$('#archive-tabs button').forEach(function (b) { b.classList.toggle('is-active', b.dataset.archiveTab === tab); });
     const styleSelect = $('#archive-style-filter');
     if (!styleSelect.options.length || styleSelect.options.length === 1) {
-      styleSelect.innerHTML = '<option value="all">全部八域</option>' + D.STYLE_ORDER.map(function (id) {
+      styleSelect.innerHTML = '<option value="all">全部八大赛区</option>' + D.STYLE_ORDER.map(function (id) {
         return '<option value="' + id + '">' + D.STYLES[id].name + '</option>';
       }).join('');
     }
@@ -2703,8 +2877,8 @@
       '<div class="detail-sheet__body">' +
         '<div class="eyebrow">' + esc(c.categoryName) + ' · ' + esc(c.styleName) + ' · ' + esc(c.rarityName) + '</div>' +
         '<h2>' + esc(c.name) + '</h2>' +
-        '<div class="effect-block effect-block--pos"><span>昭面 · 判定成功</span><p>' + esc(c.posText) + '</p></div>' +
-        '<div class="effect-block effect-block--neg"><span>昧面 · 判定失败</span><p>' + esc(c.negText) + '</p></div>' +
+        '<div class="effect-block effect-block--pos"><span>正面 · 判定成功</span><p>' + esc(c.posText) + '</p></div>' +
+        '<div class="effect-block effect-block--neg"><span>反面 · 判定失败</span><p>' + esc(c.negText) + '</p></div>' +
         '<p class="detail-bio">' + esc(c.flavor) + '</p>' +
         '<div class="prompt-box"><span>卡面提示词</span><p>' + esc(c.artPrompt) + '</p><button class="text-btn" data-copy-prompt="' + esc(c.artPrompt) + '">复制提示词</button></div>' +
       '</div></div>', { dialogClass: 'modal-dialog--wide' });
@@ -2770,7 +2944,7 @@
       }
       content.innerHTML = html + '</div>';
     } else if (tab === 'realms') {
-      let html = '<div class="codex-section"><h2>八域设定</h2>';
+      let html = '<div class="codex-section"><h2>八大赛区设定</h2>';
       if (CX && CX.realms) {
         html += '<div class="codex-realm-grid">';
         Object.keys(CX.realms).forEach(function (id) {
@@ -2851,7 +3025,7 @@
         if (R.modes) { html += '<h3>模式一览</h3><ul class="codex-modes">' + R.modes.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul>'; }
       } else {
         html += '<h3>胜利条件</h3><ul><li>将对方所有角色生命打到 0 即获胜。</li></ul>' +
-          '<h3>回合流程</h3><ul><li>抽牌阶段补牌至 3 张。</li><li>行动阶段每回合打一张牌。</li><li>抛币判定昭/昧。</li><li>逆写整局一次。</li></ul>';
+          '<h3>回合流程</h3><ul><li>抽牌阶段补牌至 3 张。</li><li>行动阶段每回合打一张牌。</li><li>抛币判定正/反。</li><li>重抛整局一次。</li></ul>';
       }
       content.innerHTML = html + '</div>';
     }
@@ -2865,12 +3039,12 @@
     $('#world-lead').textContent = W.lead;
     $('#world-quote').innerHTML = '“' + esc(W.premise) + '”';
     const sections = [
-      { id: 'world-cosmology', label: '总纲', title: '回廊是什么' },
-      { id: 'world-realms', label: '八域', title: '八个正在失去结局的世界' },
+      { id: 'world-cosmology', label: '总纲', title: '赛场是什么' },
+      { id: 'world-realms', label: '八大赛区', title: '八个正在失去结局的世界' },
       { id: 'world-factions', label: '势力', title: '牌桌旁的七双手' },
-      { id: 'world-timeline', label: '年表', title: '从初掷到终章' },
-      { id: 'world-law', label: '法则', title: '回廊的七条铁律' },
-      { id: 'world-companion', label: '同注者', title: '会反驳你的 AI 队友' },
+      { id: 'world-timeline', label: '年表', title: '从初掷到决赛' },
+      { id: 'world-law', label: '法则', title: '赛场的七条铁律' },
+      { id: 'world-companion', label: '队友', title: '会反驳你的 AI 队友' },
       { id: 'world-glossary', label: '术语', title: '赌桌上的黑话' },
       { id: 'world-endings', label: '结局', title: '硬币可能落向的三面' }
     ];
@@ -2885,11 +3059,11 @@
     });
 
     const html = [];
-    html.push('<section class="world-section" id="world-cosmology"><div class="world-section__head"><span>01</span><div><div class="eyebrow">COSMOLOGY</div><h2>回廊是什么</h2></div></div>' +
+    html.push('<section class="world-section" id="world-cosmology"><div class="world-section__head"><span>01</span><div><div class="eyebrow">COSMOLOGY</div><h2>赛场是什么</h2></div></div>' +
       '<p class="world-para world-para--lead">' + esc(W.premise) + '</p>' +
-      '<div class="world-callout"><span>“</span><p>八个世界不是被毁灭，而是被要求提前交稿。庄家要的从来不是死亡，是一个不会再产生分支的结局。</p></div></section>');
+      '<div class="world-callout"><span>“</span><p>八个世界不是被毁灭，而是被要求提前交稿。冠军要的从来不是死亡，是一个不会再产生分支的结局。</p></div></section>');
 
-    html.push('<section class="world-section" id="world-realms"><div class="world-section__head"><span>02</span><div><div class="eyebrow">THE EIGHT REALMS</div><h2>八域</h2></div></div><div class="world-realms">' +
+    html.push('<section class="world-section" id="world-realms"><div class="world-section__head"><span>02</span><div><div class="eyebrow">THE EIGHT REALMS</div><h2>八大赛区</h2></div></div><div class="world-realms">' +
       D.STYLE_ORDER.map(function (id, i) {
         const s = D.STYLES[id];
         return '<article class="world-realm" style="' + styleVars(id) + '">' +
@@ -2916,7 +3090,7 @@
         return '<article class="law-card"><span>' + String(i + 1).padStart(2, '0') + '</span><h3>' + esc(l.title) + '</h3><p>' + esc(l.text) + '</p></article>';
       }).join('') + '</div></section>');
 
-    html.push('<section class="world-section" id="world-companion"><div class="world-section__head"><span>06</span><div><div class="eyebrow">THE CO-SIGNERS</div><h2>同注者协议</h2></div></div>' +
+    html.push('<section class="world-section" id="world-companion"><div class="world-section__head"><span>06</span><div><div class="eyebrow">THE CO-SIGNERS</div><h2>队友协议</h2></div></div>' +
       '<div class="companion-lore"><div class="companion-lore__copy"><h3>' + esc(W.companionCodex.subtitle) + '</h3><p>' + esc(W.companionCodex.text) + '</p>' +
       '<div class="protocol-list">' + W.companionCodex.rules.map(function (r, i) { return '<div><span>' + String(i + 1).padStart(2, '0') + '</span><p>' + esc(r) + '</p></div>'; }).join('') + '</div></div>' +
       '<div class="companion-lore__example"><span class="eyebrow">LIVE EXAMPLE</span>' +
@@ -2924,14 +3098,14 @@
       '<div class="demo-chat demo-chat--ally"><b>齿轮医师·薇拉</b><p>你满血，我满血。奶空气吗？我的牌不是矿泉水。</p></div>' +
       '<div class="demo-chat demo-chat--player"><b>你</b><p>先保命，上盾，等他们过来。</p></div>' +
       '<div class="demo-chat demo-chat--ally"><b>齿轮医师·薇拉</b><p>行，这回合我守。别把我卖了。</p></div>' +
-      '<small>同注者会读取真实战场状态，不是关键词自动回复。</small></div></div></section>');
+      '<small>队友会读取真实战场状态，不是关键词自动回复。</small></div></div></section>');
 
     html.push('<section class="world-section" id="world-glossary"><div class="world-section__head"><span>07</span><div><div class="eyebrow">GLOSSARY</div><h2>术语</h2></div></div><div class="glossary">' +
       W.glossary.map(function (g) { return '<div><strong>' + esc(g.term) + '</strong><p>' + esc(g.text) + '</p></div>'; }).join('') + '</div></section>');
 
     html.push('<section class="world-section" id="world-endings"><div class="world-section__head"><span>08</span><div><div class="eyebrow">THE THREE SIDES</div><h2>结局</h2></div></div><div class="ending-grid">' +
       W.endings.map(function (e, i) {
-        return '<article class="ending-card"><span>' + (i === 2 ? '?' : (i === 0 ? '昭' : '昧')) + '</span><h3>' + esc(e.name) + '</h3><p>' + esc(e.text) + '</p></article>';
+        return '<article class="ending-card"><span>' + (i === 2 ? '?' : (i === 0 ? '正' : '反')) + '</span><h3>' + esc(e.name) + '</h3><p>' + esc(e.text) + '</p></article>';
       }).join('') + '</div></section>');
 
     $('#world-content').innerHTML = html.join('');
@@ -3001,7 +3175,7 @@
           player.isHuman = false;
           player.isAI = true;
           AI.initPlayer(player);
-          ENGINE.addLog(S.game, player.name + ' 掉线，由同注者接管。', 'system');
+          ENGINE.addLog(S.game, player.name + ' 掉线，由队友接管。', 'system');
           toast(player.name + ' 掉线，AI 接管该席位。', 'warning');
           afterHostMutation();
         }
@@ -3222,7 +3396,7 @@
     await createRoom();
     if (S.online.code) {
       const link = roomLink(S.online.code);
-      copyText('【命途回廊】房间号 ' + S.online.code + ' ｜ 联机链接：' + link);
+      copyText('【星杯赛场】房间号 ' + S.online.code + ' ｜ 联机链接：' + link);
       toast('一键开房成功（4 人桌），邀请链接已复制：' + S.online.code, 'success');
     }
   }
@@ -3575,7 +3749,7 @@
 
   function playerNameFor(game, player, viewer) {
     if (player.id === viewer.id) return '你';
-    if (player.team === viewer.team) return player.isAI ? '同注者' : '队友';
+    if (player.team === viewer.team) return player.isAI ? '队友' : '队友';
     return player.isAI ? '对手 AI' : '对手';
   }
 
@@ -3594,7 +3768,7 @@
     const isTarget = enemy && viewer.selectedTarget === player.id;
     const labels = [];
     if (player.id === viewer.id) labels.push('你');
-    else if (player.team === viewer.team) labels.push(player.isAI ? '同注者' : '队友');
+    else if (player.team === viewer.team) labels.push(player.isAI ? '队友' : '队友');
     else labels.push(player.isAI ? 'AI' : '玩家');
     if (player.team === viewer.team) labels.push('友方'); else labels.push('敌方');
     const hpPips = [];
@@ -3668,7 +3842,7 @@
     const cards = viewer.hand || [];
     const maxCards = game.rules.maxCards || 1;
     $('#hand-count').textContent = cards.length + ' 张' + (maxCards > 1 ? ' · 已出 ' + (viewer.cardsPlayedThisTurn || 0) + '/' + maxCards : '');
-    $('#reroll-status').innerHTML = game.noReroll ? '<span class="muted">本模式无逆写</span>' : ('逆写 <b>×' + viewer.rerolls + '</b>') + (game.rules.chain ? '<span class="chain-chip">连锁 ' + (viewer.chain || 0) + '/3</span>' : '');
+    $('#reroll-status').innerHTML = game.noReroll ? '<span class="muted">本模式无重抛</span>' : ('重抛 <b>×' + viewer.rerolls + '</b>') + (game.rules.chain ? '<span class="chain-chip">连锁 ' + (viewer.chain || 0) + '/3</span>' : '');
     const disabled = !act || viewer.cardPlayed;
     $('#hand').innerHTML = cards.map(function (card, index) {
       return fateCardHTML(card, {
@@ -3702,18 +3876,18 @@
     const current = ENGINE.currentPlayer(game);
     const pending = game.pending;
     let title = '等待抛币';
-    let sub = '打出技能卡后，昭面成功 / 昧面反噬';
+    let sub = '打出技能卡后，正面成功 / 反面反噬';
     let coinClass = 'coin--idle';
     if (game.over) {
       title = game.over.winnerTeam === viewer.team ? '审判结束 · 你赢了' : '审判结束 · 你输了';
       sub = game.over.reason;
     } else if (game.phase === 'flip' && pending) {
       title = pending.actorId === viewer.id ? '硬币正在落定' : (current ? current.name : '对手') + ' 正在抛币';
-      sub = '「' + pending.card.name + '」· 昭面成功 / 昧面反噬';
+      sub = '「' + pending.card.name + '」· 正面成功 / 反面反噬';
       coinClass = 'coin--spinning';
     } else if (game.phase === 'reveal' && pending) {
       const success = !!pending.result;
-      title = success ? '昭面 · 技能成立' : '昧面 · 技能反噬';
+      title = success ? '正面 · 技能成立' : '反面 · 技能反噬';
       sub = '「' + pending.card.name + '」' + (success ? pending.card.posText : pending.card.negText);
       coinClass = success ? 'coin--success' : 'coin--fail';
     } else if (game.phase === 'action' && current) {
@@ -3762,9 +3936,9 @@
     } else if (game.phase === 'flip') {
       actions.push('<div class="waiting-action"><span class="thinking-dots"><i></i><i></i><i></i></span><p>' + (pending && pending.actorId === viewer.id ? '完成硬币判定…' : '等待对方做出命运选择…') + '</p></div>');
     } else if (game.phase === 'reveal') {
-      actions.push('<div class="waiting-action"><span class="spin-glyph">◉</span><p>结算中，回廊正在改写这一页…</p></div>');
+      actions.push('<div class="waiting-action"><span class="spin-glyph">◉</span><p>结算中，赛场正在改写这一页…</p></div>');
     } else {
-      actions.push('<div class="waiting-action"><span class="spin-glyph">◌</span><p>等待回廊推进回合…</p></div>');
+      actions.push('<div class="waiting-action"><span class="spin-glyph">◌</span><p>等待赛场推进回合…</p></div>');
     }
     $('#arena-actions').innerHTML = actions.join('');
     $('#arena-hint').textContent = game.over ? '审判已经结束' : (canAct(game) ? ((game.rules.maxCards || 1) > 1 ? '本回合可连续打出 ' + game.rules.maxCards + ' 张技能卡' : '每回合最多打出一张技能卡') : '非你的行动阶段');
@@ -3802,7 +3976,11 @@
     box.innerHTML = chat.map(function (m) {
       if (m.kind === 'system') return '<div class="chat-system">' + esc(m.text) + '</div>';
       const who = m.kind === 'player' ? 'player' : m.kind === 'ally' ? 'ally' : m.kind === 'enemy' ? 'enemy' : 'system';
-      return '<div class="chat-msg chat-msg--' + who + '"><div class="chat-avatar">' + (who === 'player' ? '你' : (m.speaker || '?').replace(/[·\s]/g, '').slice(-1)) + '</div><div class="chat-bubble"><span>' + esc(m.speaker) + '</span><p>' + esc(m.text) + '</p></div></div>';
+      const pclass = m.persona ? ' chat-msg--persona-' + m.persona : '';
+      const avatarInner = (who === 'player' ? '你'
+        : (m.persona ? '<img src="assets/art/portraits/ai-' + m.persona + '.webp" alt="" onerror="this.style.display=\'none\'">'
+                    : (m.speaker || '?').replace(/[·\s]/g, '').slice(-1)));
+      return '<div class="chat-msg chat-msg--' + who + pclass + '"><div class="chat-avatar">' + avatarInner + '</div><div class="chat-bubble"><span>' + esc(m.speaker) + '</span><p>' + esc(m.text) + '</p></div></div>';
     }).join('');
     if (chat.length !== S.lastChatCount) {
       S.lastChatCount = chat.length;
@@ -3949,7 +4127,7 @@
         coin.className = 'coin coin--spinning';
         coin.style.setProperty('--land-face', pending.result ? '0deg' : '180deg');
       }
-      $('#flip-result').innerHTML = '<strong>硬币在空中</strong><p>昭或昧，只在落地的一瞬。</p>';
+      $('#flip-result').innerHTML = '<strong>硬币在空中</strong><p>正或反，只在落地的一瞬。</p>';
       $('#flip-choices').innerHTML = '';
       Audio.sfx('coin');
       S.overlayTimer = setTimeout(function () {
@@ -3963,14 +4141,14 @@
     const success = !!pending.result;
     const coin = $('#flip-coin');
     if (coin) coin.className = 'coin ' + (success ? 'coin--success' : 'coin--fail');
-    $('#flip-result').innerHTML = '<strong class="' + (success ? 'is-success' : 'is-fail') + '">' + (success ? '昭面 · 成功' : '昧面 · 失败') + '</strong>' +
+    $('#flip-result').innerHTML = '<strong class="' + (success ? 'is-success' : 'is-fail') + '">' + (success ? '正面 · 成功' : '反面 · 失败') + '</strong>' +
       '<p>' + esc(success ? pending.card.posText : pending.card.negText) + '</p>' +
       (pending.blessed ? '<small class="bless-note">命运祝福：本次判定必定成功</small>' : '') +
-      (pending.rerolled ? '<small class="bless-note">已逆写：这是最终结果</small>' : '');
+      (pending.rerolled ? '<small class="bless-note">已重抛：这是最终结果</small>' : '');
     const choices = [];
-    choices.push('<button class="btn btn--primary" data-flip-choice="accept">接受' + (success ? '昭面' : '昧面') + '</button>');
+    choices.push('<button class="btn btn--primary" data-flip-choice="accept">接受' + (success ? '正面' : '反面') + '</button>');
     if (pending.canReroll && !pending.rerolled && viewer.rerolls > 0) {
-      choices.push('<button class="btn btn--secondary" data-flip-choice="reroll">逆写 · 重抛 <small>剩余 ' + viewer.rerolls + '</small></button>');
+      choices.push('<button class="btn btn--secondary" data-flip-choice="reroll">重抛一次 <small>剩余 ' + viewer.rerolls + '</small></button>');
     }
     $('#flip-choices').innerHTML = choices.join('');
   }
@@ -4103,11 +4281,18 @@
     const layer = $('#effect-layer');
     if (!layer) return;
     const rect = $('#arena').getBoundingClientRect();
+    // 粒子颜色跟随当前硬币皮肤的 particle 字段；失败时统一用警示红
+    var skin = null;
+    try { skin = Audio.currentCoinSkin(); } catch (e) {}
+    var skinColor = (skin && skin.particle) || '#ffe89a';
+    var successColor = success ? skinColor : '#e06c5f';
     for (let i = 0; i < 32; i++) {
       const p = document.createElement('i');
-      p.className = 'burst-particle ' + (success ? 'is-gold' : 'is-red');
+      p.className = 'burst-particle';
       p.style.left = (rect.left + rect.width / 2) + 'px';
       p.style.top = (rect.top + rect.height / 2) + 'px';
+      p.style.background = successColor;
+      p.style.boxShadow = '0 0 8px ' + successColor;
       const angle = Math.random() * Math.PI * 2;
       const dist = 60 + Math.random() * 180;
       p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
@@ -4285,7 +4470,7 @@
         result = await AI.handleCommand(game, teammate, viewer, text, { allowRemote: AI.apiReady() });
       } catch (err) {
         game.chat = game.chat.filter(function (m) { return m.id !== typingId; });
-        ENGINE.addChat(game, '系统', '（同注者 AI 暂时没有回应：' + ((AI.lastError && AI.lastError()) || (err && err.message) || '未知错误') + '）', 'system', null);
+        ENGINE.addChat(game, '系统', '（队友 AI 暂时没有回应：' + ((AI.lastError && AI.lastError()) || (err && err.message) || '未知错误') + '）', 'system', null);
         renderBattle();
         if (S.online.role === 'host') broadcastState();
         return;
@@ -4342,7 +4527,7 @@
         result = await AI.handleCommand(game, teammate, player, text, { allowRemote: AI.apiReady() });
       } catch (err) {
         game.chat = game.chat.filter(function (m) { return m.id !== typingId; });
-        ENGINE.addChat(game, '系统', '（同注者 AI 暂时没有回应：' + ((AI.lastError && AI.lastError()) || (err && err.message) || '未知错误') + '）', 'system', null);
+        ENGINE.addChat(game, '系统', '（队友 AI 暂时没有回应：' + ((AI.lastError && AI.lastError()) || (err && err.message) || '未知错误') + '）', 'system', null);
         afterHostMutation();
         return;
       }
@@ -4419,21 +4604,21 @@
     } else {
       buttons.push('<button class="btn btn--primary" data-action="rematch">再来一局</button>');
     }
-    buttons.push('<button class="btn btn--quiet" data-action="leave-battle">返回回廊</button>');
+    buttons.push('<button class="btn btn--quiet" data-action="leave-battle">返回赛场</button>');
     const third = win && storyEnd && !S.online.role;
     openModal('<div class="result-sheet ' + (win ? 'is-win' : 'is-loss') + '">' +
-      '<div class="result-sigil">' + (win ? '昭' : '昧') + '</div>' +
+      '<div class="result-sigil">' + (win ? '正' : '反') + '</div>' +
       '<div class="eyebrow">' + (game.over.forfeit ? 'FORFEIT' : 'THE VERDICT') + '</div>' +
-      '<h2>' + (win ? '你赢了这局。' : '这局归庄家。') + '</h2>' +
+      '<h2>' + (win ? '你赢了这局。' : '这局归冠军。') + '</h2>' +
       '<p>' + esc(game.over.reason) + '</p>' +
       '<div class="result-stats">' +
         '<div><strong>' + (stats.damageDealt || 0) + '</strong><span>造成伤害</span></div>' +
         '<div><strong>' + (stats.healed || 0) + '</strong><span>治疗</span></div>' +
         '<div><strong>' + (stats.cardsPlayed || 0) + '</strong><span>打出卡牌</span></div>' +
-        '<div><strong>' + (stats.rerolls || 0) + '</strong><span>逆写</span></div>' +
+        '<div><strong>' + (stats.rerolls || 0) + '</strong><span>重抛</span></div>' +
       '</div>' +
-      (storyEnd && win ? '<div class="ending-note">八域保留了各自不完美的结局。回廊仍然开着，硬币仍在旋转。<br><small>隐藏结局「第三面」需要同注者默契 ≥10。在 2v2 中试试。</small></div>' : '') +
-      (third ? '<div class="ending-note">你把硬币立了起来。它没有倒向昭，也没有倒向昧。</div>' : '') +
+      (storyEnd && win ? '<div class="ending-note">八大赛区保留了各自不完美的结局。赛场仍然开着，硬币仍在旋转。<br><small>隐藏结局「第三面」需要队友默契 ≥10。在 2v2 中试试。</small></div>' : '') +
+      (third ? '<div class="ending-note">你把硬币立了起来。它没有倒向正，也没有倒向反。</div>' : '') +
       '<div class="modal-actions">' + buttons.join('') + '</div>' +
     '</div>', { dialogClass: 'modal-dialog--result' });
     Audio.narrator(win ? 'win' : 'lose');
@@ -4547,7 +4732,7 @@
         '</section>' +
 
         '<section class="scene-group" data-scene-group="bgm">' +
-          '<div class="scene-group__head"><h3>背景音乐（BGM）</h3><small>八域各有专属曲目，主菜单曲目独立。</small></div>' +
+          '<div class="scene-group__head"><h3>背景音乐（BGM）</h3><small>八大赛区各有专属曲目，主菜单曲目独立。</small></div>' +
           '<div class="scene-grid">' + sceneRealmOptionsHTML('bgm', bgm, [
             { value: 'theme', label: '跟随主题', sub: '默认' },
             { value: 'menu', label: '主菜单', sub: '菜单曲' }
@@ -4562,7 +4747,13 @@
         '<section class="scene-group" data-scene-group="ambient" id="scene-ambient-group">' +
           '<div class="scene-group__head"><h3>氛围音</h3><small>低频底噪与零星音，叠加在 BGM 之上。</small></div>' +
           '<label class="toggle-row"><span><strong>启用氛围音</strong><small>关闭后主题与音量不可调</small></span><input type="checkbox" id="scene-ambient-enabled" ' + (SETTINGS.ambient ? 'checked' : '') + '></label>' +
-          '<div class="scene-grid">' + sceneRealmOptionsHTML('ambient', ambientTheme, [{ value: 'theme', label: '跟随主题', sub: '默认' }]) + '</div>' +
+          '<div class="scene-grid">' + sceneRealmOptionsHTML('ambient', ambientTheme, [
+            { value: 'theme', label: '跟随主题', sub: '默认' },
+            { value: 'wind', label: '风声', sub: '旷野低鸣' },
+            { value: 'rain', label: '雨声', sub: '淅沥白噪' },
+            { value: 'star', label: '星空嗡嗡', sub: '星际低鸣' },
+            { value: 'clock', label: '机械滴答', sub: '时钟节律' }
+          ]) + '</div>' +
           '<div class="scene-toolbar">' + sceneVolumeHTML('scene-ambient-volume', SETTINGS.ambientVolume, '音量') + '</div>' +
         '</section>' +
 
@@ -4684,17 +4875,25 @@
       '<div class="settings-tabs"><button data-settings-tab="game" class="' + (tab === 'game' ? 'is-active' : '') + '">游戏</button><button data-settings-tab="ai" class="' + (tab === 'ai' ? 'is-active' : '') + '">AI 接口</button><button data-settings-tab="network" class="' + (tab === 'network' ? 'is-active' : '') + '">联机</button><button data-settings-tab="about" class="' + (tab === 'about' ? 'is-active' : '') + '">关于</button></div>' +
       '<div class="settings-body">' +
         '<div class="settings-pane" data-settings-pane="game" ' + (tab === 'game' ? '' : 'hidden') + '>' +
-          '<label class="toggle-row"><span><strong>背景音乐</strong><small>八域真人级氛围配乐 + 全套音效反馈</small></span><input type="checkbox" id="set-music" ' + (SETTINGS.music ? 'checked' : '') + '></label>' +
+          '<label class="toggle-row"><span><strong>背景音乐</strong><small>八大赛区真人级氛围配乐 + 全套音效反馈</small></span><input type="checkbox" id="set-music" ' + (SETTINGS.music ? 'checked' : '') + '></label>' +
           '<label class="toggle-row"><span><strong>音效</strong><small>抛币、命中、治疗与技能反馈</small></span><input type="checkbox" id="set-sfx" ' + (SETTINGS.sfx ? 'checked' : '') + '></label>' +
           '<label class="toggle-row"><span><strong>角色语音</strong><small>角色真人配音与 5 套旁白音色包，缺失即静默</small></span><input type="checkbox" id="set-voice" ' + (SETTINGS.voice ? 'checked' : '') + '></label>' +
           '<div class="settings-subhead">旁白与语音</div>' +
           '<div class="settings-row"><label>旁白音色包</label><div class="settings-inline"><select id="set-voice-pack">' +
-            '<option value="house"' + (SETTINGS.voicePack === 'house' ? ' selected' : '') + '>庄家·男中音</option>' +
+            '<option value="house"' + (SETTINGS.voicePack === 'house' ? ' selected' : '') + '>冠军·男中音</option>' +
             '<option value="mistress"' + (SETTINGS.voicePack === 'mistress' ? ' selected' : '') + '>御姐·魅影</option>' +
             '<option value="youth"' + (SETTINGS.voicePack === 'youth' ? ' selected' : '') + '>少年·热血</option>' +
-            '<option value="elder"' + (SETTINGS.voicePack === 'elder' ? ' selected' : '') + '>老者·守夜人</option>' +
+            '<option value="elder"' + (SETTINGS.voicePack === 'elder' ? ' selected' : '') + '>老者·值班人</option>' +
             '<option value="mystic"' + (SETTINGS.voicePack === 'mystic' ? ' selected' : '') + '>神秘女声·回声</option>' +
           '</select><button type="button" class="btn btn--secondary btn--sm" id="preview-pack">试听</button></div></div>' +
+          '<div class="settings-subhead">AI 人设</div>' +
+          '<div class="persona-grid" id="set-ai-persona">' + Object.keys(AI.PERSONAS).map(function (pid) {
+            var p = AI.PERSONAS[pid];
+            return '<button type="button" class="persona-card' + (SETTINGS.aiPersona === pid ? ' is-active' : '') + '" data-persona="' + pid + '">' +
+              '<img src="assets/art/portraits/ai-' + pid + '.webp" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
+              '<b>' + esc(p.name) + '</b><small>' + esc(p.tag) + ' · ' + esc(p.quirk) + '</small></button>';
+          }).join('') + '</div>' +
+          '<label class="toggle-row"><span><strong>AI 语音</strong><small>各人设专属真人配音，缺失自动静默</small></span><input type="checkbox" id="set-ai-voice" ' + (SETTINGS.aiVoice ? 'checked' : '') + '></label>' +
           '<div class="settings-row"><label>硬币皮肤</label>' + skinCardGridHTML() + '<input type="hidden" id="set-coin-skin" value="' + esc(SETTINGS.coinSkin || 'bronze') + '"></div>' +
           '<label class="toggle-row"><span><strong>减少动态效果</strong><small>降低粒子与过场动画</small></span><input type="checkbox" id="set-motion" ' + (SETTINGS.reducedMotion ? 'checked' : '') + '></label>' +
           '<div class="settings-note">若无声音请先在页面点一下以解锁音频（浏览器要求至少一次用户交互）。语音全部为真人配音文件，缺失时自动静默。</div>' +
@@ -4720,7 +4919,7 @@
           '</details>' +
         '</div>' +
         '<div class="settings-pane" data-settings-pane="about" ' + (tab === 'about' ? '' : 'hidden') + '>' +
-          '<div class="about-block"><span class="about-coin">◉</span><h3>命途回廊 · COINFALL</h3><p>纯前端回合制抛币卡牌对战。44 名角色，190 张技能卡，19 种模式（含 8 个娱乐模式），三段 Boss 剧情，以及会顶嘴的 AI 同注者。</p>' +
+          '<div class="about-block"><span class="about-coin">◉</span><h3>星杯赛场 · COINFALL</h3><p>纯前端回合制抛币卡牌对战。44 名角色，190 张技能卡，19 种模式（含 8 个娱乐模式），三段 Boss 剧情，以及会顶嘴的 AI 队友。</p>' +
           '<p class="microcopy">版本 ' + D.version + ' · 无框架依赖 · 可离线单机 · 局域网点对点 · 公网 Supabase Realtime</p>' +
           '<div class="about-links"><button class="text-btn" data-action="rules">规则手册</button><button class="text-btn" data-action="copy-art-prompts">复制全部美术提示词</button></div></div>' +
         '</div>' +
@@ -4770,6 +4969,15 @@
       Audio.unlock();
       Audio.previewNarrator(SETTINGS.voicePack);
     };
+    $$('#set-ai-persona .persona-card').forEach(function (card) {
+      card.onclick = function () {
+        $$('#set-ai-persona .persona-card').forEach(function (c) { c.classList.remove('is-active'); });
+        card.classList.add('is-active');
+        SETTINGS.aiPersona = card.dataset.persona;
+        AI.setPersona(SETTINGS.aiPersona);
+        saveSettings();
+      };
+    });
     $('#save-settings').onclick = function () {
       SETTINGS.music = $('#set-music').checked;
       SETTINGS.sfx = $('#set-sfx').checked;
@@ -4777,6 +4985,7 @@
       SETTINGS.reducedMotion = $('#set-motion').checked;
       SETTINGS.coinSkin = $('#set-coin-skin').value;
       SETTINGS.voicePack = ($('#set-voice-pack') || {}).value || 'house';
+      SETTINGS.aiVoice = $('#set-ai-voice').checked;
       saveSettings();
       applyCoinSkin();
       Audio.setMuted();
@@ -4808,15 +5017,15 @@
 
   function openRules() {
     openModal('<div class="rules-sheet">' +
-      '<div class="modal-head"><div><div class="eyebrow">THE RULEBOOK</div><h2>如何玩命途回廊</h2><p>五分钟学会，五秒钟输掉。</p></div></div>' +
+      '<div class="modal-head"><div><div class="eyebrow">THE RULEBOOK</div><h2>如何玩星杯赛场</h2><p>五分钟学会，五秒钟输掉。</p></div></div>' +
       '<div class="rules-steps">' +
         '<div><span>01</span><h3>选角色与卡组</h3><p>每名角色 5 点生命，拥有一个全程生效的被动和一个有次数限制的主动技。技能卡组随机或自选 10 张。</p></div>' +
-        '<div><span>02</span><h3>每回合一张</h3><p>开局 3 张手牌，每回合补至 3 张。打出一张技能卡后抛币：昭面触发正面，昧面触发负面。主动技不占出牌次数。</p></div>' +
-        '<div><span>03</span><h3>逆写一次</h3><p>每名玩家整局只有一次重抛权，可在硬币落地后、效果结算前使用。无尽赌徒模式取消逆写，效果翻倍。</p></div>' +
-        '<div><span>04</span><h3>把对手打到 0</h3><p>大乱斗中每名玩家有两名角色，全部倒下才判负。2v2 中与 AI 同注者并肩，点击敌方角色可切换目标。</p></div>' +
+        '<div><span>02</span><h3>每回合一张</h3><p>开局 3 张手牌，每回合补至 3 张。打出一张技能卡后抛币：正面触发增益，反面触发反噬。主动技不占出牌次数。</p></div>' +
+        '<div><span>03</span><h3>重抛一次</h3><p>每名玩家整局只有一次重抛权，可在硬币落地后、效果结算前使用。无尽赌徒模式取消重抛，效果翻倍。</p></div>' +
+        '<div><span>04</span><h3>把对手打到 0</h3><p>大乱斗中每名玩家有两名角色，全部倒下才判负。2v2 中与 AI 队友并肩，点击敌方角色可切换目标。</p></div>' +
       '</div>' +
-      '<div class="rules-section"><h3>同注者指挥</h3><p>在 2v2 的战术频道输入自然语言，例如“集火 B1”“先保命”“给我治疗”“别用主动”“过牌找机会”。AI 会读取血量、手牌与资源，判断指令是否合理：合理则执行，不合理会拒绝并说明原因。连续瞎指挥会降低默契，正确的决断会提升默契。它还拥有自己的情绪与说话方式。</p></div>' +
-      '<div class="rules-section"><h3>卡牌与数值</h3><div class="rules-cards"><div><b>攻击</b><span>1–3 点伤害，附带弃牌、破盾或抽牌。</span></div><div><b>防御治疗</b><span>1–3 点治疗/护盾，代价可能是自伤或资敌。</span></div><div><b>功能控制</b><span>弃牌、封印、干扰补牌、过牌。</span></div><div><b>高风险</b><span>更高收益，更重的反噬。不会一卡秒杀满血。</span></div><div><b>风格专属</b><span>八域各自的签名技，主题与机制统一。</span></div></div></div>' +
+      '<div class="rules-section"><h3>队友指挥</h3><p>在 2v2 的战术频道输入自然语言，例如“集火 B1”“先保命”“给我治疗”“别用主动”“过牌找机会”。AI 会读取血量、手牌与资源，判断指令是否合理：合理则执行，不合理会拒绝并说明原因。连续瞎指挥会降低默契，正确的决断会提升默契。它还拥有自己的情绪与说话方式。</p></div>' +
+      '<div class="rules-section"><h3>卡牌与数值</h3><div class="rules-cards"><div><b>攻击</b><span>1–3 点伤害，附带弃牌、破盾或抽牌。</span></div><div><b>防御治疗</b><span>1–3 点治疗/护盾，代价可能是自伤或资敌。</span></div><div><b>功能控制</b><span>弃牌、封印、干扰补牌、过牌。</span></div><div><b>高风险</b><span>更高收益，更重的反噬。不会一卡秒杀满血。</span></div><div><b>风格专属</b><span>八大赛区各自的签名技，主题与机制统一。</span></div></div></div>' +
       '<div class="rules-section"><h3>胜利条件</h3><p>将对方队伍的所有角色生命降至 0。生命不会低于 0；护盾最多 5 点。快速模式生命上限为 3。</p></div>' +
       '<div class="modal-actions"><button class="btn btn--primary" data-close-modal>明白了</button></div>' +
     '</div>', { dialogClass: 'modal-dialog--wide' });
@@ -4824,7 +5033,7 @@
 
   function copyAllArtPrompts() {
     const text = [
-      '【命途回廊 · 角色立绘提示词】',
+      '【星杯赛场 · 角色立绘提示词】',
       D.CHARACTERS.map(function (c) { return c.id + ' ' + c.name + '：' + c.artPrompt; }).join('\n'),
       '',
       '【技能卡卡面提示词】',
@@ -4910,7 +5119,7 @@
         setTimeout(function () {
           const s = D.STYLES[realm.dataset.realm];
           const buttons = $$('#world-nav button');
-          const found = buttons.find(function (b) { return b.textContent.indexOf('八域') >= 0; });
+          const found = buttons.find(function (b) { return b.textContent.indexOf('八大赛区') >= 0; });
           if (found) found.click();
           else if (s) { const el = $('#world-realms'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
         }, 80);
