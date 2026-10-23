@@ -1,6 +1,6 @@
 # 命途回廊 · COINFALL — 全部美术提示词
 
-> 由 `tools/export-art-prompts.mjs` 从 `data.js` 自动生成。共 32 名角色、150 张技能卡、3 个 Boss、8 个世界。
+> 由 `tools/export-art-prompts.mjs` 从 `data.js` 自动生成。共 44 名角色、190 张技能卡、3 个 Boss、8 个世界。
 
 ## 通用负面提示词
 

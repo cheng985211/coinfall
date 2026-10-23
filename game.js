@@ -2268,7 +2268,7 @@
 
     const selected = D.byId.character(S.setup.charId) || D.CHARACTERS[0];
     $('#char-selection-note').innerHTML = randomMode
-      ? '<span class="note-icon">◈</span> 随机英雄：开桌时从 32 名角色中抽取。' + (S.setup.modeId === 'brawl' ? '大乱斗会抽取两名。' : '')
+      ? '<span class="note-icon">◈</span> 随机英雄：开桌时从 44 名角色中抽取。' + (S.setup.modeId === 'brawl' ? '大乱斗会抽取两名。' : '')
       : '<span class="note-icon">◉</span> 已选择 <strong>' + esc(selected.name) + '</strong> · ' + esc(selected.role) + ' · ' + esc(selected.passive.name) + ' / ' + esc(selected.active.name);
 
     if (S.setup.modeId === 'brawl') {
@@ -2333,9 +2333,9 @@
     const ids = custom ? S.setup.customDeck : [];
     const cards = ids.map(function (id) { return D.byId.card(id); }).filter(Boolean);
     if (!custom) {
-      $('#deck-summary').innerHTML = '<div class="deck-random"><span class="deck-random__glyph">✦</span><div><strong>全卡池随机抽取</strong><p>开局从 150 张技能卡中随机生成 15 张牌库，弃牌会洗回。适合熟悉不同流派。</p></div></div>';
+      $('#deck-summary').innerHTML = '<div class="deck-random"><span class="deck-random__glyph">✦</span><div><strong>全卡池随机抽取</strong><p>开局从 190 张技能卡中随机生成 15 张牌库，弃牌会洗回。适合熟悉不同流派。</p></div></div>';
     } else if (!cards.length) {
-      $('#deck-summary').innerHTML = '<div class="deck-empty"><span>▤</span><p>还没有选牌。打开编辑器，从 150 张技能卡中挑 10 张。</p><button class="btn btn--secondary btn--sm" data-action="open-deck-builder">开始构筑</button></div>';
+      $('#deck-summary').innerHTML = '<div class="deck-empty"><span>▤</span><p>还没有选牌。打开编辑器，从 190 张技能卡中挑 10 张。</p><button class="btn btn--secondary btn--sm" data-action="open-deck-builder">开始构筑</button></div>';
     } else {
       const counts = {};
       cards.forEach(function (c) { counts[c.categoryName] = (counts[c.categoryName] || 0) + 1; });
@@ -4720,7 +4720,7 @@
           '</details>' +
         '</div>' +
         '<div class="settings-pane" data-settings-pane="about" ' + (tab === 'about' ? '' : 'hidden') + '>' +
-          '<div class="about-block"><span class="about-coin">◉</span><h3>命途回廊 · COINFALL</h3><p>纯前端回合制抛币卡牌对战。32 名角色，150 张技能卡，16 种模式（含 5 个娱乐模式），三段 Boss 剧情，以及会顶嘴的 AI 同注者。</p>' +
+          '<div class="about-block"><span class="about-coin">◉</span><h3>命途回廊 · COINFALL</h3><p>纯前端回合制抛币卡牌对战。44 名角色，190 张技能卡，19 种模式（含 8 个娱乐模式），三段 Boss 剧情，以及会顶嘴的 AI 同注者。</p>' +
           '<p class="microcopy">版本 ' + D.version + ' · 无框架依赖 · 可离线单机 · 局域网点对点 · 公网 Supabase Realtime</p>' +
           '<div class="about-links"><button class="text-btn" data-action="rules">规则手册</button><button class="text-btn" data-action="copy-art-prompts">复制全部美术提示词</button></div></div>' +
         '</div>' +
