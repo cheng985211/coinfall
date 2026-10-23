@@ -150,7 +150,12 @@
         stats: { damageDealt: 0, damageTaken: 0, healed: 0, cardsPlayed: 0, flips: 0, wins: 0, rerolls: 0 },
         orders: [],
         trust: opts.isTeammate ? 6 : null,
-        mood: opts.isTeammate ? 62 : null
+        mood: opts.isTeammate ? 62 : null,
+        personaId: opts.personaId || null,
+        blindNext: false,
+        blindThisTurn: false,
+        manaBurnNext: false,
+        puppetNext: false
       };
       if (player.isAI) AI.initPlayer(player);
       return player;
@@ -205,7 +210,7 @@
       const hp = Math.round(rules.hp * hpMult);
 
       function pickChar(requestedId, usedIds) {
-        if (requestedId && D.byId.character(requestedId)) return D.byId.character(requestedId);
+        if (requestedId && D.byId.character(requestedId) && (!usedIds || usedIds.indexOf(requestedId) < 0)) return D.byId.character(requestedId);
         const pool = D.CHARACTERS.filter(function (c) { return !usedIds || usedIds.indexOf(c.id) < 0; });
         return pool[Math.floor((rng ? rng() : Math.random()) * pool.length)] || D.CHARACTERS[0];
       }
@@ -505,6 +510,7 @@
     function aiVoice(personaId, key) {
       try {
         if (SETTINGS.aiVoice === false) return;
+        if (SETTINGS.voiceEnabled === false) return;
         var now = Date.now();
         var k = personaId + ':' + key;
         if (aiVoiceLast[k] && now - aiVoiceLast[k] < 3000) return;
@@ -559,6 +565,9 @@
       p.switchedThisTurn = false;
       p.sealedThisTurn = !!p.sealNext;
       p.sealNext = false;
+      // v2.2 blind：致盲（与封印独立，也禁主动技）
+      p.blindThisTurn = !!p.blindNext;
+      p.blindNext = false;
       // v2.0 状态钩：蓄力/血价/狂注 在回合开始清零
       p.pendingDamageBonus = 0;
       // 虚弱：上回合被上的 weakNext 在本回合生效（ outgoing 伤害 -1 ），随后清零
@@ -567,6 +576,11 @@
       // 振奋：下回合可额外打出 1 张
       p.turnMaxCards = (game.rules.maxCards || 1) + (p.nextTurnEnergize ? 1 : 0);
       p.nextTurnEnergize = false;
+      // v2.2 manaBurn：下回合少打一张牌
+      if (p.manaBurnNext) {
+        p.turnMaxCards = Math.max(1, p.turnMaxCards - 1);
+        p.manaBurnNext = false;
+      }
       // 本回合已打出类别（combo 用）
       p.playedCategories = p.playedCategories || {};
       p.orders = (p.orders || []).filter(function (o) { return o.status === 'accepted' && (!o.expiresTurn || o.expiresTurn >= game.turn); });
@@ -752,6 +766,14 @@
       let amount = Math.max(0, Math.round(raw));
       if (!amount) return 0;
 
+      // v2.2 redirectDamage：本回合受到的下一次伤害转移给对手（这里即来源）
+      if (!opts.isThorns && !opts.direct && targetPlayer.turnFlags && targetPlayer.turnFlags.redirectActive && source && source.id !== targetPlayer.id) {
+        targetPlayer.turnFlags.redirectActive = false;
+        addLog(game, targetPlayer.name + ' 将这记伤害转移回了 ' + source.name + '！', 'shield');
+        addEvent(game, { type: 'redirect', targetId: targetPlayer.id, sourceId: source.id, amount: amount });
+        return dealDamage(game, targetPlayer, source, amount, {});
+      }
+
       // v3.1 被动：counterPierce 反刺——每回合第一次受到无视护盾的攻击时，免疫该伤害并反弹 2
       if (opts.pierce && target.passiveKey === 'counterPierce' && !targetPlayer.turnFlags.counterPierceUsed) {
         targetPlayer.turnFlags.counterPierceUsed = true;
@@ -802,6 +824,13 @@
         addLog(game, target.name + ' 的龙骨余命发动，死里逃生，保留 1 点生命。', 'shield');
         addEvent(game, { type: 'passive', playerId: targetPlayer.id, name: '龙骨余命', text: '濒死保留 1 点生命' });
       }
+      // v2.2 rebirth：本局第一次濒死时不死，回 1 血
+      if (target.hp <= 0 && targetPlayer.flags && targetPlayer.flags.rebirthReady && !opts.isThorns) {
+        targetPlayer.flags.rebirthReady = false;
+        target.hp = 1;
+        addLog(game, target.name + ' 的重生之光包裹了他，死里逃生，保留 1 点生命。', 'heal');
+        addEvent(game, { type: 'rebirth', playerId: targetPlayer.id });
+      }
       const lost = before - target.hp;
       if (lost > 0) {
         targetPlayer.stats.damageTaken += lost;
@@ -844,6 +873,13 @@
           addEvent(game, { type: 'passive', playerId: targetPlayer.id, name: '反射', text: '反弹 ' + lost + ' 点伤害' });
           addLog(game, target.name + ' 的反射刃弹回 ' + lost + ' 点伤害。', 'damage');
           dealDamage(game, targetPlayer, source, lost, { isThorns: true });
+        }
+        // v2.2 mirror：本回合第一次受到的伤害原封反弹（无视护盾/直伤减免）
+        if (source && source.id !== targetPlayer.id && targetPlayer.turnFlags.mirrorActive && !targetPlayer.turnFlags.mirrorUsed) {
+          targetPlayer.turnFlags.mirrorUsed = true;
+          addEvent(game, { type: 'mirror', playerId: targetPlayer.id, amount: lost });
+          addLog(game, target.name + ' 的镜面将 ' + lost + ' 点伤害原封反弹给 ' + source.name + '！', 'damage');
+          dealDamage(game, targetPlayer, source, lost, { isThorns: true, direct: true });
         }
       }
       return lost;
@@ -1038,6 +1074,108 @@
         const tu = activeUnit(actor);
         if (tu) dealDamage(game, null, actor, n(effects.selfDmg), { direct: true, unit: tu });
       }
+
+      // ============ v2.2 新效果键 ============
+      // copySkill: 复制对手上一张打出的牌的正面效果（不抛币直接生效）
+      if (effects.copySkill) {
+        try {
+          var oppTeam = actor.team === 'A' ? 'B' : 'A';
+          var last = game.lastCard && game.lastCard[oppTeam];
+          if (last && last.posEffects) {
+            var copied = Object.assign({}, last.posEffects);
+            // 去掉可能导致递归/偷取类键，避免连锁
+            delete copied.copySkill;
+            delete copied.stealBuff;
+            addLog(game, actor.name + ' 复制了「' + last.name + '」的正面效果。', 'action');
+            addEvent(game, { type: 'status', targetId: actor.id, status: 'copySkill', cardName: last.name });
+            applyEffects(game, actor, targetResolved, copied, '复制·' + last.name);
+          } else {
+            addLog(game, actor.name + ' 想要复制，但对手还没出过牌。', 'control');
+          }
+        } catch (e) {}
+      }
+      // redirectDamage: 本回合受到的下一次伤害转移给对手
+      if (effects.redirectDamage && actorUnit) {
+        actor.turnFlags.redirectActive = true;
+        addEvent(game, { type: 'status', targetId: actor.id, status: 'redirect' });
+        addLog(game, actor.name + ' 架起转移，本回合下一次受到的伤害将转移给对手。', 'shield');
+      }
+      // rebirth: 本局第一次濒死时不死，回 1 血
+      if (effects.rebirth && actorUnit) {
+        actor.flags = actor.flags || {};
+        actor.flags.rebirthReady = true;
+        addEvent(game, { type: 'status', targetId: actor.id, status: 'rebirth' });
+        addLog(game, actor.name + ' 获得一次重生机会，本局第一次濒死时保留 1 点生命。', 'heal');
+      }
+      // puppet: 对手下一张牌的目标由你选
+      if (effects.puppet && targetResolved) {
+        targetResolved.puppetNext = true;
+        targetResolved.puppetCasterId = actor.id;
+        addEvent(game, { type: 'status', targetId: targetResolved.id, status: 'puppet' });
+        addLog(game, targetResolved.name + ' 被傀儡线缠住，下一张牌的目标将由对手指定。', 'control');
+      }
+      // swapHp: 与目标交换当前 HP（差 ≤3 时才能用）
+      if (effects.swapHp && targetResolved) {
+        var aUnit = activeUnit(actor);
+        var tUnit = activeUnit(targetResolved);
+        if (aUnit && tUnit && Math.abs(aUnit.hp - tUnit.hp) <= 3) {
+          var tmp = aUnit.hp;
+          aUnit.hp = tUnit.hp;
+          tUnit.hp = tmp;
+          addLog(game, actor.name + ' 与 ' + targetResolved.name + ' 交换了生命！', 'action');
+          addEvent(game, { type: 'swapHp', targetId: targetResolved.id, actorId: actor.id });
+        } else {
+          addLog(game, actor.name + ' 想交换生命，但双方血量差超过 3，没有生效。', 'control');
+        }
+      }
+      // blind: 对手下回合不能用主动技（与 seal 独立）
+      if (effects.blind && targetResolved) {
+        targetResolved.blindNext = true;
+        addEvent(game, { type: 'status', targetId: targetResolved.id, status: 'blind' });
+        addLog(game, targetResolved.name + ' 被致盲，下回合无法使用主动技。', 'control');
+      }
+      // peek: 显示对手手牌（下回合前可见）
+      if (effects.peek) {
+        game.peekUntilTurn = (game.turn || 1) + 1;
+        game.peekViewerId = actor.id;
+        addEvent(game, { type: 'status', targetId: actor.id, status: 'peek' });
+        addLog(game, actor.name + ' 窥见了对手的手牌。', 'action');
+      }
+      // manaBurn: 对手下回合少打一张牌
+      if (effects.manaBurn && targetResolved) {
+        targetResolved.manaBurnNext = true;
+        addEvent(game, { type: 'status', targetId: targetResolved.id, status: 'manaBurn' });
+        addLog(game, targetResolved.name + ' 被抽干法力，下回合少打一张牌。', 'control');
+      }
+      // mirror: 本回合第一次受到的伤害原封反弹
+      if (effects.mirror && actorUnit) {
+        actor.turnFlags.mirrorActive = true;
+        addEvent(game, { type: 'status', targetId: actor.id, status: 'mirror' });
+        addLog(game, actor.name + ' 架起镜面，本回合第一次受到的伤害将原封反弹。', 'shield');
+      }
+      // stealBuff: 偷取对手所有护盾和正面 buff
+      if (effects.stealBuff && targetResolved) {
+        var tUnit2 = activeUnit(targetResolved);
+        var aUnit2 = activeUnit(actor);
+        if (tUnit2 && aUnit2) {
+          var stolenShield = tUnit2.shield;
+          if (stolenShield > 0) {
+            tUnit2.shield = 0;
+            shieldUnit(game, actor, aUnit2, stolenShield);
+          }
+          // 转移正面 buff
+          if (targetResolved.blessNext) { actor.blessNext = true; targetResolved.blessNext = false; }
+          if (targetResolved.nextTurnEnergize) { actor.nextTurnEnergize = true; targetResolved.nextTurnEnergize = false; }
+          actor.pendingDamageBonus = (actor.pendingDamageBonus || 0) + (targetResolved.pendingDamageBonus || 0);
+          targetResolved.pendingDamageBonus = 0;
+          if (targetResolved.turnFlags && targetResolved.turnFlags.guardActive) { actor.turnFlags.guardActive = true; }
+          if (targetResolved.turnFlags && targetResolved.turnFlags.reflectActive) { actor.turnFlags.reflectActive = true; }
+          addLog(game, actor.name + ' 偷走了 ' + targetResolved.name + ' 的护盾与增益！', 'heal');
+          addEvent(game, { type: 'stealBuff', targetId: targetResolved.id, actorId: actor.id, shield: stolenShield });
+        }
+      }
+      // ============ /v2.2 新效果键 ============
+
       if (actorUnit && actorUnit.hp <= 0) defeatUnit(game, actor, actorUnit, null);
       checkVictory(game);
     }
@@ -1114,9 +1252,18 @@
       }
       const card = actor.hand[handIndex];
       if (!card) return { ok: false, reason: '没有这张牌' };
-      const target = resolveTarget(game, actor, targetId);
+      // v2.2 puppet：对手下一张牌的目标由傀儡施法者指定
+      let effectiveTargetId = targetId;
+      if (actor.puppetNext) {
+        const caster = actor.puppetCasterId ? playerById(game, actor.puppetCasterId) : null;
+        if (caster && caster.selectedTarget) effectiveTargetId = caster.selectedTarget;
+        actor.puppetNext = false;
+        actor.puppetCasterId = null;
+        addLog(game, actor.name + ' 被傀儡线操控，这张牌的目标被强制改写。', 'control');
+      }
+      const target = resolveTarget(game, actor, effectiveTargetId);
       if (!target) return { ok: false, reason: '没有可选目标' };
-      if (targetId) setTarget(game, actor.id, targetId);
+      if (effectiveTargetId) setTarget(game, actor.id, effectiveTargetId);
 
       actor.hand.splice(handIndex, 1);
       actor.cardsPlayedThisTurn = (actor.cardsPlayedThisTurn || 0) + 1;
@@ -1132,6 +1279,7 @@
         card: card,
         targetId: target.id,
         result: null,
+        guessed: null,
         blessed: !!actor.blessNext,
         rerolled: false,
         canReroll: !game.noReroll && actor.rerolls > 0 && !actor.blessNext,
@@ -1141,14 +1289,18 @@
       if (actor.blessNext) {
         actor.blessNext = false;
         game.pending.result = true;
-        addLog(game, actor.name + ' 的命运祝福生效，硬币停在正面。', 'coin');
-      } else {
-        game.pending.result = flipCoin(game);
+        game.pending.guessed = 'head';
+        addLog(game, actor.name + ' 的命运祝福生效，硬币直接停在正面。', 'coin');
       }
       game.phase = 'flip';
-      addEvent(game, { type: 'card', playerId: actor.id, cardId: card.id, name: card.name, result: game.pending.result, blessed: game.pending.blessed });
-      addLog(game, actor.name + ' 打出「' + card.name + '」。' + (game.pending.result ? '正面。' : '反面。'), 'card');
+      // v2.2 猜币：先记录出牌，不立即抛结果，等玩家/AI 猜完正反面再开
+      addEvent(game, { type: 'card', playerId: actor.id, cardId: card.id, name: card.name, result: null, blessed: game.pending.blessed, awaitingGuess: true });
+      addLog(game, actor.name + ' 打出「' + card.name + '」。请猜正面或反面。', 'card');
+      // 记录最近一张打出的牌（copySkill 用）
+      game.lastCard = game.lastCard || {};
+      game.lastCard[actor.team] = { card: card, actorId: actor.id, name: card.name, posEffects: card.posEffects };
 
+      // 被动：onPlayDraw / onStyleDraw / 法则④（保留原逻辑）
       if (activeUnit(actor) && activeUnit(actor).passiveKey === 'onPlayDraw' && !actor.turnFlags.playDrawUsed) {
         actor.turnFlags.playDrawUsed = true;
         drawCards(game, actor, 1);
@@ -1168,6 +1320,43 @@
       return { ok: true, state: game, pending: game.pending };
     }
 
+    // v2.2 猜币：根据 AI 人设自动选边
+    function autoGuessByPersona(game, actor) {
+      try {
+        var pid = (actor && actor.personaId) || (AI.getPersonaId ? AI.getPersonaId() : 'hotaru');
+        // 热血 → 爱猜正面；沉稳/冷面/酷哥 → 偏反面；其他 → 随机
+        if (pid === 'hotaru') return 'head';
+        if (pid === 'sen' || pid === 'ren' || pid === 'kurome') return 'tail';
+        return Math.random() < 0.5 ? 'head' : 'tail';
+      } catch (e) { return 'head'; }
+    }
+
+    // v2.2 猜币：玩家/AI 在抛币前选择正反面，选完才抛币
+    function submitGuess(game, playerId, guess) {
+      if (game.phase !== 'flip') return { ok: false, reason: '现在不能猜' };
+      const pending = game.pending;
+      if (!pending || pending.actorId !== playerId) return { ok: false, reason: '没有待猜的硬币' };
+      if (pending.resolved) return { ok: false, reason: '已经结算过了' };
+      if (pending.result != null) return { ok: false, reason: '硬币已经抛过了' };
+      if (guess !== 'head' && guess !== 'tail') return { ok: false, reason: '请猜正面或反面' };
+      pending.guessed = guess;
+      if (pending.blessed) {
+        pending.result = true;
+      } else {
+        pending.result = flipCoin(game);
+        game.coinStats = game.coinStats || { head: 0, tail: 0 };
+        game.coinStats[pending.result ? 'head' : 'tail']++;
+        const total = game.coinStats.head + game.coinStats.tail;
+        if (total % 20 === 0) {
+          console.log('[coin] heads/tails =', game.coinStats.head, '/', game.coinStats.tail, 'ratio=', (game.coinStats.head / total).toFixed(3));
+        }
+      }
+      addEvent(game, { type: 'guess', playerId: playerId, guessed: guess, result: pending.result });
+      const actor = playerById(game, playerId);
+      if (actor) addLog(game, actor.name + ' 猜了' + (guess === 'head' ? '正面' : '反面') + '。', 'coin');
+      return { ok: true, result: pending.result, guessed: guess, pending: pending };
+    }
+
     function resolveFlip(game, playerId, choice) {
       const pending = game.pending;
       if (!pending || pending.actorId !== playerId) return { ok: false, reason: '没有待结算的抛币' };
@@ -1175,6 +1364,20 @@
       const actor = playerById(game, playerId);
       if (!actor) return { ok: false, reason: '角色不存在' };
       const card = pending.card;
+
+      // AI/自动化路径：如果玩家还没猜（result 为 null），按人设自动猜并抛币
+      if (pending.result == null) {
+        if (!pending.guessed) pending.guessed = autoGuessByPersona(game, actor);
+        pending.result = pending.blessed ? true : flipCoin(game);
+        game.coinStats = game.coinStats || { head: 0, tail: 0 };
+        game.coinStats[pending.result ? 'head' : 'tail']++;
+        const total = game.coinStats.head + game.coinStats.tail;
+        if (total % 20 === 0) {
+          console.log('[coin] heads/tails =', game.coinStats.head, '/', game.coinStats.tail, 'ratio=', (game.coinStats.head / total).toFixed(3));
+        }
+      } else if (!pending.guessed) {
+        pending.guessed = autoGuessByPersona(game, actor);
+      }
 
       if (choice === 'reroll') {
         if (game.noReroll) return { ok: false, reason: '本模式没有重抛' };
@@ -1191,24 +1394,51 @@
         }
         addEvent(game, { type: 'reroll', playerId: actor.id, result: pending.result });
         addLog(game, actor.name + ' 重抛命运，重新抛币：' + (pending.result ? '正面。' : '反面。'), 'coin');
-        return { ok: true, rerolled: true, result: pending.result, pending: pending };
+        // fall through to settle (reroll 后直接进入结算，与原逻辑一致)
       }
 
       // 接受结果
       pending.resolved = true;
       const success = !!pending.result;
       triggerFlipPassives(game, actor, success);
-      addEvent(game, { type: 'flipResult', playerId: actor.id, result: success, cardName: card.name, blessed: pending.blessed, rerolled: pending.rerolled });
-      addLog(game, '硬币落定：' + (success ? '正面 · 技能成立。' : '反面 · 技能反噬。'), 'coin');
+      addEvent(game, { type: 'flipResult', playerId: actor.id, result: success, cardName: card.name, blessed: pending.blessed, rerolled: pending.rerolled, guessed: pending.guessed });
+      addLog(game, '硬币落定：' + (success ? '正面 · 技能成立。' : '反面 · 技能反噬。') + (pending.guessed ? '（你猜的' + (pending.guessed === 'head' ? '正面' : '反面') + '）' : ''), 'coin');
       // v2.1 random-rules 法则②：反面也触发正面效果
       let useSuccess = success;
       if (!success && game.turnRule === 2) {
         useSuccess = true;
         addLog(game, '法则「反面转正」生效，反面亦按正面结算。', 'system');
       }
-      const effects = useSuccess ? card.posEffects : card.negEffects;
+      // 克隆 effects，避免直接改 card 数据；同时叠加猜币加成
+      let effects = Object.assign({}, useSuccess ? card.posEffects : card.negEffects);
       const target = playerById(game, pending.targetId) || resolveTarget(game, actor);
       addLog(game, '「' + card.name + '」' + (success ? '正面' : '负面') + '：' + (success ? card.posText : card.negText), success ? 'action' : 'damage');
+
+      // v2.2 猜币加成
+      if (pending.guessed) {
+        const guessCorrect = (pending.guessed === 'head') === success;
+        if (guessCorrect) {
+          let boosted = false;
+          if (effects.dmg) { effects.dmg += 1; boosted = true; }
+          if (effects.heal) { effects.heal += 1; boosted = true; }
+          if (effects.draw) { effects.draw += 1; boosted = true; }
+          if (!boosted) {
+            const au = activeUnit(actor);
+            if (au) shieldUnit(game, actor, au, 1);
+          }
+          addLog(game, actor.name + ' 猜中了！命运额外倾斜。', 'coin');
+          addEvent(game, { type: 'guessHit', playerId: actor.id, guessed: pending.guessed });
+        } else {
+          if (effects.selfDmg) effects.selfDmg += 1;
+          if (effects.discard) effects.discard += 1;
+          if (effects.oppHeal) effects.oppHeal += 1;
+          if (effects.oppShield) effects.oppShield += 1;
+          if (effects.oppDraw) effects.oppDraw += 1;
+          addLog(game, actor.name + ' 猜错了，反噬加重。', 'damage');
+          addEvent(game, { type: 'guessMiss', playerId: actor.id, guessed: pending.guessed });
+        }
+      }
+
       // v2.0 combo：本回合已打出过同类卡时，正面追加同类加成
       let comboBonus = null;
       if (success && card.combo && (actor.playedCategories[card.category] || 0) > 1) {
@@ -1253,6 +1483,7 @@
       if (!actor || actor.id !== playerId) return { ok: false, reason: '还没轮到你' };
       if (actor.activeUsedThisTurn) return { ok: false, reason: '本回合已经使用过主动技' };
       if (actor.sealedThisTurn) return { ok: false, reason: '主动技被封印' };
+      if (actor.blindThisTurn) return { ok: false, reason: '主动技被致盲' };
       const unit = activeUnit(actor);
       if (!unit || unit.activeUsesLeft <= 0) return { ok: false, reason: '主动技次数已用尽' };
       const target = resolveTarget(game, actor, targetId);
@@ -1370,7 +1601,7 @@
     return {
       RULES, createGame, playerById, currentPlayer, activeUnit, playerAlive, teamAlive,
       enemiesOf, alliesOf, resolveTarget, setTarget, drawCards, discardRandom, addLog, addChat, addEvent,
-      beginTurn, endTurn, forceAdvanceAfterReveal, playCard, resolveFlip, useActive, switchCharacter,
+      beginTurn, endTurn, forceAdvanceAfterReveal, playCard, resolveFlip, submitGuess, useActive, switchCharacter,
       checkVictory, serializeFor, flipCoin, randomSetup, randomDeck, cloneCard, shuffle,
       buildDraftDeck,
       HAND_MAX, SHIELD_MAX
@@ -1405,7 +1636,7 @@
   }
 
   const SETTINGS = readJSON(SETTINGS_KEY, {
-    music: true, sfx: true, voice: true, reducedMotion: false, hideHints: false,
+    music: true, sfx: true, voice: true, voiceEnabled: true, reducedMotion: false, hideHints: false,
     coinSkin: 'bronze', voicePack: 'house',
     bgmTrack: 'theme', bgmVolume: 0.45,
     ambient: false, ambientTheme: 'theme', ambientVolume: 0.35,
@@ -1415,6 +1646,7 @@
   });
   SETTINGS.aiPersona = SETTINGS.aiPersona || 'hotaru';
   if (SETTINGS.aiVoice === undefined) SETTINGS.aiVoice = true;
+  if (SETTINGS.voiceEnabled === undefined) SETTINGS.voiceEnabled = true;
   try { if (root.CF_AI && root.CF_AI.setPersona) root.CF_AI.setPersona(SETTINGS.aiPersona); } catch (e) {}
   SETTINGS.bgmVolume = Math.max(0, Math.min(1, Number(SETTINGS.bgmVolume)));
   if (isNaN(SETTINGS.bgmVolume)) SETTINGS.bgmVolume = 0.45;
@@ -2060,10 +2292,24 @@
       return next;
     }
 
+    // v2.2 预加载所有 sfx wav，避免首次播放卡顿
+    function preloadSfx() {
+      try {
+        if (!root.CF_ASSETS || !root.CF_ASSETS.SFX_NAMES) return;
+        root.CF_ASSETS.SFX_NAMES.forEach(function (name) {
+          try {
+            var a = new Audio(root.CF_ASSETS.sfxUrl(name));
+            a.preload = 'auto';
+            // 不播放，仅加载到浏览器缓存
+          } catch (e) {}
+        });
+      } catch (e) {}
+    }
+
     return {
       unlock, sfx, startBgm, stopBgm, say, voice, narrator, storyVoice, toggle, setMuted, ensure,
       refreshBgm, refreshAmbient, setBgmVolume, setAmbientVolume, setAmbientEnabled,
-      startAmbient, stopAmbient, previewNarrator, currentCoinSkin, duckMusic
+      startAmbient, stopAmbient, previewNarrator, currentCoinSkin, duckMusic, preloadSfx
     };
   })();
 
@@ -2330,7 +2576,7 @@
 
   function modeCardHTML(mode) {
     return '<button class="mode-card" data-mode="' + mode.id + '" style="--mode-accent:' + mode.accent + '" type="button">' +
-      '<span class="mode-card__top"><span class="mode-card__icon">' + mode.icon + '</span><span class="mode-card__en">' + esc(mode.en) + '</span>' + (mode.fun ? '<span class="mode-card__fun">娱乐</span>' : '') + '</span>' +
+      '<span class="mode-card__top"><span class="mode-card__icon"><img src="assets/art/ui/icons/mode-' + mode.id + '.png" alt="" loading="lazy"></span><span class="mode-card__en">' + esc(mode.en) + '</span>' + (mode.fun ? '<span class="mode-card__fun">娱乐</span>' : '') + '</span>' +
       '<strong>' + esc(mode.name) + '</strong>' +
       '<span class="mode-card__tagline">' + esc(mode.tagline) + '</span>' +
       '<span class="mode-card__badges">' + mode.badges.map(function (b) { return '<i>' + esc(b) + '</i>'; }).join('') + '</span>' +
@@ -2930,10 +3176,18 @@
           '<div><span>主动 · ' + c.active.uses + ' 次</span><strong>' + esc(c.active.name) + '</strong><small>' + esc(c.active.desc) + '</small></div>' +
         '</div>' +
         '<blockquote class="detail-quote">“' + esc(c.quote) + '”</blockquote>' +
-        '<div class="prompt-box"><span>立绘提示词</span><p>' + esc(c.artPrompt) + '</p><button class="text-btn" data-copy-prompt="' + esc(c.artPrompt) + '">复制提示词</button></div>' +
+        '<div class="prompt-box prompt-box--collapsed">' +
+          '<button type="button" class="text-btn prompt-box__toggle">高级：复制生图提示词</button>' +
+          '<div class="prompt-box__body" style="display:none"><p>' + esc(c.artPrompt) + '</p><button class="text-btn" data-copy-prompt="' + esc(c.artPrompt) + '">复制提示词</button></div>' +
+        '</div>' +
       '</div></div>', { dialogClass: 'modal-dialog--wide' });
     const copyBtn = $('[data-copy-prompt]');
     if (copyBtn) copyBtn.onclick = function () { copyText(copyBtn.dataset.copyPrompt); };
+    const toggleBtn = document.querySelector('.prompt-box--collapsed .prompt-box__toggle');
+    if (toggleBtn) toggleBtn.onclick = function () {
+      const body = toggleBtn.parentElement.querySelector('.prompt-box__body');
+      if (body) body.style.display = (body.style.display === 'none') ? '' : 'none';
+    };
   }
 
   function openCardDetail(id) {
@@ -2947,10 +3201,18 @@
         '<div class="effect-block effect-block--pos"><span>正面 · 判定成功</span><p>' + esc(c.posText) + '</p></div>' +
         '<div class="effect-block effect-block--neg"><span>反面 · 判定失败</span><p>' + esc(c.negText) + '</p></div>' +
         '<p class="detail-bio">' + esc(c.flavor) + '</p>' +
-        '<div class="prompt-box"><span>卡面提示词</span><p>' + esc(c.artPrompt) + '</p><button class="text-btn" data-copy-prompt="' + esc(c.artPrompt) + '">复制提示词</button></div>' +
+        '<div class="prompt-box prompt-box--collapsed">' +
+          '<button type="button" class="text-btn prompt-box__toggle">高级：复制生图提示词</button>' +
+          '<div class="prompt-box__body" style="display:none"><p>' + esc(c.artPrompt) + '</p><button class="text-btn" data-copy-prompt="' + esc(c.artPrompt) + '">复制提示词</button></div>' +
+        '</div>' +
       '</div></div>', { dialogClass: 'modal-dialog--wide' });
     const copyBtn = $('[data-copy-prompt]');
     if (copyBtn) copyBtn.onclick = function () { copyText(copyBtn.dataset.copyPrompt); };
+    const toggleBtn = document.querySelector('.prompt-box--collapsed .prompt-box__toggle');
+    if (toggleBtn) toggleBtn.onclick = function () {
+      const body = toggleBtn.parentElement.querySelector('.prompt-box__body');
+      if (body) body.style.display = (body.style.display === 'none') ? '' : 'none';
+    };
   }
 
   /* =========================================================
@@ -3731,6 +3993,15 @@
           return;
         }
         afterHostMutation();
+      } else if (msg.type === 'guess') {
+        const guest = S.game.players.find(function (p) { return p.id === pid; });
+        if (!guest || !guest.isHuman) return;
+        const g = ENGINE.submitGuess(S.game, pid, msg.guess);
+        if (!g.ok) {
+          NET.sendTo(seat, { type: 'notice', message: g.reason });
+          return;
+        }
+        afterHostMutation();
       } else if (msg.type === 'chat') {
         handleIncomingChat(pid, msg.text || '', msg.targetId || null);
       } else if (msg.type === 'target') {
@@ -3848,6 +4119,12 @@
     if (player.burnNext) status.push('<span class="status-chip">' + badgeImg('burn', '灼烧') + ' ' + player.burnNext + '</span>');
     if (player.weakThisTurn) status.push('<span class="status-chip">' + badgeImg('weak', '虚弱') + ' ' + player.weakThisTurn + '</span>');
     if (player.sealedThisTurn || player.sealNext) status.push('<span class="status-chip">' + badgeImg('seal', '封印') + '</span>');
+    if (player.blindThisTurn || player.blindNext) status.push('<span class="status-chip">' + badgeImg('seal', '致盲') + '</span>');
+    if (player.manaBurnNext) status.push('<span class="status-chip">' + badgeImg('choke', '抽干') + '</span>');
+    if (player.puppetNext) status.push('<span class="status-chip">' + badgeImg('control', '傀儡') + '</span>');
+    if (player.flags && player.flags.rebirthReady) status.push('<span class="status-chip">' + badgeImg('shield', '重生') + '</span>');
+    if (player.turnFlags && player.turnFlags.redirectActive) status.push('<span class="status-chip">' + badgeImg('reflect', '转移') + '</span>');
+    if (player.turnFlags && player.turnFlags.mirrorActive && !player.turnFlags.mirrorUsed) status.push('<span class="status-chip">' + badgeImg('reflect', '镜面') + '</span>');
     if (player.turnFlags && player.turnFlags.guardActive) status.push('<span class="status-chip">' + badgeImg('guard', '坚守') + '</span>');
     if (player.turnFlags && player.turnFlags.reflectActive) status.push('<span class="status-chip">' + badgeImg('reflect', '反射') + '</span>');
     if (player.pendingDamageBonus) status.push('<span class="status-chip">' + badgeImg('power', '蓄力') + ' +' + player.pendingDamageBonus + '</span>');
@@ -3861,12 +4138,22 @@
       return '<span class="reserve ' + (u.hp <= 0 ? 'is-down' : '') + '"><i>' + (u.hp > 0 ? u.hp : '×') + '</i>' + esc(u.name.split('·').pop()) + '</span>';
     }).join('');
 
+    const showOppHand = !!(game.peekViewerId === viewer.id && game.turn <= (game.peekUntilTurn || 0));
+    const handLabel = (player.id === viewer.id)
+      ? player.hand.length
+      : (showOppHand ? (player.hand || []).map(function (c) { return c.name; }).join('/') : (player.handCount != null ? player.handCount : player.hand.length));
     return '<article class="combatant ' + (isCurrent ? 'is-current ' : '') + (enemy ? 'is-enemy ' : 'is-ally ') + (isTarget ? 'is-target ' : '') + (unit.hp <= 2 ? 'is-low ' : '') + '" data-player-id="' + player.id + '" style="' + styleVars(unit.style) + '">' +
       (selectable ? '<button class="target-btn" data-set-target="' + player.id + '" title="将当前目标锁定为 ' + esc(unit.name) + '">' + (isTarget ? '已锁定' : '锁定目标') + '</button>' : '') +
       '<div class="combatant__art' + (char.id ? ' has-media' : '') + '">' +
         (function () {
           try {
-            if (root.CF_ASSETS && char.id) {
+            if (!root.CF_ASSETS) return '';
+            // v2.2 AI 队友/敌人使用 ai-{personaId}.webp，而不是 char.id.webp
+            if (player.isAI) {
+              var pid = player.personaId || (AI.getPersonaId ? AI.getPersonaId() : null) || SETTINGS.aiPersona || 'hotaru';
+              return '<img class="combatant__img" src="assets/art/portraits/ai-' + pid + '.webp" alt="" aria-hidden="true" onerror="this.remove();this.parentNode.classList.remove(\'has-media\')">';
+            }
+            if (char.id) {
               return '<img class="combatant__img" src="' + root.CF_ASSETS.portraitUrl(char.id) + '" alt="" aria-hidden="true" onerror="this.remove();this.parentNode.classList.remove(\'has-media\')">';
             }
           } catch (e) {}
@@ -3883,7 +4170,7 @@
         '<h3>' + esc(unit.name) + '</h3>' +
         '<div class="hp-line"><div class="hp-pips">' + hpPips.join('') + '</div><strong>' + unit.hp + '<small>/' + unit.maxHp + '</small></strong></div>' +
         '<div class="status-row">' + status.join('') + '</div>' +
-        '<div class="combatant__footer"><span>手牌 ' + (player.id === viewer.id ? player.hand.length : (player.handCount != null ? player.handCount : player.hand.length)) + '</span><span>牌库 ' + (player.deckCount != null ? player.deckCount : player.deck.length) + '</span><span>主动 ' + unit.activeUsesLeft + '/' + (char.active ? char.active.uses : '?') + '</span></div>' +
+        '<div class="combatant__footer"><span title="' + esc(showOppHand && player.id !== viewer.id ? '窥视中：' + handLabel : '') + '">手牌 ' + handLabel + '</span><span>牌库 ' + (player.deckCount != null ? player.deckCount : player.deck.length) + '</span><span>主动 ' + unit.activeUsesLeft + '/' + (char.active ? char.active.uses : '?') + '</span></div>' +
         (reserves ? '<div class="reserves">' + reserves + '</div>' : '') +
       '</div>' +
       '</article>';
@@ -4170,6 +4457,21 @@
     commitHost();
   }
 
+  // v2.2 猜币：玩家选择正反面后才抛币
+  function chooseGuess(guess) {
+    const game = getGame();
+    const viewer = viewerFor(game);
+    if (!game || !viewer || game.phase !== 'flip') return;
+    if (S.online.role === 'guest') {
+      NET.send({ type: 'guess', guess: guess });
+      return;
+    }
+    const r = ENGINE.submitGuess(game, viewer.id, guess);
+    if (!r.ok) { toast(r.reason, 'warning'); return; }
+    Audio.sfx('click');
+    commitHost();
+  }
+
   function renderFlipOverlay(game, viewer) {
     const overlay = $('#flip-overlay');
     if (!overlay) return;
@@ -4183,6 +4485,21 @@
       return;
     }
     overlay.hidden = false;
+
+    // v2.2 阶段一：还没猜，也没抛币 — 显示两个大猜币按钮
+    if (pending.result == null && !pending.resolved) {
+      S.overlayKey = pending.id + ':guess';
+      S.overlayRevealed = false;
+      if (S.overlayTimer) { clearTimeout(S.overlayTimer); S.overlayTimer = null; }
+      const coin = $('#flip-coin');
+      if (coin) coin.className = 'coin coin--idle';
+      $('#flip-result').innerHTML = '<strong>命运悬而未决</strong><p>这张牌已经打出，在硬币落地之前——你猜正面还是反面？</p>';
+      $('#flip-choices').innerHTML =
+        '<button class="btn btn--primary guess-btn" data-guess="head">猜正面 ↑</button>' +
+        '<button class="btn btn--secondary guess-btn" data-guess="tail">猜反面 ↓</button>';
+      return;
+    }
+
     const key = pending.id + ':' + pending.result + ':' + pending.rerolled;
     if (key !== S.overlayKey) {
       S.overlayKey = key;
@@ -4194,7 +4511,8 @@
         coin.className = 'coin coin--spinning';
         coin.style.setProperty('--land-face', pending.result ? '0deg' : '180deg');
       }
-      $('#flip-result').innerHTML = '<strong>硬币在空中</strong><p>正或反，只在落地的一瞬。</p>';
+      const guessText = pending.guessed ? ('（你猜的' + (pending.guessed === 'head' ? '正面' : '反面') + '）') : '';
+      $('#flip-result').innerHTML = '<strong>硬币在空中</strong><p>' + guessText + '正或反，只在落地的一瞬。</p>';
       $('#flip-choices').innerHTML = '';
       Audio.sfx('coin');
       S.overlayTimer = setTimeout(function () {
@@ -4208,10 +4526,12 @@
     const success = !!pending.result;
     const coin = $('#flip-coin');
     if (coin) coin.className = 'coin ' + (success ? 'coin--success' : 'coin--fail');
+    const guessText = pending.guessed ? ('（你猜的' + (pending.guessed === 'head' ? '正面' : '反面') + '）') : '';
     $('#flip-result').innerHTML = '<strong class="' + (success ? 'is-success' : 'is-fail') + '">' + (success ? '正面 · 成功' : '反面 · 失败') + '</strong>' +
       '<p>' + esc(success ? pending.card.posText : pending.card.negText) + '</p>' +
       (pending.blessed ? '<small class="bless-note">命运祝福：本次判定必定成功</small>' : '') +
-      (pending.rerolled ? '<small class="bless-note">已重抛：这是最终结果</small>' : '');
+      (pending.rerolled ? '<small class="bless-note">已重抛：这是最终结果</small>' : '') +
+      '<small class="bless-note">' + guessText + '</small>';
     const choices = [];
     choices.push('<button class="btn btn--primary" data-flip-choice="accept">接受' + (success ? '正面' : '反面') + '</button>');
     if (pending.canReroll && !pending.rerolled && viewer.rerolls > 0) {
@@ -5202,6 +5522,8 @@
       if (target) { setBattleTarget(target.dataset.setTarget); return; }
       const flipChoice = event.target.closest('[data-flip-choice]');
       if (flipChoice) { chooseFlip(flipChoice.dataset.flipChoice); return; }
+      const guessBtn = event.target.closest('[data-guess]');
+      if (guessBtn) { chooseGuess(guessBtn.dataset.guess); return; }
       const row = event.target.closest('[data-flip-choice]');
       if (row) return;
       const order = event.target.closest('[data-order]');
@@ -5345,6 +5667,7 @@
     bindEvents();
     FX.init();
     updateAudioButton();
+    Audio.preloadSfx();
     showScreen('home');
     // 邀请链接：?room=CF-XXXX 直接进入联机大厅并自动入席（一键联机）
     try {

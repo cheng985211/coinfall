@@ -3104,15 +3104,19 @@ html[data-coin-skin="bloodmoon"] .hero-coin__face--back {
     0 0 0 1px color-mix(in srgb, var(--mode-accent, #e7b86a) 55%, transparent),
     0 0 28px color-mix(in srgb, var(--mode-accent, #e7b86a) 28%, transparent);
 }
-/* 模式图标：硬币贴图做底，字符叠在上面 */
+/* 模式图标：AI生图图标 */
 .mode-card__icon {
-  width: 42px; height: 42px;
-  border-radius: 50%;
+  width: 48px; height: 48px;
+  border-radius: 10px;
   border: 0;
-  background: url('assets/art/ui/icons/coin.png') center / contain no-repeat;
+  background: transparent;
   box-shadow: 0 0 14px color-mix(in srgb, var(--mode-accent, #e7b86a) 35%, transparent);
-  color: var(--mode-accent, var(--gold));
-  text-shadow: 0 1px 2px rgba(0, 0, 0, .8);
+  overflow: hidden;
+}
+.mode-card__icon img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
 }
 /* 模式标签小徽章：badge.png 做底 */
 .mode-card__badges i {

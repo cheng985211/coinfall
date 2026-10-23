@@ -669,18 +669,18 @@
     function buildTtsRow() {
       var row = document.createElement('div');
       row.className = 'settings-row';
-      row.innerHTML = '<label>试听当前人格声音</label><div class="settings-inline"><button type="button" class="btn btn--secondary btn--sm" id="cf-tts-preview">试听</button><small class="microcopy">按当前人格的音高与语速朗读（浏览器合成语音）</small></div>';
+      row.innerHTML = '<label>试听当前人格声音</label><div class="settings-inline"><button type="button" class="btn btn--secondary btn--sm" id="cf-tts-preview">试听</button><small class="microcopy">播放当前人格的真人配音（缺失则静默）</small></div>';
       var pv = row.querySelector('#cf-tts-preview');
       if (pv) pv.onclick = function () {
         try {
-          if (!window.speechSynthesis || !window.CF_AI) return;
+          if (!window.CF_AI) return;
           var p = window.CF_AI.getPersona();
           if (!p) return;
-          window.speechSynthesis.cancel();
-          var u = new SpeechSynthesisUtterance('你好！我是' + p.name + '，这是我的声音~');
-          u.pitch = p.voicePitch || 1;
-          u.rate = p.voiceRate || 1;
-          window.speechSynthesis.speak(u);
+          // v2.2：直接播放 wav，不再用浏览器 speechSynthesis
+          var url = 'assets/audio/voice/ai/' + p.id + '-greet.wav';
+          var el = new Audio(url);
+          el.volume = 0.85;
+          el.play().catch(function () { /* 文件缺失则静默 */ });
         } catch (e) {}
       };
       return row;

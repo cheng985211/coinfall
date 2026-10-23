@@ -606,6 +606,71 @@
       bio: '浓缩在钢都齿轮巷开了家小咖啡馆，打牌的人都爱来他这儿点一杯。他说咖啡因和能量牌是一个道理。',
       temper: '温和、麻利、记得每个熟客的口味。',
       quote: '一杯浓缩，精神一回合。'
+    },
+    // ---- 同人英雄：蛊真人 × 蓝白社 ----
+    {
+      id: 'lx-01', name: '重生者·方源', title: '星海轮回赌徒', style: 'abyss', role: '赌徒',
+      passiveKey: 'highRoller',
+      active: { name: '春秋轮回', uses: 2, effects: { bless2: 1 }, quote: '我重生过很多次，这一次也不会输。' },
+      bio: '方源从五百年后回来，口袋里揣着上一世输掉的那枚硬币。他记得每一个对手的牌路，因此开局总是慢半拍——那是他在确认这一次世界线有没有变。',
+      temper: '深沉、冷静、算尽三步，把所有情绪藏在一句"无妨"后面。',
+      quote: '凡人有一世，我有百世。这局，我陪你玩到底。'
+    },
+    {
+      id: 'lx-02', name: '冰魄·白凝冰', title: '青云寒霜弟子', style: 'cultivation', role: '防御',
+      passiveKey: 'regen',
+      active: { name: '冰肌玉骨', uses: 2, effects: { shield: 1, heal: 1 }, quote: '寒入骨髓，反而清醒。' },
+      bio: '白凝冰修的是合欢冰魄道，渡劫时被天道翻了个面——从少女变成了少年。她至今对自己的新嗓音不太习惯，但牌桌上没人敢笑第二遍。',
+      temper: '外冷内傲、耳根子软，被人夸一句会别过脸去。',
+      quote: '我这层冰，你砸不开。'
+    },
+    {
+      id: 'lx-03', name: '女王·黑楼兰', title: '荒漠铁腕领主', style: 'west', role: '输出',
+      passiveKey: 'bloodlust',
+      active: { name: '楼兰王令', uses: 2, effects: { dmg: 2, power: 1 }, quote: '孤说赢，就必须赢。' },
+      bio: '黑楼兰在荒漠镇建了自己的城邦，门口只立一块牌子："不服就上牌桌。"她的鞭子从不离手，但出牌比鞭子还快。',
+      temper: '霸道、自负、护短，对手下和颜悦色，对敌人零容忍。',
+      quote: '跪下来，还能留你半条命。'
+    },
+    {
+      id: 'lx-04', name: '善商·商心慈', title: '樱炎行商小姐', style: 'wa', role: '功能',
+      passiveKey: 'onFlipWinDraw',
+      active: { name: '慈心算盘', uses: 2, effects: { draw: 1, heal: 1 }, quote: '这一注，我替你压。' },
+      bio: '商心慈是商队养大的孤女，把所有积蓄换成了一张参赛请柬。她相信赢的人要有福气，而福气是从帮人开始攒的。',
+      temper: '温柔、善良、耳根子软，见不得队友掉血。',
+      quote: '别急，我这张牌，是给你留的。'
+    },
+    {
+      id: 'lx-05', name: '正义青年·白歌', title: '圣辉蓝白社探员', style: 'fantasy', role: '防御',
+      passiveKey: 'startShield',
+      active: { name: '蓝白正义', uses: 2, effects: { shield: 1, guard: 1 }, quote: '看到不公平的事，我就忍不住要管。' },
+      bio: '白歌是蓝白社最年轻的探员，任务清单上写着："哪里有不公，就去哪里。"他来到星杯，是因为听说有人在牌桌上出千。',
+      temper: '热血、爱管闲事、正义感爆棚，被吐槽"多管闲事"会认真反驳。',
+      quote: '这张盾，我替这个世界挡着。'
+    },
+    {
+      id: 'lx-06', name: '大佬·黄极', title: '霓虹区蓝白社长老', style: 'neon', role: '功能',
+      passiveKey: 'onPlayDraw',
+      active: { name: '黄极书库', uses: 2, effects: { draw: 2 }, quote: '我这里的资料，比你的命还全。' },
+      bio: '黄极是蓝白社的活档案，脑子里装着过去三百年的所有大事件。他来参赛不为奖金，只为"观察一下这个时代的年轻人怎么打牌"。',
+      temper: '悠然、博学、爱用过来人语气说教，但关键时刻极其靠谱。',
+      quote: '年轻人，你的牌路我三十年前见过。'
+    },
+    {
+      id: 'lx-07', name: '穷神·墨穷', title: '钢都意志打工仔', style: 'steam', role: '输出',
+      passiveKey: 'firstStrike',
+      active: { name: '穷且益坚', uses: 2, effects: { dmg: 2, selfDmg: 1 }, quote: '我什么都没有，只剩这股不服输的劲。' },
+      bio: '墨穷是钢都最穷的选手，穷到参赛费是全队凑的。他说自己唯一的本钱就是"比任何人都想赢"，而这一点，对手永远偷不走。',
+      temper: '倔强、寡言、把苦往肚子里咽，被人可怜会翻脸。',
+      quote: '别同情我——用你的血来还。'
+    },
+    {
+      id: 'lx-08', name: '炎奴儿·阿炎', title: '幻书火焰少女', style: 'anime', role: '赌徒',
+      passiveKey: 'onFlipLoseShield',
+      active: { name: '火焰换血', uses: 1, effects: { dmg: 2, hpBurn: 1 }, quote: '烧吧，反正我也没什么可输的。' },
+      bio: '炎奴儿是从一本旧漫画里跑出来的配角，连名字都是读者起的。她习惯了被火焰包围，也习惯了被世界忘记——所以每一局都打得像最后一页。',
+      temper: '倔强、自暴自弃式乐观，被认真对待时会红眼眶。',
+      quote: '烧尽这页，下一章我还是主角。'
     }
   ];
 
@@ -982,6 +1047,16 @@
     if (effect.guard) parts.push('本回合第一次受到的伤害 -1');
     if (effect.reflect) parts.push('本回合第一次受击时反弹伤害');
     if (effect.energize) parts.push('下回合可额外打出 1 张技能卡');
+    if (effect.copySkill) parts.push('复制对手上一张牌的正面效果');
+    if (effect.redirectDamage) parts.push('本回合受到的下一次伤害转移给对手');
+    if (effect.rebirth) parts.push('本局第一次濒死时不死，回复1点生命');
+    if (effect.puppet) parts.push('操控对手下一张打出的牌');
+    if (effect.swapHp) parts.push('与目标交换当前生命值');
+    if (effect.blind) parts.push('对手下回合无法使用主动技');
+    if (effect.peek) parts.push('观看对手全部手牌');
+    if (effect.manaBurn) parts.push('对手下回合少打一张牌');
+    if (effect.mirror) parts.push('本回合第一次受到的伤害反弹给攻击者');
+    if (effect.stealBuff) parts.push('偷取对手所有护盾和正面增益');
     return parts.join('，') + '。';
   }
 
@@ -1081,7 +1156,33 @@
     { id: 'style-043', name: '星海冲刺', style: 'abyss', cat: 'style', pos: { dmg: 2, pierce: 1 }, neg: { selfDmg: 1 } },
     { id: 'style-044', name: '蒸汽Buff', style: 'steam', cat: 'style', pos: { shield: 1, heal: 1, draw: 1 }, neg: { selfDiscard: 1 } },
     { id: 'style-045', name: '樱色应援', style: 'wa', cat: 'style', pos: { bless: 1, heal: 1 }, neg: { oppDraw: 1 } },
-    { id: 'style-046', name: '荒漠烧烤', style: 'west', cat: 'style', pos: { lifesteal: 2, weak: 1 }, neg: { selfDmg: 1 } }
+    { id: 'style-046', name: '荒漠烧烤', style: 'west', cat: 'style', pos: { lifesteal: 2, weak: 1 }, neg: { selfDmg: 1 } },
+    // ---- v3.2 同人扩展：新效果键 20 张 ----
+    // attack +4
+    { id: 'attack-045', name: '偷梁换柱', style: 'neon', cat: 'attack', pos: { copySkill: 1 }, neg: { selfDiscard: 1 }, combo: 'attack' },
+    { id: 'attack-046', name: '嫁祸', style: 'west', cat: 'attack', pos: { dmg: 1, redirectDamage: 1 }, neg: { selfDmg: 1 }, combo: 'attack' },
+    { id: 'attack-047', name: '暗夜突刺', style: 'abyss', cat: 'attack', pos: { dmg: 2, weak: 1 }, neg: { selfDmg: 1 }, combo: 'attack' },
+    { id: 'attack-048', name: '穿云箭', style: 'cultivation', cat: 'attack', pos: { dmg: 2, pierce: 1 }, neg: { oppHeal: 1 }, combo: 'attack' },
+    // defense +4
+    { id: 'defense-045', name: '以牙还牙', style: 'fantasy', cat: 'defense', pos: { mirror: 1, shield: 1 }, neg: { oppDraw: 1 }, combo: 'defense' },
+    { id: 'defense-046', name: '回光返照', style: 'cultivation', cat: 'defense', pos: { rebirth: 1, heal: 1 }, neg: { selfDiscard: 1 }, combo: 'defense' },
+    { id: 'defense-047', name: '吸星大法', style: 'cultivation', cat: 'defense', pos: { stealBuff: 1 }, neg: { oppHeal: 1 }, combo: 'defense' },
+    { id: 'defense-048', name: '金钟罩', style: 'wa', cat: 'defense', pos: { shield: 2, guard: 1 }, neg: { selfDmg: 1 }, combo: 'defense' },
+    // control +4
+    { id: 'control-045', name: '沉默是金', style: 'wa', cat: 'control', pos: { blind: 1, seal: 1 }, neg: { oppDraw: 1 }, combo: 'control' },
+    { id: 'control-046', name: '夺舍', style: 'anime', cat: 'control', pos: { puppet: 1 }, neg: { selfDmg: 1 }, combo: 'control' },
+    { id: 'control-047', name: '窥屏', style: 'neon', cat: 'control', pos: { peek: 1, draw: 1 }, neg: { oppDraw: 1 }, combo: 'control' },
+    { id: 'control-048', name: '抽干', style: 'steam', cat: 'control', pos: { manaBurn: 1, discard: 1 }, neg: { selfDiscard: 1 }, combo: 'control' },
+    // risk +4
+    { id: 'risk-045', name: '血债血偿', style: 'west', cat: 'risk', pos: { swapHp: 1 }, neg: { selfDmg: 2 }, combo: 'risk' },
+    { id: 'risk-046', name: '破釜沉舟', style: 'steam', cat: 'risk', pos: { dmg: 3, power: 1 }, neg: { selfDmg: 2 }, combo: 'risk' },
+    { id: 'risk-047', name: '浴火重生', style: 'wa', cat: 'risk', pos: { dmg: 1, heal: 2 }, neg: { selfDmg: 2 }, combo: 'risk' },
+    { id: 'risk-048', name: '最后一注', style: 'fantasy', cat: 'risk', pos: { bless2: 1, draw: 2 }, neg: { selfDiscard: 2 }, combo: 'risk' },
+    // style +4
+    { id: 'style-047', name: '春秋梦旅', style: 'abyss', cat: 'style', pos: { bless2: 1, dmg: 1 }, neg: { selfDiscard: 1 } },
+    { id: 'style-048', name: '冰魄封天', style: 'cultivation', cat: 'style', pos: { shield: 2, weak: 1 }, neg: { selfDmg: 1 } },
+    { id: 'style-049', name: '楼兰王令', style: 'west', cat: 'style', pos: { dmg: 2, power: 1 }, neg: { oppHeal: 1 } },
+    { id: 'style-050', name: '蓝白正义', style: 'fantasy', cat: 'style', pos: { shield: 1, heal: 1, draw: 1 }, neg: { oppDraw: 1 } }
   ];
 
   NEW_CARD_DEFS.forEach(function (def, i) {
